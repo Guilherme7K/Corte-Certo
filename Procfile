@@ -1,1 +1,1 @@
-web: python init_database.py && gunicorn app:app --config gunicorn.conf.py
+web: gunicorn app:app --config gunicorn.conf.py
