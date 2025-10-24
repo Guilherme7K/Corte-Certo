@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -16,6 +17,13 @@ class Usuario(db.Model):
     
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='cliente', lazy=True)
+    
+    def verificar_senha(self, senha):
+        """Verifica se a senha fornecida está correta"""
+        return check_password_hash(self.senha, senha)
+    
+    def __repr__(self):
+        return f'<Usuario {self.nome} - {self.email}>'
 
 class Servico(db.Model):
     __tablename__ = 'servico'
@@ -30,6 +38,9 @@ class Servico(db.Model):
     
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='servico', lazy=True)
+    
+    def __repr__(self):
+        return f'<Servico {self.nome} - R$ {self.preco}>'
 
 class Agendamento(db.Model):
     __tablename__ = 'agendamento'
@@ -41,6 +52,9 @@ class Agendamento(db.Model):
     status = db.Column(db.String(20), default='pendente')  # 'pendente', 'confirmado', 'concluido', 'cancelado'
     observacoes = db.Column(db.Text)
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<Agendamento {self.id} - Cliente: {self.cliente_id} - Data: {self.data_hora}>'
 
 class HorarioFuncionamento(db.Model):
     __tablename__ = 'horario_funcionamento'
