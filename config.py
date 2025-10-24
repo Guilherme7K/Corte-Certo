@@ -14,11 +14,23 @@ class Config:
     
     # Configurações do Flask
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'sua-chave-secreta-super-segura-aqui'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///barbearia.db'
+    
+    # Banco de Dados - Supabase (PostgreSQL)
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    
+    # Fix para Render/Heroku que usam postgres:// ao invés de postgresql://
+    if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL or 'sqlite:///barbearia.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
     
     # Segurança
-    SESSION_COOKIE_SECURE = True  # True em produção
+    SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     

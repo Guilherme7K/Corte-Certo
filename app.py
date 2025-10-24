@@ -608,38 +608,55 @@ def internal_server_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
 
+
 def init_db():
     with app.app_context():
+        # Criar todas as tabelas
         db.create_all()
         
+        # Verificar se já existe um admin
         admin = Usuario.query.filter_by(email='admin@cortecerto.com').first()
         if not admin:
+            from werkzeug.security import generate_password_hash
             admin = Usuario(
                 nome='Administrador',
                 email='admin@cortecerto.com',
-                telefone='(11) 98765-4321',
+                telefone='11987654321',
+                senha=generate_password_hash('admin123'),
                 tipo='admin'
             )
-            admin.set_senha('Admin@123')  # Senha forte
             db.session.add(admin)
-            db.session.commit()
-            print('✅ Usuário admin criado: admin@cortecerto.com / Admin@123')
+            print("✅ Usuário admin criado!")
         
+        # Verificar se já existem serviços
         if Servico.query.count() == 0:
             servicos_padrao = [
-                Servico(nome='Corte de Cabelo', descricao='Corte masculino tradicional ou moderno', preco=35.00, duracao=30),
-                Servico(nome='Barba', descricao='Aparar e modelar barba', preco=25.00, duracao=20),
-                Servico(nome='Corte + Barba', descricao='Combo completo de corte e barba', preco=50.00, duracao=45),
-                Servico(nome='Sobrancelha', descricao='Design de sobrancelha masculina', preco=15.00, duracao=15),
-                Servico(nome='Hidratação', descricao='Tratamento capilar com hidratação profunda', preco=40.00, duracao=30),
-                Servico(nome='Acabamento', descricao='Finalização com máquina e navalha', preco=20.00, duracao=15),
+                Servico(nome='Corte de Cabelo', descricao='Corte masculino tradicional ou moderno', preco=35.00, duracao=30, ativo=True),
+                Servico(nome='Barba', descricao='Aparar e modelar barba', preco=25.00, duracao=20, ativo=True),
+                Servico(nome='Corte + Barba', descricao='Combo completo de corte e barba', preco=50.00, duracao=45, ativo=True),
+                Servico(nome='Sobrancelha', descricao='Design de sobrancelha masculina', preco=15.00, duracao=15, ativo=True),
             ]
-            
-            for servico in servicos_padrao:
-                db.session.add(servico)
-            
-            db.session.commit()
-            print('✅ Serviços padrão cadastrados!')
+            db.session.add_all(servicos_padrao)
+            print("✅ Serviços padrão criados!")
+        
+        # Verificar se já existem horários de funcionamento
+        if HorarioFuncionamento.query.count() == 0:
+            horarios = [
+                HorarioFuncionamento(dia_semana=1, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
+                HorarioFuncionamento(dia_semana=2, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
+                HorarioFuncionamento(dia_semana=3, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
+                HorarioFuncionamento(dia_semana=4, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
+                HorarioFuncionamento(dia_semana=5, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
+                HorarioFuncionamento(dia_semana=6, horario_abertura='09:00', horario_fechamento='17:00', ativo=True),
+                HorarioFuncionamento(dia_semana=0, horario_abertura='09:00', horario_fechamento='13:00', ativo=False),
+            ]
+            db.session.add_all(horarios)
+            print("✅ Horários de funcionamento criados!")
+        
+        db.session.commit()
+        print("✅ Banco de dados inicializado com sucesso!")
+
+
 
 if __name__ == '__main__':
     init_db()
