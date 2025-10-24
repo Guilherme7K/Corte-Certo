@@ -2,10 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento
 from datetime import datetime, timedelta
 from functools import wraps
+from config import Config
 import os
 import re
-import secrets
-from config import Config
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
