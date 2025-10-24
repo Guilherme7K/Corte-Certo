@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 bg-light sidebar p-3">
+            <h5 class="mb-3"><i class="bi bi-speedometer2"></i> Painel Admin</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                        <i class="bi bi-house"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('admin_servicos') }}">
+                        <i class="bi bi-scissors"></i> Serviços
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Gerenciar Serviços</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoServicoModal">
+                    <i class="bi bi-plus-circle"></i> Novo Serviço
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    {% if servicos %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Descrição</th>
+                                        <th>Preço</th>
+                                        <th>Duração</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for servico in servicos %}
+                                    <tr>
+                                        <td>{{ servico.nome }}</td>
+                                        <td>{{ servico.descricao }}</td>
+                                        <td>R$ {{ "%.2f"|format(servico.preco) }}</td>
+                                        <td>{{ servico.duracao }} min</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if servico.ativo else 'secondary' }}">
+                                                {{ 'Ativo' if servico.ativo else 'Inativo' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editarModal{{ servico.id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Nenhum serviço cadastrado ainda.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Novo Serviço -->
+<div class="modal fade" id="novoServicoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Serviço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Serviço</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preco" class="form-label">Preço (R$)</label>
+                        <input type="number" class="form-control" id="preco" name="preco" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duracao" class="form-label">Duração (minutos)</label>
+                        <input type="number" class="form-control" id="duracao" name="duracao" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modais de Edição (um para cada serviço) -->
+{% for servico in servicos %}
+<div class="modal fade" id="editarModal{{ servico.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Serviço</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('editar_servico', servico_id=servico.id) }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome{{ servico.id }}" class="form-label">Nome do Serviço</label>
+                        <input type="text" class="form-control" id="nome{{ servico.id }}" name="nome" value="{{ servico.nome }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao{{ servico.id }}" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao{{ servico.id }}" name="descricao" rows="3">{{ servico.descricao }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preco{{ servico.id }}" class="form-label">Preço (R$)</label>
+                        <input type="number" class="form-control" id="preco{{ servico.id }}" name="preco" step="0.01" value="{{ servico.preco }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duracao{{ servico.id }}" class="form-label">Duração (minutos)</label>
+                        <input type="number" class="form-control" id="duracao{{ servico.id }}" name="duracao" value="{{ servico.duracao }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ativo{{ servico.id }}" class="form-label">Status</label>
+                        <select class="form-control" id="ativo{{ servico.id }}" name="ativo">
+                            <option value="1" {{ 'selected' if servico.ativo else '' }}>Ativo</option>
+                            <option value="0" {{ 'selected' if not servico.ativo else '' }}>Inativo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

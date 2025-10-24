@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(62, 39, 35, 0.8), rgba(62, 39, 35, 0.8)), 
+                    url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200') center/cover;
+        min-height: 500px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .service-card {
+        transition: transform 0.3s;
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .contact-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-3">{{ barbeiro.barbearia }}</h1>
+        <p class="lead fs-4 mb-4">Estilo, Qualidade e Tradição em Cada Corte</p>
+        <p class="fs-5 mb-4">Barbeiro: {{ barbeiro.nome }}</p>
+        {% if not session.usuario_id %}
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="{{ url_for('cadastro') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-calendar-check"></i> Agendar Horário
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-5">
+                    <i class="bi bi-box-arrow-in-right"></i> Entrar
+                </a>
+            </div>
+        {% else %}
+            {% if session.usuario_tipo == 'cliente' %}
+                <a href="{{ url_for('cliente_agendar') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-calendar-plus"></i> Fazer Novo Agendamento
+                </a>
+            {% else %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-speedometer2"></i> Ir para Dashboard
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="container my-5 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 mb-4 mb-md-0">
+            <h2 class="display-5 fw-bold mb-4">Sobre Nós</h2>
+            <p class="lead mb-3">
+                Bem-vindo à {{ barbeiro.barbearia }}! Aqui você encontra 
+                o melhor atendimento em cortes masculinos da região.
+            </p>
+            <p class="fs-5 mb-3">
+                Com anos de experiência, {{ barbeiro.nome }} está sempre 
+                atualizado com as últimas tendências e técnicas, garantindo 
+                que cada cliente saia satisfeito e com visual impecável.
+            </p>
+            <div class="d-flex align-items-center mt-4">
+                <i class="bi bi-award-fill text-primary fs-1 me-3"></i>
+                <div>
+                    <strong class="d-block">Atendimento Personalizado</strong>
+                    <span class="text-muted">Cada cliente é único para nós</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600" 
+                 alt="Barbearia" 
+                 class="img-fluid rounded shadow">
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5">
+    <div class="container my-5">
+        <h2 class="display-5 fw-bold text-center mb-5">Nossos Serviços</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-scissors display-3 text-primary mb-3"></i>
+                        <h5 class="card-title fw-bold">Corte de Cabelo</h5>
+                        <p class="card-text text-muted">
+                            Cortes modernos, clássicos e personalizados
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-brush display-3 text-primary mb-3"></i>
+                        <h5 class="card-title fw-bold">Barba</h5>
+                        <p class="card-text text-muted">
+                            Design e manutenção profissional de barba
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-droplet display-3 text-primary mb-3"></i>
+                        <h5 class="card-title fw-bold">Hidratação</h5>
+                        <p class="card-text text-muted">
+                            Tratamento e hidratação capilar
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-star-fill display-3 text-primary mb-3"></i>
+                        <h5 class="card-title fw-bold">Acabamento</h5>
+                        <p class="card-text text-muted">
+                            Finalização e styling profissional
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 py-5">
+    <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="contact-card h-100">
+                <h2 class="fw-bold mb-4">
+                    <i class="bi bi-geo-alt-fill text-primary"></i> Localização
+                </h2>
+                <h5 class="mb-3">{{ barbeiro.barbearia }}</h5>
+                <p class="fs-5 mb-4">
+                    <i class="bi bi-pin-map text-primary me-2"></i>
+                    {{ barbeiro.endereco }}
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="contact-card h-100">
+                <h2 class="fw-bold mb-4">
+                    <i class="bi bi-telephone-fill text-primary"></i> Contato
+                </h2>
+                <div class="mb-4">
+                    <h5 class="mb-3">Entre em contato conosco:</h5>
+                    <ul class="list-unstyled fs-5">
+                        <li class="mb-3">
+                            <i class="bi bi-whatsapp text-success me-2"></i>
+                            <strong>WhatsApp:</strong> {{ barbeiro.telefone }}
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-envelope text-primary me-2"></i>
+                            <strong>Email:</strong> {{ barbeiro.email }}
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-clock text-primary me-2"></i>
+                            <strong>Horário:</strong> Segunda a Sexta: 9h às 19h
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not session.usuario_id %}
+<div class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h2 class="display-6 fw-bold mb-3">Pronto para um Novo Visual?</h2>
+        <p class="lead mb-4">Agende seu horário agora!</p>
+        <a href="{{ url_for('cadastro') }}" class="btn btn-primary btn-lg px-5">
+            <i class="bi bi-calendar-check"></i> Fazer Cadastro e Agendar
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="bi bi-calendar-check"></i> Gerenciar Agendamentos</h2>
+            <p class="text-muted">{{ barbeiro.barbearia }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Data</label>
+                    <input type="date" name="data" class="form-control" value="{{ request.args.get('data', '') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="todos">Todos</option>
+                        <option value="agendado" {% if request.args.get('status') == 'agendado' %}selected{% endif %}>Agendado</option>
+                        <option value="concluido" {% if request.args.get('status') == 'concluido' %}selected{% endif %}>Concluído</option>
+                        <option value="cancelado" {% if request.args.get('status') == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                    <a href="{{ url_for('admin_agendamentos') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x"></i> Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Lista de Agendamentos -->
+    <div class="card">
+        <div class="card-body">
+            {% if agendamentos %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Duração</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ag in agendamentos %}
+                        <tr>
+                            <td>
+                                <strong>{{ ag.data_hora.strftime('%d/%m/%Y') }}</strong><br>
+                                <small class="text-muted">{{ ag.data_hora.strftime('%H:%M') }}</small>
+                            </td>
+                            <td>
+                                {% if ag.cliente %}
+                                <strong>{{ ag.cliente.nome }}</strong><br>
+                                <small class="text-muted">{{ ag.cliente.email }}</small>
+                                {% else %}
+                                <span class="text-danger">Cliente não encontrado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ag.servico %}
+                                {{ ag.servico.nome }}
+                                {% else %}
+                                <span class="text-danger">Serviço não encontrado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ag.servico %}
+                                {{ ag.servico.duracao }} min
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ag.servico %}
+                                R$ {{ "%.2f"|format(ag.servico.preco) }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge {% if ag.status == 'agendado' %}bg-primary{% elif ag.status == 'concluido' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ ag.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    {% if ag.status == 'agendado' %}
+                                    <form method="POST" action="{{ url_for('atualizar_status_agendamento', id=ag.id) }}" style="display: inline;">
+                                        <input type="hidden" name="status" value="concluido">
+                                        <button type="submit" class="btn btn-success" title="Marcar como concluído">
+                                            <i class="bi bi-check"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('cancelar_agendamento', id=ag.id) }}" style="display: inline;" 
+                                          onsubmit="return confirm('Cancelar este agendamento?');">
+                                        <button type="submit" class="btn btn-danger" title="Cancelar">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    
+                                    {% if ag.observacoes %}
+                                    <button type="button" class="btn btn-outline-info" 
+                                            data-bs-toggle="modal" data-bs-target="#obs{{ ag.id }}" title="Ver observações">
+                                        <i class="bi bi-chat-left-text"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        {% if ag.observacoes %}
+                        <div class="modal fade" id="obs{{ ag.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Observações do Cliente</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% if ag.cliente %}
+                                        <p><strong>Cliente:</strong> {{ ag.cliente.nome }}</p>
+                                        {% endif %}
+                                        {% if ag.servico %}
+                                        <p><strong>Serviço:</strong> {{ ag.servico.nome }}</p>
+                                        {% endif %}
+                                        <p><strong>Data:</strong> {{ ag.data_hora.strftime('%d/%m/%Y às %H:%M') }}</p>
+                                        <hr>
+                                        <p class="mb-0">{{ ag.observacoes }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Nenhum agendamento encontrado
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

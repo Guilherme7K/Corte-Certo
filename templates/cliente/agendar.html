@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+    
+    .step {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        border-bottom: 3px solid #e0e0e0;
+        color: #999;
+        position: relative;
+    }
+    
+    .step.active {
+        border-bottom-color: var(--primary-color);
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+    
+    .step.completed {
+        border-bottom-color: #28a745;
+        color: #28a745;
+    }
+    
+    .servico-card {
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid #e0e0e0;
+    }
+    
+    .servico-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .servico-card.selected {
+        border-color: var(--primary-color);
+        background-color: #f0f8ff;
+    }
+    
+    .calendar-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .horarios-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .horario-btn {
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+    
+    .horario-btn:hover:not(:disabled) {
+        border-color: var(--primary-color);
+        background-color: #f0f8ff;
+        transform: scale(1.05);
+    }
+    
+    .horario-btn.selected {
+        border-color: var(--primary-color);
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .horario-btn:disabled {
+        background-color: #f8f9fa;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+    
+    .step-content {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+    
+    .step-content.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .resumo-box {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-calendar-plus"></i> Novo Agendamento</h3>
+                    <p class="mb-0 small">{{ barbeiro.barbearia }} - {{ barbeiro.nome }}</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <!-- Indicador de Passos -->
+                    <div class="step-indicator">
+                        <div class="step active" id="step-indicator-1">
+                            <i class="bi bi-1-circle-fill"></i><br>
+                            Escolha o Serviço
+                        </div>
+                        <div class="step" id="step-indicator-2">
+                            <i class="bi bi-2-circle"></i><br>
+                            Selecione a Data
+                        </div>
+                        <div class="step" id="step-indicator-3">
+                            <i class="bi bi-3-circle"></i><br>
+                            Escolha o Horário
+                        </div>
+                        <div class="step" id="step-indicator-4">
+                            <i class="bi bi-4-circle"></i><br>
+                            Confirmar
+                        </div>
+                    </div>
+                    
+                    <form method="POST" id="formAgendamento">
+                        <!-- Passo 1: Escolher Serviço -->
+                        <div class="step-content active" id="step-1">
+                            <h4 class="mb-4 text-center">Escolha o Serviço</h4>
+                            <div class="row g-3">
+                                {% for servico in servicos %}
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card servico-card h-100" 
+                                         data-servico-id="{{ servico.id }}"
+                                         data-servico-nome="{{ servico.nome }}"
+                                         data-servico-preco="{{ servico.preco }}"
+                                         data-servico-duracao="{{ servico.duracao }}">
+                                        <div class="card-body text-center">
+                                            <i class="bi bi-scissors display-4 text-primary mb-3"></i>
+                                            <h5 class="card-title">{{ servico.nome }}</h5>
+                                            <p class="card-text text-muted">{{ servico.descricao }}</p>
+                                            <hr>
+                                            <p class="mb-1"><strong>R$ {{ "%.2f"|format(servico.preco) }}</strong></p>
+                                            <p class="text-muted small">{{ servico.duracao }} minutos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="servico_id" id="servico_id">
+                        </div>
+                        
+                        <!-- Passo 2: Escolher Data -->
+                        <div class="step-content" id="step-2">
+                            <h4 class="mb-4 text-center">Selecione a Data</h4>
+                            <div class="calendar-container">
+                                <input type="date" class="form-control form-control-lg" id="data" name="data">
+                                <div class="alert alert-info mt-3">
+                                    <i class="bi bi-info-circle"></i>
+                                    <strong>Importante:</strong> Não abrimos aos domingos
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(1)">
+                                    <i class="bi bi-arrow-left"></i> Voltar
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="avancarPasso(3)" disabled id="btn-passo-2">
+                                    Avançar <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Passo 3: Escolher Horário -->
+                        <div class="step-content" id="step-3">
+                            <h4 class="mb-4 text-center">Escolha o Horário</h4>
+                            <div id="loading" class="text-center" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p class="mt-2">Carregando horários disponíveis...</p>
+                            </div>
+                            <div id="horarios-container"></div>
+                            <input type="hidden" name="hora" id="hora">
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(2)">
+                                    <i class="bi bi-arrow-left"></i> Voltar
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="avancarPasso(4)" disabled id="btn-passo-3">
+                                    Avançar <i class="bi bi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Passo 4: Confirmar -->
+                        <div class="step-content" id="step-4">
+                            <h4 class="mb-4 text-center">Confirmar Agendamento</h4>
+                            <div class="resumo-box">
+                                <h5 class="mb-3"><i class="bi bi-clipboard-check"></i> Resumo do Agendamento</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Serviço:</strong> <span id="resumo-servico"></span></p>
+                                        <p><strong>Data:</strong> <span id="resumo-data"></span></p>
+                                        <p><strong>Horário:</strong> <span id="resumo-hora"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Duração:</strong> <span id="resumo-duracao"></span> minutos</p>
+                                        <p><strong>Valor:</strong> R$ <span id="resumo-preco"></span></p>
+                                        <p><strong>Local:</strong> {{ barbeiro.endereco }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label for="observacoes" class="form-label">Observações (Opcional)</label>
+                                <textarea class="form-control" id="observacoes" name="observacoes" 
+                                          rows="3" maxlength="500" 
+                                          placeholder="Alguma preferência ou observação?"></textarea>
+                                <small class="text-muted">Máximo 500 caracteres</small>
+                            </div>
+                            
+                            <div class="alert alert-warning mt-4">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <strong>Lembre-se:</strong> Chegue com 5 minutos de antecedência. 
+                                Cancelamentos devem ser feitos com pelo menos 2 horas de antecedência.
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(3)">
+                                    <i class="bi bi-arrow-left"></i> Voltar
+                                </button>
+                                <button type="submit" class="btn btn-success btn-lg px-5">
+                                    <i class="bi bi-check-circle"></i> Confirmar Agendamento
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let passoAtual = 1;
+let servicoSelecionado = null;
+let dataSelecionada = null;
+let horaSelecionada = null;
+
+// Configurar data mínima como hoje
+document.addEventListener('DOMContentLoaded', function() {
+    const hoje = new Date();
+    const dataInput = document.getElementById('data');
+    dataInput.min = hoje.toISOString().split('T')[0];
+    
+    // Adicionar evento de clique nos cards de serviço
+    document.querySelectorAll('.servico-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const id = this.getAttribute('data-servico-id');
+            const nome = this.getAttribute('data-servico-nome');
+            const preco = parseFloat(this.getAttribute('data-servico-preco'));
+            const duracao = parseInt(this.getAttribute('data-servico-duracao'));
+            
+            selecionarServico(id, nome, preco, duracao, this);
+        });
+    });
+});
+
+function selecionarServico(id, nome, preco, duracao, elemento) {
+    // Remover seleção anterior
+    document.querySelectorAll('.servico-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Selecionar novo serviço
+    elemento.classList.add('selected');
+    
+    servicoSelecionado = {id, nome, preco, duracao};
+    document.getElementById('servico_id').value = id;
+    
+    // Avançar automaticamente após 500ms
+    setTimeout(() => avancarPasso(2), 500);
+}
+
+function avancarPasso(passo) {
+    // Validações
+    if (passo === 2 && !servicoSelecionado) {
+        alert('Por favor, selecione um serviço');
+        return;
+    }
+    
+    if (passo === 3 && !dataSelecionada) {
+        alert('Por favor, selecione uma data');
+        return;
+    }
+    
+    if (passo === 4 && !horaSelecionada) {
+        alert('Por favor, selecione um horário');
+        return;
+    }
+    
+    // Ocultar passo atual
+    document.getElementById('step-' + passoAtual).classList.remove('active');
+    document.getElementById('step-indicator-' + passoAtual).classList.remove('active');
+    document.getElementById('step-indicator-' + passoAtual).classList.add('completed');
+    
+    // Mostrar próximo passo
+    passoAtual = passo;
+    document.getElementById('step-' + passo).classList.add('active');
+    document.getElementById('step-indicator-' + passo).classList.add('active');
+    
+    // Se for o passo 4, preencher resumo
+    if (passo === 4) {
+        preencherResumo();
+    }
+    
+    // Scroll suave para o topo
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function voltarPasso(passo) {
+    document.getElementById('step-' + passoAtual).classList.remove('active');
+    document.getElementById('step-indicator-' + passoAtual).classList.remove('active');
+    
+    passoAtual = passo;
+    document.getElementById('step-' + passo).classList.add('active');
+    document.getElementById('step-indicator-' + passo).classList.add('active');
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+document.getElementById('data').addEventListener('change', function() {
+    const data = this.value;
+    if (data) {
+        // Verificar se é domingo
+        const dataObj = new Date(data + 'T00:00:00');
+        if (dataObj.getDay() === 0) {
+            alert('Desculpe, não abrimos aos domingos!');
+            this.value = '';
+            return;
+        }
+        
+        dataSelecionada = data;
+        document.getElementById('btn-passo-2').disabled = false;
+        carregarHorarios();
+    }
+});
+
+function carregarHorarios() {
+    if (!dataSelecionada || !servicoSelecionado) return;
+    
+    const loading = document.getElementById('loading');
+    const container = document.getElementById('horarios-container');
+    
+    loading.style.display = 'block';
+    container.innerHTML = '';
+    
+    fetch(`/api/horarios-disponiveis?data=${dataSelecionada}&servico_id=${servicoSelecionado.id}`)
+        .then(response => response.json())
+        .then(data => {
+            loading.style.display = 'none';
+            
+            if (data.mensagem) {
+                container.innerHTML = `<div class="alert alert-warning">${data.mensagem}</div>`;
+                return;
+            }
+            
+            if (data.horarios.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Nenhum horário disponível para esta data</div>';
+                return;
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'horarios-grid';
+            
+            data.horarios.forEach(h => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'horario-btn';
+                btn.textContent = h.horario;
+                btn.disabled = !h.disponivel;
+                
+                if (h.disponivel) {
+                    btn.addEventListener('click', function() {
+                        selecionarHorario(h.horario, this);
+                    });
+                }
+                
+                grid.appendChild(btn);
+            });
+            
+            container.appendChild(grid);
+        })
+        .catch(error => {
+            loading.style.display = 'none';
+            container.innerHTML = '<div class="alert alert-danger">Erro ao carregar horários</div>';
+            console.error(error);
+        });
+}
+
+function selecionarHorario(hora, elemento) {
+    // Remover seleção anterior
+    document.querySelectorAll('.horario-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Selecionar novo horário
+    elemento.classList.add('selected');
+    
+    horaSelecionada = hora;
+    document.getElementById('hora').value = hora;
+    document.getElementById('btn-passo-3').disabled = false;
+}
+
+function preencherResumo() {
+    document.getElementById('resumo-servico').textContent = servicoSelecionado.nome;
+    document.getElementById('resumo-preco').textContent = servicoSelecionado.preco.toFixed(2);
+    document.getElementById('resumo-duracao').textContent = servicoSelecionado.duracao;
+    
+    // Formatar data
+    const dataObj = new Date(dataSelecionada + 'T00:00:00');
+    const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+    document.getElementById('resumo-data').textContent = dataFormatada;
+    document.getElementById('resumo-hora').textContent = horaSelecionada;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        border-left: 4px solid;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+    
+    .stat-card.blue { border-left-color: #3498db; }
+    .stat-card.green { border-left-color: #2ecc71; }
+    .stat-card.red { border-left-color: #e74c3c; }
+    .stat-card.purple { border-left-color: #9b59b6; }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    
+    .agenda-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .agendamento-item {
+        border-left: 3px solid #3498db;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: all 0.3s;
+    }
+    
+    .agendamento-item:hover {
+        background: #e3f2fd;
+        transform: translateX(5px);
+    }
+    
+    .horario {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .servico-item {
+        padding: 10px;
+        border-bottom: 1px solid #ecf0f1;
+    }
+    
+    .servico-item:last-child {
+        border-bottom: none;
+    }
+    
+    .progress-bar-custom {
+        height: 6px;
+        background: #ecf0f1;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+        transition: width 0.5s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">👋 Olá, {{ session.usuario_nome }}!</h2>
+                <p class="mb-0 opacity-75">{{ barbeiro.barbearia }}</p>
+            </div>
+            <div class="text-end">
+                <div id="relogio" class="h3 mb-0"></div>
+                <small id="dataHoje"></small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cards de Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-card blue">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Hoje</div>
+                        <div class="stat-number">{{ agendamentos|length }}</div>
+                    </div>
+                    <i class="bi bi-calendar-check" style="font-size: 3rem; color: #3498db; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-card green">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Concluídos</div>
+                        <div class="stat-number">{{ concluidos_hoje }}</div>
+                    </div>
+                    <i class="bi bi-check-circle" style="font-size: 3rem; color: #2ecc71; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-card red">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Receita Hoje</div>
+                        <div class="stat-number">R$ {{ receita_hoje|round(2) }}</div>
+                    </div>
+                    <i class="bi bi-cash-coin" style="font-size: 3rem; color: #e74c3c; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-card purple">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Clientes</div>
+                        <div class="stat-number">{{ total_clientes }}</div>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 3rem; color: #9b59b6; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Agenda de Hoje -->
+        <div class="col-lg-8 mb-4">
+            <div class="agenda-card">
+                <h5 class="mb-4"><i class="bi bi-calendar-event"></i> Agenda de Hoje</h5>
+                
+                {% if agendamentos %}
+                    {% for ag in agendamentos %}
+                    <div class="agendamento-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="horario">{{ ag.data_hora.strftime('%H:%M') }}</div>
+                                <div class="mt-2">
+                                    <strong>{{ ag.cliente.nome }}</strong>
+                                    <span class="badge-status {% if ag.status == 'agendado' %}bg-primary{% elif ag.status == 'concluido' %}bg-success{% else %}bg-secondary{% endif %} ms-2">
+                                        {{ ag.status }}
+                                    </span>
+                                </div>
+                                <div class="text-muted small mt-1">
+                                    <i class="bi bi-scissors"></i> {{ ag.servico.nome }}
+                                    <span class="ms-2"><i class="bi bi-clock"></i> {{ ag.servico.duracao }} min</span>
+                                    <span class="ms-2"><i class="bi bi-cash"></i> R$ {{ ag.servico.preco }}</span>
+                                </div>
+                                {% if ag.observacoes %}
+                                <div class="alert alert-light mt-2 mb-0 py-2">
+                                    <small><i class="bi bi-chat-left-text"></i> {{ ag.observacoes }}</small>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <a href="{{ url_for('admin_agendamentos') }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Nenhum agendamento para hoje
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Próximos Agendamentos -->
+            <div class="agenda-card mb-4">
+                <h6 class="mb-3"><i class="bi bi-clock-history"></i> Próximas 3 Horas</h6>
+                
+                {% if proximos_agendamentos %}
+                    {% for ag in proximos_agendamentos %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                        <div>
+                            <div class="fw-bold">{{ ag.data_hora.strftime('%H:%M') }}</div>
+                            <small class="text-muted">{{ ag.cliente.nome }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary">{{ ag.servico.nome }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-light small mb-0">
+                        <i class="bi bi-info-circle"></i> Nenhum agendamento próximo
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Serviços Populares -->
+            <div class="agenda-card">
+                <h6 class="mb-3"><i class="bi bi-star"></i> Serviços Populares</h6>
+                
+                {% if servicos_populares %}
+                    {% for servico in servicos_populares %}
+                    <div class="servico-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="fw-bold">{{ servico.nome }}</small>
+                            <small class="text-muted">{{ servico.total }}x</small>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" data-width="{{ (servico.total * 100 / servicos_populares[0].total)|int }}"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-light small mb-0">
+                        <i class="bi bi-info-circle"></i> Sem dados ainda
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Links Rápidos -->
+            <div class="agenda-card mt-4">
+                <h6 class="mb-3"><i class="bi bi-lightning"></i> Ações Rápidas</h6>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('admin_agendamentos') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-calendar-check"></i> Ver Agendamentos
+                    </a>
+                    <a href="{{ url_for('admin_servicos') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-scissors"></i> Gerenciar Serviços
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Relógio em tempo real
+    function atualizarRelogio() {
+        const agora = new Date();
+        
+        // Relógio
+        const horas = String(agora.getHours()).padStart(2, '0');
+        const minutos = String(agora.getMinutes()).padStart(2, '0');
+        document.getElementById('relogio').textContent = horas + ':' + minutos;
+        
+        // Data
+        const dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        const dataFormatada = dias[agora.getDay()] + ', ' + agora.getDate() + ' de ' + meses[agora.getMonth()];
+        document.getElementById('dataHoje').textContent = dataFormatada;
+    }
+    
+    atualizarRelogio();
+    setInterval(atualizarRelogio, 1000);
+    
+    // Animar barras de progresso
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.progress-fill').forEach(function(bar) {
+            const width = bar.getAttribute('data-width');
+            setTimeout(function() {
+                bar.style.width = width + '%';
+            }, 100);
+        });
+    });
+</script>
+{% endblock %}

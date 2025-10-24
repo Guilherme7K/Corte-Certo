@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-calendar-check"></i> Meus Agendamentos</h2>
+    <p class="text-muted">{{ session.usuario_nome }}</p>
+    
+    <div class="row mt-4">
+        {% if agendamentos %}
+            {% for ag in agendamentos %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 {% if ag.status == 'cancelado' %}border-danger{% elif ag.status == 'concluido' %}border-success{% else %}border-primary{% endif %}">
+                    <div class="card-header {% if ag.status == 'cancelado' %}bg-danger{% elif ag.status == 'concluido' %}bg-success{% else %}bg-primary{% endif %} text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ ag.data_hora.strftime('%d/%m/%Y') }}</h5>
+                            <span class="badge bg-white text-dark">{{ ag.status }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="h4 mb-3"><i class="bi bi-clock"></i> {{ ag.data_hora.strftime('%H:%M') }}</p>
+                        
+                        {% if ag.servico %}
+                        <p class="mb-2"><i class="bi bi-scissors"></i> <strong>Serviço:</strong> {{ ag.servico.nome }}</p>
+                        <p class="mb-2"><i class="bi bi-hourglass"></i> <strong>Duração:</strong> {{ ag.servico.duracao }} minutos</p>
+                        <p class="mb-2"><i class="bi bi-cash"></i> <strong>Valor:</strong> R$ {{ "%.2f"|format(ag.servico.preco) }}</p>
+                        {% endif %}
+                        
+                        <p class="mb-2"><i class="bi bi-geo-alt"></i> <strong>Local:</strong> {{ barbeiro.endereco }}</p>
+                        
+                        {% if ag.observacoes %}
+                        <hr>
+                        <p class="mb-0"><i class="bi bi-chat-left-text"></i> <strong>Observações:</strong></p>
+                        <p class="text-muted">{{ ag.observacoes }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if ag.status == 'agendado' %}
+                        <form method="POST" action="{{ url_for('cliente_cancelar_agendamento', id=ag.id) }}" 
+                              onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.');">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-x-circle"></i> Cancelar Agendamento
+                            </button>
+                        </form>
+                        <small class="text-muted d-block mt-2">
+                            <i class="bi bi-info-circle"></i> Cancelamentos devem ser feitos com pelo menos 2 horas de antecedência
+                        </small>
+                        {% elif ag.status == 'cancelado' %}
+                        <div class="alert alert-danger mb-0">
+                            <i class="bi bi-x-circle"></i> Este agendamento foi cancelado
+                        </div>
+                        {% elif ag.status == 'concluido' %}
+                        <div class="alert alert-success mb-0">
+                            <i class="bi bi-check-circle"></i> Serviço concluído
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Você ainda não possui agendamentos.
+                    <a href="{{ url_for('index') }}" class="alert-link">Clique aqui para fazer seu primeiro agendamento</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Fazer Novo Agendamento
+        </a>
+    </div>
+</div>
+{% endblock %}
