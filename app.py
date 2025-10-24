@@ -242,8 +242,11 @@ def admin_dashboard():
     # Estatísticas gerais
     total_agendamentos = Agendamento.query.count()
     total_clientes = Usuario.query.filter_by(tipo='cliente').count()
+    
+    # Substituição de strftime por db.extract
     agendamentos_mes = Agendamento.query.filter(
-        db.func.strftime('%Y-%m', Agendamento.data_hora) == agora.strftime('%Y-%m')
+        db.extract('year', Agendamento.data_hora) == agora.year,
+        db.extract('month', Agendamento.data_hora) == agora.month
     ).count()
     
     # Agendamentos por status hoje
@@ -291,17 +294,17 @@ def admin_dashboard():
         })
     
     return render_template('admin/dashboard.html',
-                         agendamentos=agendamentos_hoje,
-                         total_agendamentos=total_agendamentos,
-                         total_clientes=total_clientes,
-                         agendamentos_mes=agendamentos_mes,
-                         agendados_hoje=agendados_hoje,
-                         concluidos_hoje=concluidos_hoje,
-                         receita_hoje=receita_hoje,
-                         servicos_populares=servicos_populares,
-                         proximos_agendamentos=proximos_agendamentos,
-                         agendamentos_semana=agendamentos_semana,
-                         barbeiro=BARBEIRO_INFO)
+                            agendamentos=agendamentos_hoje,
+                            total_agendamentos=total_agendamentos,
+                            total_clientes=total_clientes,
+                            agendamentos_mes=agendamentos_mes,
+                            agendados_hoje=agendados_hoje,
+                            concluidos_hoje=concluidos_hoje,
+                            receita_hoje=receita_hoje,
+                            servicos_populares=servicos_populares,
+                            proximos_agendamentos=proximos_agendamentos,
+                            agendamentos_semana=agendamentos_semana,
+                            barbeiro=BARBEIRO_INFO)
 
 @app.route('/admin/agendamento/<int:id>/concluir', methods=['POST'])
 @admin_required
@@ -420,8 +423,8 @@ def cliente_dashboard():
     ).order_by(Agendamento.data_hora.desc()).all()
     
     return render_template('cliente/dashboard.html', 
-                         agendamentos=agendamentos,
-                         barbeiro=BARBEIRO_INFO)
+                            agendamentos=agendamentos,
+                            barbeiro=BARBEIRO_INFO)
 
 
 @app.route('/cliente/agendar', methods=['GET', 'POST'])
@@ -463,7 +466,7 @@ def cliente_agendar():
             # Verificar horário comercial
             hora_agendamento = data_hora.time()
             if hora_agendamento < datetime.strptime('09:00', '%H:%M').time() or \
-               hora_agendamento >= datetime.strptime('19:00', '%H:%M').time():
+                hora_agendamento >= datetime.strptime('19:00', '%H:%M').time():
                 flash('Horário fora do expediente (9h às 19h)', 'danger')
                 return redirect(url_for('cliente_agendar'))
             
@@ -501,8 +504,8 @@ def cliente_agendar():
     
     servicos = Servico.query.filter_by(ativo=True).all()
     return render_template('cliente/agendar.html', 
-                         servicos=servicos,
-                         barbeiro=BARBEIRO_INFO)
+                            servicos=servicos,
+                            barbeiro=BARBEIRO_INFO)
 
 @app.route('/meus-agendamentos')
 @login_required
@@ -515,8 +518,8 @@ def meus_agendamentos():
         .order_by(Agendamento.data_hora.desc()).all()
     
     return render_template('cliente/dashboard.html',
-                         agendamentos=agendamentos,
-                         barbeiro=BARBEIRO_INFO)
+                            agendamentos=agendamentos,
+                            barbeiro=BARBEIRO_INFO)
 
 @app.route('/cliente/agendamento/<int:id>/cancelar', methods=['POST'])
 @login_required
@@ -625,8 +628,8 @@ def admin_agendamentos():
     agendamentos = query.order_by(Agendamento.data_hora.desc()).all()
     
     return render_template('admin/agendamentos.html', 
-                         agendamentos=agendamentos,
-                         barbeiro=BARBEIRO_INFO)
+                            agendamentos=agendamentos,
+                            barbeiro=BARBEIRO_INFO)
 
 @app.route('/admin/agendamento/<int:id>/atualizar-status', methods=['POST'])
 @admin_required
@@ -665,54 +668,6 @@ def page_not_found(e):
 def internal_server_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
-
-
-def init_db():
-    with app.app_context():
-        # Criar todas as tabelas
-        db.create_all()
-        
-        # Verificar se já existe um admin
-        admin = Usuario.query.filter_by(email='admin@cortecerto.com').first()
-        if not admin:
-            from werkzeug.security import generate_password_hash
-            admin = Usuario(
-                nome='Administrador',
-                email='admin@cortecerto.com',
-                telefone='11987654321',
-                senha=generate_password_hash('admin123'),
-                tipo='admin'
-            )
-            db.session.add(admin)
-            print("✅ Usuário admin criado!")
-        
-        # Verificar se já existem serviços
-        if Servico.query.count() == 0:
-            servicos_padrao = [
-                Servico(nome='Corte de Cabelo', descricao='Corte masculino tradicional ou moderno', preco=35.00, duracao=30, ativo=True),
-                Servico(nome='Barba', descricao='Aparar e modelar barba', preco=25.00, duracao=20, ativo=True),
-                Servico(nome='Corte + Barba', descricao='Combo completo de corte e barba', preco=50.00, duracao=45, ativo=True),
-                Servico(nome='Sobrancelha', descricao='Design de sobrancelha masculina', preco=15.00, duracao=15, ativo=True),
-            ]
-            db.session.add_all(servicos_padrao)
-            print("✅ Serviços padrão criados!")
-        
-        # Verificar se já existem horários de funcionamento
-        if HorarioFuncionamento.query.count() == 0:
-            horarios = [
-                HorarioFuncionamento(dia_semana=1, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
-                HorarioFuncionamento(dia_semana=2, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
-                HorarioFuncionamento(dia_semana=3, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
-                HorarioFuncionamento(dia_semana=4, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
-                HorarioFuncionamento(dia_semana=5, horario_abertura='09:00', horario_fechamento='19:00', ativo=True),
-                HorarioFuncionamento(dia_semana=6, horario_abertura='09:00', horario_fechamento='17:00', ativo=True),
-                HorarioFuncionamento(dia_semana=0, horario_abertura='09:00', horario_fechamento='13:00', ativo=False),
-            ]
-            db.session.add_all(horarios)
-            print("✅ Horários de funcionamento criados!")
-        
-        db.session.commit()
-        print("✅ Banco de dados inicializado com sucesso!")
 
 
 
