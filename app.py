@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
+from utils import obter_horarios_disponiveis, obter_agendamentos_por_periodo, obter_agendamentos_do_mes, calcular_receita_periodo
 import os
 import re
 
