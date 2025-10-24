@@ -18,6 +18,10 @@ class Usuario(db.Model):
     # Relacionamentos
     agendamentos = db.relationship('Agendamento', backref='cliente', lazy=True)
     
+    def set_senha(self, senha):
+        """Define a senha do usuário com hash"""
+        self.senha = generate_password_hash(senha)
+    
     def verificar_senha(self, senha):
         """Verifica se a senha fornecida está correta"""
         return check_password_hash(self.senha, senha)
@@ -49,7 +53,7 @@ class Agendamento(db.Model):
     cliente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
     servico_id = db.Column(db.Integer, db.ForeignKey('servico.id'), nullable=False)
     data_hora = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(20), default='pendente')  # 'pendente', 'confirmado', 'concluido', 'cancelado'
+    status = db.Column(db.String(20), default='agendado')  # 'agendado', 'concluido', 'cancelado'
     observacoes = db.Column(db.Text)
     data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
     
