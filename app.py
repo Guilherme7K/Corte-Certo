@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento
 from datetime import datetime, timedelta
+from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento, BloqueioAgenda
 from functools import wraps
 from config import Config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -669,6 +670,130 @@ def page_not_found(e):
 def internal_server_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
+
+
+# ==================== ROTAS DE BLOQUEIO DE AGENDA ====================
+
+@app.route('/admin/bloqueios')
+@admin_required
+def admin_bloqueios():
+    """Lista todos os bloqueios de agenda"""
+    bloqueios = BloqueioAgenda.query.order_by(BloqueioAgenda.data_inicio.desc()).all()
+    return render_template('admin/bloqueios.html', bloqueios=bloqueios, barbeiro=BARBEIRO_INFO)
+
+@app.route('/admin/bloqueios/novo', methods=['GET', 'POST'])
+@admin_required
+def novo_bloqueio():
+    """Cria um novo bloqueio de agenda"""
+    if request.method == 'POST':
+        data_inicio_str = request.form.get('data_inicio')
+        data_fim_str = request.form.get('data_fim')
+        motivo = sanitizar_input(request.form.get('motivo', ''))
+        
+        if not data_inicio_str or not data_fim_str:
+            flash('Data de início e fim são obrigatórias', 'danger')
+            return redirect(url_for('novo_bloqueio'))
+        
+        try:
+            data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date()
+            data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
+            
+            if data_fim < data_inicio:
+                flash('Data final deve ser maior ou igual à data inicial', 'danger')
+                return redirect(url_for('novo_bloqueio'))
+            
+            if data_inicio < datetime.now().date():
+                flash('Não é possível bloquear datas passadas', 'danger')
+                return redirect(url_for('novo_bloqueio'))
+            
+            diferenca_dias = (data_fim - data_inicio).days
+            if diferenca_dias > 90:
+                flash('Período máximo de bloqueio é 90 dias', 'danger')
+                return redirect(url_for('novo_bloqueio'))
+            
+            conflito = BloqueioAgenda.query.filter(
+                BloqueioAgenda.ativo == True,
+                db.or_(
+                    db.and_(
+                        BloqueioAgenda.data_inicio <= data_inicio,
+                        BloqueioAgenda.data_fim >= data_inicio
+                    ),
+                    db.and_(
+                        BloqueioAgenda.data_inicio <= data_fim,
+                        BloqueioAgenda.data_fim >= data_fim
+                    ),
+                    db.and_(
+                        BloqueioAgenda.data_inicio >= data_inicio,
+                        BloqueioAgenda.data_fim <= data_fim
+                    )
+                )
+            ).first()
+            
+            if conflito:
+                flash(f'Já existe um bloqueio ativo entre {conflito.data_inicio} e {conflito.data_fim}', 'warning')
+                return redirect(url_for('novo_bloqueio'))
+            
+        except ValueError:
+            flash('Formato de data inválido', 'danger')
+            return redirect(url_for('novo_bloqueio'))
+        
+        novo_bloqueio = BloqueioAgenda(
+            data_inicio=data_inicio,
+            data_fim=data_fim,
+            motivo=motivo if motivo else 'Sem motivo especificado',
+            criado_por=session['usuario_id']
+        )
+        
+        db.session.add(novo_bloqueio)
+        db.session.commit()
+        
+        agendamentos_afetados = Agendamento.query.filter(
+            db.func.date(Agendamento.data_hora) >= data_inicio,
+            db.func.date(Agendamento.data_hora) <= data_fim,
+            Agendamento.status == 'agendado'
+        ).all()
+        
+        for agendamento in agendamentos_afetados:
+            agendamento.status = 'cancelado'
+            agendamento.observacoes = f"Cancelado automaticamente - {motivo}"
+        
+        db.session.commit()
+        
+        if agendamentos_afetados:
+            flash(f'Bloqueio criado! {len(agendamentos_afetados)} agendamento(s) cancelados.', 'success')
+        else:
+            flash('Bloqueio criado com sucesso!', 'success')
+        
+        return redirect(url_for('admin_bloqueios'))
+    
+    return render_template('admin/novo_bloqueio.html', barbeiro=BARBEIRO_INFO)
+
+@app.route('/admin/bloqueios/<int:id>/desativar', methods=['POST'])
+@admin_required
+def desativar_bloqueio(id):
+    """Desativa um bloqueio de agenda"""
+    bloqueio = BloqueioAgenda.query.get_or_404(id)
+    bloqueio.ativo = False
+    db.session.commit()
+    flash('Bloqueio desativado com sucesso!', 'success')
+    return redirect(url_for('admin_bloqueios'))
+
+@app.route('/admin/bloqueios/<int:id>/deletar', methods=['POST'])
+@admin_required
+def deletar_bloqueio(id):
+    """Deleta um bloqueio de agenda"""
+    bloqueio = BloqueioAgenda.query.get_or_404(id)
+    
+    if bloqueio.data_inicio < datetime.now().date():
+        flash('Não é possível deletar bloqueios que já iniciaram.', 'warning')
+        return redirect(url_for('admin_bloqueios'))
+    
+    db.session.delete(bloqueio)
+    db.session.commit()
+    flash('Bloqueio deletado com sucesso!', 'success')
+    return redirect(url_for('admin_bloqueios'))
+
+
 
 
 

@@ -72,3 +72,27 @@ class HorarioFuncionamento(db.Model):
     def __repr__(self):
         dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
         return f'<HorarioFuncionamento {dias[self.dia_semana]}: {self.horario_abertura} - {self.horario_fechamento}>'
+    
+    
+    # Modelo para Bloqueios de Agenda
+class BloqueioAgenda(db.Model):
+    __tablename__ = 'bloqueio_agenda'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    data_inicio = db.Column(db.Date, nullable=False)
+    data_fim = db.Column(db.Date, nullable=False)
+    motivo = db.Column(db.String(200))
+    ativo = db.Column(db.Boolean, default=True)
+    criado_por = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    data_cadastro = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    criador = db.relationship('Usuario', foreign_keys=[criado_por])
+    
+    def __repr__(self):
+        return f'<BloqueioAgenda {self.data_inicio} até {self.data_fim} - {self.motivo}>'
+    
+    def esta_ativo(self, data):
+        """Verifica se o bloqueio está ativo para uma data específica"""
+        if not self.ativo:
+            return False
+        return self.data_inicio <= data <= self.data_fim

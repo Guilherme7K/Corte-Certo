@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 bg-light sidebar p-3">
+            <h5 class="mb-3"><i class="bi bi-speedometer2"></i> Painel Admin</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_servicos') }}">
+                        <i class="bi bi-scissors"></i> Serviços
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin_agendamentos') }}">
+                        <i class="bi bi-calendar-check"></i> Agendamentos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('admin_bloqueios') }}">
+                        <i class="bi bi-lock"></i> Bloqueios de Agenda
+                    </a>
+                </li>
+                <li class="nav-item mt-3">
+                    <a class="nav-link text-danger" href="{{ url_for('logout') }}">
+                        <i class="bi bi-box-arrow-right"></i> Sair
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-lock"></i> Gerenciar Bloqueios de Agenda</h2>
+                <a href="{{ url_for('novo_bloqueio') }}" class="btn btn-danger">
+                    <i class="bi bi-plus-circle"></i> Novo Bloqueio
+                </a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {% if bloqueios %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Data Início</th>
+                                        <th>Data Fim</th>
+                                        <th>Duração</th>
+                                        <th>Motivo</th>
+                                        <th>Status</th>
+                                        <th>Criado em</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bloqueio in bloqueios %}
+                                    <tr class="{% if not bloqueio.ativo %}table-secondary{% endif %}">
+                                        <td>{{ bloqueio.data_inicio.strftime('%d/%m/%Y') }}</td>
+                                        <td>{{ bloqueio.data_fim.strftime('%d/%m/%Y') }}</td>
+                                        <td>{{ (bloqueio.data_fim - bloqueio.data_inicio).days + 1 }} dia(s)</td>
+                                        <td>{{ bloqueio.motivo }}</td>
+                                        <td>
+                                            {% if bloqueio.ativo %}
+                                                <span class="badge bg-danger">Ativo</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inativo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ bloqueio.data_cadastro.strftime('%d/%m/%Y %H:%M') }}</td>
+                                        <td>
+                                            {% if bloqueio.ativo %}
+                                                <form method="POST" action="{{ url_for('desativar_bloqueio', id=bloqueio.id) }}" style="display:inline;">
+                                                    <button type="submit" class="btn btn-sm btn-warning" 
+                                                            onclick="return confirm('Tem certeza que deseja desativar este bloqueio?')">
+                                                        <i class="bi bi-pause-circle"></i> Desativar
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                            
+                                            {% if bloqueio.data_inicio >= bloqueio.data_inicio.today() %}
+                                                <form method="POST" action="{{ url_for('deletar_bloqueio', id=bloqueio.id) }}" style="display:inline;">
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Tem certeza que deseja deletar este bloqueio?')">
+                                                        <i class="bi bi-trash"></i> Deletar
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Nenhum bloqueio de agenda cadastrado.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-4">
+                <h5><i class="bi bi-exclamation-triangle"></i> Importante:</h5>
+                <ul>
+                    <li>Ao criar um bloqueio, todos os agendamentos existentes no período serão <strong>cancelados automaticamente</strong>.</li>
+                    <li>Bloqueios ativos impedem novos agendamentos nas datas bloqueadas.</li>
+                    <li>Você pode desativar um bloqueio a qualquer momento.</li>
+                    <li>Bloqueios que já iniciaram não podem ser deletados, apenas desativados.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
