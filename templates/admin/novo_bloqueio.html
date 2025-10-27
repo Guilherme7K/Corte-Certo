@@ -60,12 +60,12 @@
                             <div class="col-md-6 mb-3">
                                 <label for="data_inicio" class="form-label">Data Início *</label>
                                 <input type="date" class="form-control" id="data_inicio" name="data_inicio" 
-                                       min="{{ now().strftime('%Y-%m-%d') }}" required>
+                                       min="{{ datetime.now().strftime('%Y-%m-%d') }}" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="data_fim" class="form-label">Data Fim *</label>
                                 <input type="date" class="form-control" id="data_fim" name="data_fim" 
-                                       min="{{ now().strftime('%Y-%m-%d') }}" required>
+                                       min="{{ datetime.now().strftime('%Y-%m-%d') }}" required>
                             </div>
                         </div>
 
@@ -98,6 +98,7 @@
 </div>
 
 <script>
+// Validar que data_fim >= data_inicio
 document.getElementById('formBloqueio').addEventListener('submit', function(e) {
     const dataInicio = new Date(document.getElementById('data_inicio').value);
     const dataFim = new Date(document.getElementById('data_fim').value);
@@ -108,6 +109,7 @@ document.getElementById('formBloqueio').addEventListener('submit', function(e) {
         return;
     }
     
+    // Calcular dias
     const diffTime = Math.abs(dataFim - dataInicio);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
@@ -117,11 +119,13 @@ document.getElementById('formBloqueio').addEventListener('submit', function(e) {
         return;
     }
     
+    // Confirmar ação
     if (!confirm(`Confirma o bloqueio de ${diffDays + 1} dia(s)?\n\nAgendamentos existentes neste período serão cancelados.`)) {
         e.preventDefault();
     }
 });
 
+// Atualizar min do data_fim quando data_inicio mudar
 document.getElementById('data_inicio').addEventListener('change', function() {
     document.getElementById('data_fim').min = this.value;
 });
