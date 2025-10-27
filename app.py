@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento, BloqueioAgenda
 from functools import wraps
 from config import Config
@@ -674,13 +674,6 @@ def internal_server_error(e):
 
 # ==================== ROTAS DE BLOQUEIO DE AGENDA ====================
 
-@app.route('/admin/bloqueios')
-@admin_required
-def admin_bloqueios():
-    """Lista todos os bloqueios de agenda"""
-    bloqueios = BloqueioAgenda.query.order_by(BloqueioAgenda.data_inicio.desc()).all()
-    return render_template('admin/bloqueios.html', bloqueios=bloqueios, barbeiro=BARBEIRO_INFO)
-
 @app.route('/admin/bloqueios/novo', methods=['GET', 'POST'])
 @admin_required
 def novo_bloqueio():
@@ -702,7 +695,7 @@ def novo_bloqueio():
                 flash('Data final deve ser maior ou igual à data inicial', 'danger')
                 return redirect(url_for('novo_bloqueio'))
             
-            if data_inicio < datetime.now().date():
+            if data_inicio < date.today():
                 flash('Não é possível bloquear datas passadas', 'danger')
                 return redirect(url_for('novo_bloqueio'))
             
@@ -737,14 +730,14 @@ def novo_bloqueio():
             flash('Formato de data inválido', 'danger')
             return redirect(url_for('novo_bloqueio'))
         
-        novo_bloqueio = BloqueioAgenda(
+        novo_bloqueio_obj = BloqueioAgenda(
             data_inicio=data_inicio,
             data_fim=data_fim,
             motivo=motivo if motivo else 'Sem motivo especificado',
             criado_por=session['usuario_id']
         )
         
-        db.session.add(novo_bloqueio)
+        db.session.add(novo_bloqueio_obj)
         db.session.commit()
         
         agendamentos_afetados = Agendamento.query.filter(
