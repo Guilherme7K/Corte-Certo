@@ -115,6 +115,35 @@
             </div>
         </div>
     </div>
+
+
+    <!-- MENU DE NAVEGAÇÃO -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-2">
+                    <nav class="nav nav-pills nav-fill">
+                        <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
+                            <i class="bi bi-house-door"></i> Dashboard
+                        </a>
+                        <a class="nav-link" href="{{ url_for('admin_agendamentos') }}">
+                            <i class="bi bi-calendar-check"></i> Agendamentos
+                        </a>
+                        <a class="nav-link" href="{{ url_for('admin_servicos') }}">
+                            <i class="bi bi-scissors"></i> Serviços
+                        </a>
+                        <a class="nav-link" href="{{ url_for('admin_bloqueios') }}">
+                            <i class="bi bi-lock"></i> Bloqueios
+                        </a>
+                        <a class="nav-link text-danger" href="{{ url_for('logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Sair
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <!-- Cards de Estatísticas -->
     <div class="row mb-4">
