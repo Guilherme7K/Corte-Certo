@@ -672,7 +672,20 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
+
 # ==================== ROTAS DE BLOQUEIO DE AGENDA ====================
+
+@app.route('/admin/bloqueios')
+@admin_required
+def admin_bloqueios():
+    """Lista todos os bloqueios de agenda"""
+    try:
+        bloqueios = BloqueioAgenda.query.order_by(BloqueioAgenda.data_inicio.desc()).all()
+        return render_template('admin/bloqueios.html', bloqueios=bloqueios, barbeiro=BARBEIRO_INFO)
+    except Exception as e:
+        app.logger.error(f'Erro ao listar bloqueios: {e}')
+        flash('Erro ao carregar bloqueios.', 'danger')
+        return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/bloqueios/novo', methods=['GET', 'POST'])
 @admin_required
@@ -681,7 +694,7 @@ def novo_bloqueio():
     if request.method == 'POST':
         data_inicio_str = request.form.get('data_inicio')
         data_fim_str = request.form.get('data_fim')
-        motivo = sanitizar_input(request.form.get('motivo', ''))
+        motivo = request.form.get('motivo', '').strip()
         
         if not data_inicio_str or not data_fim_str:
             flash('Data de início e fim são obrigatórias', 'danger')
@@ -723,7 +736,7 @@ def novo_bloqueio():
             ).first()
             
             if conflito:
-                flash(f'Já existe um bloqueio ativo entre {conflito.data_inicio} e {conflito.data_fim}', 'warning')
+                flash(f'Já existe um bloqueio ativo entre {conflito.data_inicio.strftime("%d/%m/%Y")} e {conflito.data_fim.strftime("%d/%m/%Y")}', 'warning')
                 return redirect(url_for('novo_bloqueio'))
             
         except ValueError:
@@ -777,7 +790,7 @@ def deletar_bloqueio(id):
     """Deleta um bloqueio de agenda"""
     bloqueio = BloqueioAgenda.query.get_or_404(id)
     
-    if bloqueio.data_inicio < datetime.now().date():
+    if bloqueio.data_inicio < date.today():
         flash('Não é possível deletar bloqueios que já iniciaram.', 'warning')
         return redirect(url_for('admin_bloqueios'))
     
@@ -785,6 +798,8 @@ def deletar_bloqueio(id):
     db.session.commit()
     flash('Bloqueio deletado com sucesso!', 'success')
     return redirect(url_for('admin_bloqueios'))
+
+
 
 
 
