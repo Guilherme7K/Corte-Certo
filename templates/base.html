@@ -3,94 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Barbearia Corte Certo{% endblock %}</title>
+    <title>{% block title %}{{ barbeiro.barbearia }}{% endblock %}</title>
+    
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #8B4513;
-            --secondary-color: #D2691E;
-            --dark-color: #3E2723;
+            --primary-color: #2D2A26;
+            --secondary-color: #8B7355;
+            --accent-color: #D4AF37;
+            --text-dark: #1a1a1a;
+            --text-light: #6c757d;
+            --bg-light: #f8f9fa;
+            --bg-cream: #FAF7F2;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
         
-        .navbar {
-            background-color: var(--dark-color) !important;
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        /* Navbar moderna */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-custom.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 80%;
+        }
+        
+        /* Botões modernos */
+        .btn {
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
         }
         
         .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
         }
         
         .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, #1a1816 0%, #705b47 100%);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-accent {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-accent:hover {
+            background: #c29d2f;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Cards premium */
+        .card-premium {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .card-premium:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Alertas modernos */
+        .alert {
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* Footer moderno */
+        .footer-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a1816 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+        
+        .footer-custom a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-custom a:hover {
+            color: var(--accent-color);
+        }
+        
+        /* Animações suaves */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
         }
     </style>
+    
     {% block styles %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="bi bi-scissors"></i> Corte Certo
+                <i class="bi bi-scissors"></i>
+                {{ barbeiro.barbearia }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     {% if session.usuario_id %}
                         <li class="nav-item">
-                            <span class="navbar-text text-white me-3">
+                            <span class="nav-link">
+                                <i class="bi bi-person-circle"></i> 
                                 Olá, {{ session.usuario_nome }}
                             </span>
                         </li>
-                        {% if session.usuario_tipo == 'admin' %}
+                        {% if session.usuario_tipo == 'cliente' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('cliente_dashboard') }}">
+                                    <i class="bi bi-house-door"></i> Dashboard
+                                </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('cliente_dashboard') }}">Meus Agendamentos</a>
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                    <i class="bi bi-speedometer2"></i> Painel Admin
+                                </a>
                             </li>
                         {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('logout') }}">Sair</a>
+                        <li class="nav-item ms-2">
+                            <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-box-arrow-right"></i> Sair
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Entrar</a>
+                            <a class="nav-link" href="{{ url_for('index') }}">Início</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('cadastro') }}">Cadastrar</a>
+                            <a class="nav-link" href="{{ url_for('login') }}">Entrar</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a href="{{ url_for('cadastro') }}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-calendar-check"></i> Agendar
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="container mt-3">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    
+    <!-- Espaçamento para navbar fixa -->
+    <div style="height: 80px;"></div>
+    
+    <!-- Conteúdo -->
+    <main class="fade-in">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="mb-3">{{ barbeiro.barbearia }}</h5>
+                    <p class="text-white-50">
+                        Estilo, qualidade e tradição em cada corte.
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Contato</h5>
+                    <p class="mb-2">
+                        <i class="bi bi-telephone me-2"></i> {{ barbeiro.telefone }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-envelope me-2"></i> {{ barbeiro.email }}
+                    </p>
+                    <p>
+                        <i class="bi bi-geo-alt me-2"></i> {{ barbeiro.endereco }}
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Redes Sociais</h5>
+                    <div class="d-flex gap-3">
+                        <a href="{{ barbeiro.link_whatsapp }}" target="_blank" class="fs-4">
+                            <i class="bi bi-whatsapp"></i>
+                        </a>
+                        <a href="{{ barbeiro.link_instagram }}" target="_blank" class="fs-4">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="{{ barbeiro.link_facebook }}" target="_blank" class="fs-4">
+                            <i class="bi bi-facebook"></i>
+                        </a>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% endif %}
-    {% endwith %}
-
-    {% block content %}{% endblock %}
-
+            <hr class="my-4 bg-white opacity-25">
+            <div class="text-center text-white-50">
+                <small>&copy; 2025 {{ barbeiro.barbearia }}. Todos os direitos reservados.</small>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Navbar scroll effect -->
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>
