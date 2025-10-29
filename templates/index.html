@@ -2,257 +2,129 @@
 
 {% block styles %}
 <style>
-    /* Hero Section com animação */
-    .hero-section {
-        position: relative;
-        min-height: 90vh;
+    /* Hero minimalista com gradiente sutil */
+    .hero-minimal {
+        min-height: 85vh;
         display: flex;
         align-items: center;
-        overflow: hidden;
-        background: linear-gradient(135deg, #2D2A26 0%, #1a1816 100%);
-    }
-    
-    .hero-content {
+        background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
         position: relative;
-        z-index: 2;
-        animation: slideInUp 1s ease-out;
+        overflow: hidden;
     }
     
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .hero-title {
-        font-size: clamp(3rem, 8vw, 5rem);
-        font-weight: 800;
-        margin-bottom: 1.5rem;
-        background: linear-gradient(135deg, #ffffff 0%, #D4AF37 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .hero-subtitle {
-        font-size: clamp(1.25rem, 3vw, 1.75rem);
-        color: rgba(255,255,255,0.9);
-        margin-bottom: 2rem;
-        font-weight: 300;
-    }
-    
-    .hero-barber {
-        font-size: 1.25rem;
-        color: var(--accent-color);
-        font-weight: 600;
-    }
-    
-    /* Decorative elements */
-    .hero-decoration {
+    .hero-minimal::before {
+        content: '';
         position: absolute;
-        width: 500px;
-        height: 500px;
+        width: 600px;
+        height: 600px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+        top: -200px;
+        right: -200px;
         pointer-events: none;
     }
     
-    .deco-1 {
-        top: -200px;
-        right: -200px;
+    .hero-title {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
     }
     
-    .deco-2 {
-        bottom: -250px;
-        left: -250px;
+    .hero-subtitle {
+        font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+        color: var(--text-light);
+        font-weight: 400;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
     }
     
-    /* Seção Sobre */
-    .section-about {
-        padding: 100px 0;
-        background: var(--bg-cream);
-    }
-    
-    .about-image {
-        border-radius: 30px;
-        box-shadow: var(--shadow-lg);
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .about-image::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(45,42,38,0.3) 0%, transparent 100%);
-        z-index: 1;
-    }
-    
-    .about-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-    
-    .about-image:hover img {
-        transform: scale(1.05);
-    }
-    
-    .feature-badge {
+    .stats-card {
         background: white;
-        border-radius: 20px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
         padding: 1.5rem;
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .feature-badge:hover {
-        transform: translateX(10px);
-        box-shadow: var(--shadow-md);
-    }
-    
-    .feature-badge i {
-        font-size: 2.5rem;
-        color: var(--accent-color);
-    }
-    
-    /* Cards de Serviços */
-    .services-section {
-        padding: 100px 0;
-        background: white;
-    }
-    
-    .service-card-modern {
-        background: white;
-        border-radius: 25px;
-        padding: 2.5rem;
         text-align: center;
-        box-shadow: var(--shadow-sm);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: 1px solid rgba(0,0,0,0.05);
-        height: 100%;
     }
     
-    .service-card-modern:hover {
-        transform: translateY(-15px) rotate(2deg);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--accent-color);
-    }
-    
-    .service-icon {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .service-card-modern:hover .service-icon {
-        transform: scale(1.1) rotate(-5deg);
-    }
-    
-    .service-icon i {
+    .stats-number {
         font-size: 2rem;
-        color: white;
+        font-weight: 800;
+        color: var(--accent);
+        display: block;
     }
     
-    /* Contato Section */
-    .contact-section {
-        padding: 100px 0;
-        background: var(--bg-cream);
+    .stats-label {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        font-weight: 500;
     }
     
-    .contact-card-modern {
+    /* Seção de features */
+    .features-section {
+        padding: 6rem 0;
         background: white;
-        border-radius: 30px;
-        padding: 3rem;
-        height: 100%;
-        box-shadow: var(--shadow-md);
-        transition: all 0.3s ease;
     }
     
-    .contact-card-modern:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-    }
-    
-    .contact-info-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem 0;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .contact-info-item:last-child {
-        border-bottom: none;
-    }
-    
-    .contact-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 15px;
-        background: linear-gradient(135deg, var(--accent-color) 0%, #c29d2f 100%);
+    .feature-icon-minimal {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
+        margin-bottom: 1.25rem;
     }
     
-    .contact-icon i {
-        color: var(--primary-color);
-        font-size: 1.5rem;
+    .feature-icon-minimal i {
+        font-size: 1.75rem;
+        color: var(--accent);
     }
     
-    /* CTA Section */
-    .cta-section {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #1a1816 100%);
-        padding: 80px 0;
+    /* Seção CTA minimalista */
+    .cta-minimal {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+        padding: 5rem 0;
         text-align: center;
         position: relative;
         overflow: hidden;
     }
     
-    .cta-section::before {
+    .cta-minimal::before {
         content: '';
         position: absolute;
-        width: 500px;
-        height: 500px;
+        width: 400px;
+        height: 400px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
-        top: -250px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+        bottom: -200px;
         left: 50%;
         transform: translateX(-50%);
     }
     
-    .cta-content {
-        position: relative;
-        z-index: 2;
+    /* Grid de serviços minimalista */
+    .service-minimal {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .service-minimal i {
+        font-size: 2.5rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
     }
     
     /* Responsivo */
     @media (max-width: 768px) {
-        .hero-section {
+        .hero-minimal {
             min-height: 70vh;
+            padding: 3rem 0;
         }
         
-        .section-about,
-        .services-section,
-        .contact-section {
-            padding: 60px 0;
+        .features-section {
+            padding: 4rem 0;
         }
     }
 </style>
@@ -260,70 +132,122 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-decoration deco-1"></div>
-    <div class="hero-decoration deco-2"></div>
-    
+<section class="hero-minimal">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center hero-content">
-                <h1 class="hero-title">{{ barbeiro.barbearia }}</h1>
-                <p class="hero-subtitle">Estilo, Qualidade e Tradição em Cada Corte</p>
-                <p class="hero-barber">Barbeiro: {{ barbeiro.nome }}</p>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="badge-modern badge-success mb-4">
+                    <i class="bi bi-lightning-fill me-2"></i>
+                    Agendamento Online
+                </span>
                 
-                <div class="d-flex gap-3 justify-content-center mt-5 flex-wrap">
+                <h1 class="hero-title">
+                    Agende seu corte de forma 
+                    <span class="text-gradient">simples e rápida</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    {{ barbeiro.barbearia }} - A melhor experiência em barbearia, 
+                    agora com agendamento online. Sem filas, sem espera.
+                </p>
+                
+                <div class="d-flex gap-3 mb-5 flex-wrap">
                     {% if not session.usuario_id %}
-                        <a href="{{ url_for('cadastro') }}" class="btn btn-primary btn-lg px-5">
-                            <i class="bi bi-calendar-check me-2"></i> Agendar Horário
+                        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern">
+                            Criar conta grátis
+                            <i class="bi bi-arrow-right ms-2"></i>
                         </a>
-                        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg px-5">
-                            <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+                        <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern">
+                            Já tenho conta
                         </a>
                     {% else %}
                         {% if session.usuario_tipo == 'cliente' %}
-                            <a href="{{ url_for('cliente_agendar') }}" class="btn btn-primary btn-lg px-5">
-                                <i class="bi bi-calendar-plus me-2"></i> Novo Agendamento
+                            <a href="{{ url_for('cliente_agendar') }}" class="btn btn-modern btn-primary-modern">
+                                Novo agendamento
+                                <i class="bi bi-calendar-plus ms-2"></i>
                             </a>
                         {% else %}
-                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg px-5">
-                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-modern btn-primary-modern">
+                                Ir para dashboard
+                                <i class="bi bi-speedometer2 ms-2"></i>
                             </a>
                         {% endif %}
                     {% endif %}
                 </div>
+                
+                <div class="row g-3">
+                    <div class="col-4">
+                        <div class="stats-card">
+                            <span class="stats-number">24h</span>
+                            <span class="stats-label">Disponível</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stats-card">
+                            <span class="stats-number">5min</span>
+                            <span class="stats-label">Para agendar</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stats-card">
+                            <span class="stats-number">100%</span>
+                            <span class="stats-label">Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&h=600&fit=crop" 
+                     alt="Barbearia" 
+                     class="img-fluid rounded-4 shadow-lg">
             </div>
         </div>
     </div>
 </section>
 
-<!-- Sobre Section -->
-<section class="section-about">
+<!-- Features Section -->
+<section class="features-section">
     <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <h2 class="display-4 fw-bold mb-4">Sobre Nós</h2>
-                <p class="lead mb-4" style="color: var(--text-light);">
-                    Bem-vindo à {{ barbeiro.barbearia }}! Aqui você encontra 
-                    o melhor atendimento em cortes masculinos da região.
-                </p>
-                <p class="fs-5 mb-4" style="color: var(--text-light);">
-                    Com anos de experiência, {{ barbeiro.nome }} está sempre 
-                    atualizado com as últimas tendências e técnicas, garantindo 
-                    que cada cliente saia satisfeito e com visual impecável.
-                </p>
-                
-                <div class="feature-badge">
-                    <i class="bi bi-award-fill"></i>
-                    <div>
-                        <strong class="d-block">Atendimento Personalizado</strong>
-                        <span style="color: var(--text-light);">Cada cliente é único para nós</span>
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Como funciona</h2>
+            <p class="lead text-muted">Processo simples em 3 passos</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card-minimal text-center">
+                    <div class="feature-icon-minimal mx-auto">
+                        <i class="bi bi-person-plus"></i>
                     </div>
+                    <h5 class="fw-bold mb-2">1. Crie sua conta</h5>
+                    <p class="text-muted mb-0">
+                        Cadastro rápido e gratuito. Só precisa de email e senha.
+                    </p>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&h=600&fit=crop" 
-                         alt="Barbearia">
+            
+            <div class="col-md-4">
+                <div class="card-minimal text-center">
+                    <div class="feature-icon-minimal mx-auto">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">2. Escolha seu horário</h5>
+                    <p class="text-muted mb-0">
+                        Veja horários disponíveis em tempo real e selecione o melhor para você.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card-minimal text-center">
+                    <div class="feature-icon-minimal mx-auto">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">3. Pronto!</h5>
+                    <p class="text-muted mb-0">
+                        Receba confirmação por email e apareça no horário agendado.
+                    </p>
                 </div>
             </div>
         </div>
@@ -331,120 +255,36 @@
 </section>
 
 <!-- Serviços Section -->
-<section class="services-section">
-    <div class="container">
+<section class="section-gradient py-5">
+    <div class="container py-4">
         <div class="text-center mb-5">
-            <h2 class="display-4 fw-bold mb-3">Nossos Serviços</h2>
-            <p class="lead" style="color: var(--text-light);">Experiência premium em cada serviço</p>
+            <h2 class="display-5 fw-bold mb-3">Nossos serviços</h2>
+            <p class="lead text-muted">Experiência completa para seu visual</p>
         </div>
         
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="service-card-modern">
-                    <div class="service-icon">
-                        <i class="bi bi-scissors"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Corte de Cabelo</h5>
-                    <p style="color: var(--text-light);">
-                        Cortes modernos, clássicos e personalizados
-                    </p>
+            <div class="col-6 col-md-3">
+                <div class="service-minimal">
+                    <i class="bi bi-scissors"></i>
+                    <h6 class="fw-bold">Corte</h6>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="service-card-modern">
-                    <div class="service-icon">
-                        <i class="bi bi-brush"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Barba</h5>
-                    <p style="color: var(--text-light);">
-                        Design e manutenção profissional de barba
-                    </p>
+            <div class="col-6 col-md-3">
+                <div class="service-minimal">
+                    <i class="bi bi-brush"></i>
+                    <h6 class="fw-bold">Barba</h6>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="service-card-modern">
-                    <div class="service-icon">
-                        <i class="bi bi-droplet"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Hidratação</h5>
-                    <p style="color: var(--text-light);">
-                        Tratamento e hidratação capilar
-                    </p>
+            <div class="col-6 col-md-3">
+                <div class="service-minimal">
+                    <i class="bi bi-droplet"></i>
+                    <h6 class="fw-bold">Hidratação</h6>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="service-card-modern">
-                    <div class="service-icon">
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Acabamento</h5>
-                    <p style="color: var(--text-light);">
-                        Finalização e styling profissional
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contato Section -->
-<section class="contact-section">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="contact-card-modern">
-                    <h2 class="fw-bold mb-4">
-                        <i class="bi bi-geo-alt-fill" style="color: var(--accent-color);"></i> 
-                        Localização
-                    </h2>
-                    <h4 class="mb-4">{{ barbeiro.barbearia }}</h4>
-                    <div class="contact-info-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-pin-map"></i>
-                        </div>
-                        <div>
-                            <strong>Endereço</strong>
-                            <p class="mb-0" style="color: var(--text-light);">{{ barbeiro.endereco }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="contact-card-modern">
-                    <h2 class="fw-bold mb-4">
-                        <i class="bi bi-telephone-fill" style="color: var(--accent-color);"></i> 
-                        Contato
-                    </h2>
-                    
-                    <div class="contact-info-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-whatsapp"></i>
-                        </div>
-                        <div>
-                            <strong>WhatsApp</strong>
-                            <p class="mb-0" style="color: var(--text-light);">{{ barbeiro.telefone }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-info-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-envelope"></i>
-                        </div>
-                        <div>
-                            <strong>Email</strong>
-                            <p class="mb-0" style="color: var(--text-light);">{{ barbeiro.email }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-info-item">
-                        <div class="contact-icon">
-                            <i class="bi bi-clock"></i>
-                        </div>
-                        <div>
-                            <strong>Horário</strong>
-                            <p class="mb-0" style="color: var(--text-light);">Segunda a Sexta: 9h às 19h</p>
-                        </div>
-                    </div>
+            <div class="col-6 col-md-3">
+                <div class="service-minimal">
+                    <i class="bi bi-star"></i>
+                    <h6 class="fw-bold">Acabamento</h6>
                 </div>
             </div>
         </div>
@@ -453,12 +293,17 @@
 
 <!-- CTA Section -->
 {% if not session.usuario_id %}
-<section class="cta-section">
-    <div class="container cta-content">
-        <h2 class="display-5 fw-bold text-white mb-3">Pronto para um Novo Visual?</h2>
-        <p class="lead text-white-50 mb-5">Agende seu horário agora e experimente o melhor da barbearia!</p>
-        <a href="{{ url_for('cadastro') }}" class="btn btn-accent btn-lg px-5">
-            <i class="bi bi-calendar-check me-2"></i> Fazer Cadastro e Agendar
+<section class="cta-minimal">
+    <div class="container" style="position: relative; z-index: 2;">
+        <h2 class="display-5 fw-bold text-white mb-3">
+            Comece hoje mesmo
+        </h2>
+        <p class="lead text-white-50 mb-5 mx-auto" style="max-width: 600px;">
+            Junte-se a centenas de clientes que já agendaram online
+        </p>
+        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg">
+            Criar minha conta grátis
+            <i class="bi bi-arrow-right ms-2"></i>
         </a>
     </div>
 </section>

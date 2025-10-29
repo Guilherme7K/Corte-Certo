@@ -11,23 +11,25 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts - Inter (moderno e clean) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #2D2A26;
-            --secondary-color: #8B7355;
-            --accent-color: #D4AF37;
-            --text-dark: #1a1a1a;
-            --text-light: #6c757d;
-            --bg-light: #f8f9fa;
-            --bg-cream: #FAF7F2;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+            --primary: #1a1a1a;
+            --secondary: #4a5568;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-white: #ffffff;
+            --bg-gray: #f9fafb;
+            --bg-light: #f3f4f6;
+            --border: #e5e7eb;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
         * {
@@ -37,187 +39,179 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
-            overflow-x: hidden;
+            background: var(--bg-white);
+            -webkit-font-smoothing: antialiased;
         }
         
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-        
-        /* Navbar moderna */
-        .navbar-custom {
+        /* Navbar minimalista */
+        .navbar-minimal {
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-sm);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
             padding: 1rem 0;
             transition: all 0.3s ease;
         }
         
-        .navbar-custom.scrolled {
-            box-shadow: var(--shadow-md);
-        }
-        
         .navbar-brand {
-            font-family: 'Playfair Display', serif;
             font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--primary-color) !important;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-size: 1.25rem;
+            color: var(--primary) !important;
+            letter-spacing: -0.02em;
         }
         
-        .navbar-brand i {
-            color: var(--accent-color);
-        }
-        
-        .nav-link {
+        .nav-link-minimal {
             font-weight: 500;
-            color: var(--text-dark) !important;
+            font-size: 0.9375rem;
+            color: var(--text-light) !important;
             padding: 0.5rem 1rem !important;
-            transition: all 0.3s ease;
-            position: relative;
+            transition: color 0.2s ease;
         }
         
-        .nav-link:hover {
-            color: var(--accent-color) !important;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--accent-color);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        
-        .nav-link:hover::after {
-            width: 80%;
+        .nav-link-minimal:hover {
+            color: var(--primary) !important;
         }
         
         /* Botões modernos */
-        .btn {
+        .btn-modern {
             font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+            font-size: 0.9375rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
             border: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            letter-spacing: -0.01em;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        .btn-primary-modern {
+            background: var(--accent);
             color: white;
-            box-shadow: var(--shadow-sm);
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            background: linear-gradient(135deg, #1a1816 0%, #705b47 100%);
+        .btn-primary-modern:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
         }
         
-        .btn-outline-primary {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
+        .btn-outline-modern {
             background: transparent;
+            border: 1.5px solid var(--border);
+            color: var(--text-dark);
         }
         
-        .btn-outline-primary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
+        .btn-outline-modern:hover {
+            background: var(--bg-gray);
+            border-color: var(--text-light);
         }
         
-        .btn-accent {
-            background: var(--accent-color);
-            color: var(--primary-color);
+        /* Cards minimalistas */
+        .card-minimal {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .btn-accent:hover {
-            background: #c29d2f;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        /* Cards premium */
-        .card-premium {
-            border: none;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: white;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .card-premium:hover {
-            transform: translateY(-10px);
+        .card-minimal:hover {
+            transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
         }
         
-        /* Alertas modernos */
-        .alert {
-            border: none;
-            border-radius: 15px;
-            padding: 1rem 1.5rem;
-            box-shadow: var(--shadow-sm);
+        /* Seções com gradiente sutil */
+        .section-gradient {
+            background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-gray) 100%);
         }
         
-        /* Footer moderno */
-        .footer-custom {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #1a1816 100%);
-            color: white;
-            padding: 3rem 0 1rem;
+        /* Títulos modernos */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            color: var(--primary);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Badge moderno */
+        .badge-modern {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        /* Footer minimalista */
+        .footer-minimal {
+            background: var(--bg-gray);
+            border-top: 1px solid var(--border);
+            padding: 3rem 0 2rem;
             margin-top: 5rem;
         }
         
-        .footer-custom a {
-            color: rgba(255,255,255,0.8);
+        .footer-link {
+            color: var(--text-light);
             text-decoration: none;
-            transition: all 0.3s ease;
+            font-size: 0.9375rem;
+            transition: color 0.2s ease;
         }
         
-        .footer-custom a:hover {
-            color: var(--accent-color);
+        .footer-link:hover {
+            color: var(--accent);
         }
         
-        /* Animações suaves */
-        .fade-in {
-            animation: fadeIn 0.6s ease-in;
+        /* Animação suave */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         /* Scrollbar customizada */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: var(--bg-light);
+            background: var(--bg-gray);
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--secondary-color);
-            border-radius: 5px;
+            background: var(--text-light);
+            border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-color);
+            background: var(--accent);
         }
     </style>
     
@@ -225,52 +219,47 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-minimal fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="bi bi-scissors"></i>
                 {{ barbeiro.barbearia }}
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
                     {% if session.usuario_id %}
                         <li class="nav-item">
-                            <span class="nav-link">
-                                <i class="bi bi-person-circle"></i> 
-                                Olá, {{ session.usuario_nome }}
+                            <span class="nav-link-minimal">
+                                Olá, <strong>{{ session.usuario_nome }}</strong>
                             </span>
                         </li>
                         {% if session.usuario_tipo == 'cliente' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('cliente_dashboard') }}">
-                                    <i class="bi bi-house-door"></i> Dashboard
+                                <a class="nav-link-minimal" href="{{ url_for('cliente_dashboard') }}">
+                                    Dashboard
                                 </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                                    <i class="bi bi-speedometer2"></i> Painel Admin
+                                <a class="nav-link-minimal" href="{{ url_for('admin_dashboard') }}">
+                                    Painel Admin
                                 </a>
                             </li>
                         {% endif %}
                         <li class="nav-item ms-2">
-                            <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-box-arrow-right"></i> Sair
+                            <a href="{{ url_for('logout') }}" class="btn btn-modern btn-outline-modern btn-sm">
+                                Sair
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Entrar</a>
+                            <a class="nav-link-minimal" href="{{ url_for('login') }}">Entrar</a>
                         </li>
                         <li class="nav-item ms-2">
-                            <a href="{{ url_for('cadastro') }}" class="btn btn-sm btn-primary">
-                                <i class="bi bi-calendar-check"></i> Agendar
+                            <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-sm">
+                                Agendar
                             </a>
                         </li>
                     {% endif %}
@@ -280,71 +269,58 @@
     </nav>
     
     <!-- Espaçamento para navbar fixa -->
-    <div style="height: 80px;"></div>
+    <div style="height: 72px;"></div>
     
     <!-- Conteúdo -->
-    <main class="fade-in">
+    <main class="fade-in-up">
         {% block content %}{% endblock %}
     </main>
     
     <!-- Footer -->
-    <footer class="footer-custom">
+    <footer class="footer-minimal">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <h5 class="mb-3">{{ barbeiro.barbearia }}</h5>
-                    <p class="text-white-50">
-                        Estilo, qualidade e tradição em cada corte.
+                    <h6 class="fw-bold mb-3">{{ barbeiro.barbearia }}</h6>
+                    <p class="text-muted small">
+                        Agendamento online simplificado para sua barbearia.
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="mb-3">Contato</h5>
-                    <p class="mb-2">
-                        <i class="bi bi-telephone me-2"></i> {{ barbeiro.telefone }}
+                    <h6 class="fw-bold mb-3">Contato</h6>
+                    <p class="mb-2 small">
+                        <i class="bi bi-telephone me-2 text-muted"></i> 
+                        <a href="tel:{{ barbeiro.telefone }}" class="footer-link">{{ barbeiro.telefone }}</a>
                     </p>
-                    <p class="mb-2">
-                        <i class="bi bi-envelope me-2"></i> {{ barbeiro.email }}
-                    </p>
-                    <p>
-                        <i class="bi bi-geo-alt me-2"></i> {{ barbeiro.endereco }}
+                    <p class="mb-0 small">
+                        <i class="bi bi-envelope me-2 text-muted"></i> 
+                        <a href="mailto:{{ barbeiro.email }}" class="footer-link">{{ barbeiro.email }}</a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h5 class="mb-3">Redes Sociais</h5>
-                    <div class="d-flex gap-3">
-                        <a href="{{ barbeiro.link_whatsapp }}" target="_blank" class="fs-4">
+                    <h6 class="fw-bold mb-3">Redes Sociais</h6>
+                    <div class="d-flex gap-2">
+                        <a href="{{ barbeiro.link_whatsapp }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
                             <i class="bi bi-whatsapp"></i>
                         </a>
-                        <a href="{{ barbeiro.link_instagram }}" target="_blank" class="fs-4">
+                        <a href="{{ barbeiro.link_instagram }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
                             <i class="bi bi-instagram"></i>
                         </a>
-                        <a href="{{ barbeiro.link_facebook }}" target="_blank" class="fs-4">
+                        <a href="{{ barbeiro.link_facebook }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
                             <i class="bi bi-facebook"></i>
                         </a>
                     </div>
                 </div>
             </div>
-            <hr class="my-4 bg-white opacity-25">
-            <div class="text-center text-white-50">
-                <small>&copy; 2025 {{ barbeiro.barbearia }}. Todos os direitos reservados.</small>
+            <hr class="my-4" style="border-color: var(--border);">
+            <div class="text-center">
+                <small class="text-muted">&copy; 2025 {{ barbeiro.barbearia }}. Todos os direitos reservados.</small>
             </div>
         </div>
     </footer>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Navbar scroll effect -->
-    <script>
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar-custom');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-    </script>
     
     {% block scripts %}{% endblock %}
 </body>
