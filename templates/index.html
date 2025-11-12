@@ -2,174 +2,496 @@
 
 {% block styles %}
 <style>
-    /* Hero minimalista com gradiente sutil */
-    .hero-minimal {
-        min-height: 85vh;
+    /* Hero com animações e efeitos modernos */
+    .hero-premium {
+        min-height: 90vh;
         display: flex;
         align-items: center;
-        background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
         position: relative;
         overflow: hidden;
+        color: white;
     }
     
-    .hero-minimal::before {
+    .hero-premium::before {
+        content: '';
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+        top: -400px;
+        right: -200px;
+        animation: pulse 8s ease-in-out infinite;
+    }
+    
+    .hero-premium::after {
         content: '';
         position: absolute;
         width: 600px;
         height: 600px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-        top: -200px;
-        right: -200px;
-        pointer-events: none;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+        bottom: -300px;
+        left: -100px;
+        animation: pulse 6s ease-in-out infinite reverse;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
     }
     
     .hero-title {
-        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
         font-weight: 900;
         letter-spacing: -0.04em;
         margin-bottom: 1.5rem;
         line-height: 1.1;
+        background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     .hero-subtitle {
         font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-        color: var(--text-light);
+        color: rgba(255, 255, 255, 0.8);
         font-weight: 400;
         margin-bottom: 2.5rem;
         max-width: 600px;
+        line-height: 1.6;
     }
     
-    .stats-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.5rem;
+    .trust-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+    }
+    
+    .stats-card-premium {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
         text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card-premium:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-5px);
     }
     
     .stats-number {
-        font-size: 2rem;
+        font-size: 2.5rem;
         font-weight: 800;
         color: var(--accent);
         display: block;
+        line-height: 1;
+        margin-bottom: 0.5rem;
     }
     
     .stats-label {
         font-size: 0.875rem;
-        color: var(--text-light);
+        color: rgba(255, 255, 255, 0.8);
         font-weight: 500;
     }
     
-    /* Seção de features */
-    .features-section {
-        padding: 6rem 0;
-        background: white;
+    .hero-image-wrapper {
+        position: relative;
+        z-index: 2;
     }
     
-    .feature-icon-minimal {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
+    .hero-image {
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Features Section Premium */
+    .features-premium {
+        padding: 8rem 0;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+    
+    .section-header {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto 4rem;
+    }
+    
+    .section-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        color: var(--accent);
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 900;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+    }
+    
+    .section-description {
+        font-size: 1.125rem;
+        color: var(--text-light);
+        line-height: 1.7;
+    }
+    
+    .feature-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        box-shadow: var(--shadow-xl);
+        transform: translateY(-8px);
+        border-color: var(--accent);
+    }
+    
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .feature-icon-premium {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+    }
+    
+    .feature-icon-premium i {
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .feature-description {
+        color: var(--text-light);
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+    
+    /* Serviços Premium */
+    .services-premium {
+        padding: 8rem 0;
+        background: white;
+        position: relative;
+    }
+    
+    .service-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .service-card:hover {
+        background: white;
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-5px);
+    }
+    
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
         background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.25rem;
+        margin: 0 auto 1.5rem;
+        transition: all 0.3s ease;
     }
     
-    .feature-icon-minimal i {
-        font-size: 1.75rem;
+    .service-card:hover .service-icon {
+        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+        transform: scale(1.1);
+    }
+    
+    .service-icon i {
+        font-size: 2.5rem;
         color: var(--accent);
+        transition: color 0.3s ease;
     }
     
-    /* Seção CTA minimalista */
-    .cta-minimal {
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-        padding: 5rem 0;
+    .service-card:hover .service-icon i {
+        color: white;
+    }
+    
+    .service-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+    }
+    
+    .service-price {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+    
+    .service-description {
+        color: var(--text-light);
+        font-size: 0.9375rem;
+        line-height: 1.6;
+    }
+    
+    /* Depoimentos */
+    .testimonials-section {
+        padding: 8rem 0;
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    }
+    
+    .testimonial-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        height: 100%;
+        position: relative;
+    }
+    
+    .testimonial-quote {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        font-size: 4rem;
+        color: rgba(16, 185, 129, 0.1);
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+    
+    .testimonial-text {
+        font-size: 1.0625rem;
+        line-height: 1.8;
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+    
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .testimonial-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.125rem;
+    }
+    
+    .testimonial-info h6 {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.25rem;
+    }
+    
+    .testimonial-stars {
+        color: #fbbf24;
+        font-size: 0.875rem;
+    }
+    
+    /* CTA Premium */
+    .cta-premium {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 8rem 0;
         text-align: center;
         position: relative;
         overflow: hidden;
     }
     
-    .cta-minimal::before {
+    .cta-premium::before {
         content: '';
         position: absolute;
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-        bottom: -200px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+        bottom: -300px;
         left: 50%;
         transform: translateX(-50%);
+        animation: pulse 6s ease-in-out infinite;
     }
     
-    /* Grid de serviços minimalista */
-    .service-minimal {
-        text-align: center;
-        padding: 2rem;
+    .cta-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+        margin: 0 auto;
     }
     
-    .service-minimal i {
-        font-size: 2.5rem;
+    .cta-title {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 900;
+        color: white;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+    }
+    
+    .cta-description {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+    }
+    
+    .cta-benefits {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+    }
+    
+    .cta-benefit {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+    }
+    
+    .cta-benefit i {
         color: var(--accent);
-        margin-bottom: 1rem;
+        font-size: 1.25rem;
     }
     
     /* Responsivo */
     @media (max-width: 768px) {
-        .hero-minimal {
+        .hero-premium {
             min-height: 70vh;
             padding: 3rem 0;
         }
         
-        .features-section {
+        .features-premium,
+        .services-premium,
+        .testimonials-section,
+        .cta-premium {
             padding: 4rem 0;
+        }
+        
+        .section-header {
+            margin-bottom: 3rem;
+        }
+        
+        .stats-card-premium {
+            margin-bottom: 1rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-minimal">
+<!-- Hero Section Premium -->
+<section class="hero-premium" role="banner">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <span class="badge-modern badge-success mb-4">
-                    <i class="bi bi-lightning-fill me-2"></i>
-                    Agendamento Online
-                </span>
+            <div class="col-lg-6 hero-content">
+                <div class="trust-badge">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Sistema 100% seguro e confiável</span>
+                </div>
                 
                 <h1 class="hero-title">
-                    Agende seu corte de forma 
-                    <span class="text-gradient">simples e rápida</span>
+                    A melhor experiência em agendamento de barbearia
                 </h1>
                 
                 <p class="hero-subtitle">
-                    {{ barbeiro.barbearia }} - A melhor experiência em barbearia, 
-                    agora com agendamento online. Sem filas, sem espera.
+                    {{ barbeiro.barbearia }} - Agende seu horário em segundos, 
+                    sem filas e sem espera. Transforme sua experiência com tecnologia de ponta.
                 </p>
                 
                 <div class="d-flex gap-3 mb-5 flex-wrap">
                     {% if not session.usuario_id %}
-                        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern">
-                            Criar conta grátis
-                            <i class="bi bi-arrow-right ms-2"></i>
+                        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg" aria-label="Criar conta gratuitamente">
+                            <i class="bi bi-rocket-takeoff me-2"></i>
+                            Começar agora - É grátis
                         </a>
-                        <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern">
+                        <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern btn-lg" aria-label="Fazer login na conta existente">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
                             Já tenho conta
                         </a>
                     {% else %}
                         {% if session.usuario_tipo == 'cliente' %}
-                            <a href="{{ url_for('cliente_agendar') }}" class="btn btn-modern btn-primary-modern">
-                                Novo agendamento
-                                <i class="bi bi-calendar-plus ms-2"></i>
+                            <a href="{{ url_for('cliente_agendar') }}" class="btn btn-modern btn-primary-modern btn-lg">
+                                <i class="bi bi-calendar-plus me-2"></i>
+                                Fazer novo agendamento
+                            </a>
+                            <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-modern btn-outline-modern btn-lg">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Meus agendamentos
                             </a>
                         {% else %}
-                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-modern btn-primary-modern">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-modern btn-primary-modern btn-lg">
+                                <i class="bi bi-speedometer2 me-2"></i>
                                 Ir para dashboard
-                                <i class="bi bi-speedometer2 ms-2"></i>
                             </a>
                         {% endif %}
                     {% endif %}
@@ -177,76 +499,92 @@
                 
                 <div class="row g-3">
                     <div class="col-4">
-                        <div class="stats-card">
-                            <span class="stats-number">24h</span>
+                        <div class="stats-card-premium">
+                            <span class="stats-number" aria-label="Disponível 24 horas por dia">24/7</span>
                             <span class="stats-label">Disponível</span>
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="stats-card">
-                            <span class="stats-number">5min</span>
+                        <div class="stats-card-premium">
+                            <span class="stats-number" aria-label="Agendamento em 2 minutos">2min</span>
                             <span class="stats-label">Para agendar</span>
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="stats-card">
-                            <span class="stats-number">100%</span>
-                            <span class="stats-label">Online</span>
+                        <div class="stats-card-premium">
+                            <span class="stats-number" aria-label="5 estrelas de avaliação">5.0⭐</span>
+                            <span class="stats-label">Avaliação</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-6 d-none d-lg-block">
-                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&h=600&fit=crop" 
-                     alt="Barbearia" 
-                     class="img-fluid rounded-4 shadow-lg">
+            <div class="col-lg-6 d-none d-lg-block hero-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&h=700&fit=crop&q=80" 
+                     alt="Interior moderno de barbearia com cadeiras profissionais" 
+                     class="img-fluid hero-image"
+                     loading="lazy">
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="features-section">
+<!-- Features Section Premium -->
+<section class="features-premium" role="region" aria-labelledby="features-title">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Como funciona</h2>
-            <p class="lead text-muted">Processo simples em 3 passos</p>
+        <div class="section-header">
+            <span class="section-badge">COMO FUNCIONA</span>
+            <h2 class="section-title" id="features-title">Agendar nunca foi tão fácil</h2>
+            <p class="section-description">
+                Sistema intuitivo e rápido, pensado para você economizar tempo e ter a melhor experiência
+            </p>
         </div>
         
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card-minimal text-center">
-                    <div class="feature-icon-minimal mx-auto">
-                        <i class="bi bi-person-plus"></i>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-premium">
+                        <i class="bi bi-person-plus-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">1. Crie sua conta</h5>
-                    <p class="text-muted mb-0">
-                        Cadastro rápido e gratuito. Só precisa de email e senha.
+                    <h3 class="feature-title">1. Cadastro rápido</h3>
+                    <p class="feature-description">
+                        Crie sua conta em menos de 1 minuto. Só precisa de email e senha. Simples assim!
                     </p>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="card-minimal text-center">
-                    <div class="feature-icon-minimal mx-auto">
-                        <i class="bi bi-calendar-check"></i>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-premium">
+                        <i class="bi bi-calendar-check-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">2. Escolha seu horário</h5>
-                    <p class="text-muted mb-0">
-                        Veja horários disponíveis em tempo real e selecione o melhor para você.
+                    <h3 class="feature-title">2. Escolha o horário</h3>
+                    <p class="feature-description">
+                        Veja horários disponíveis em tempo real e escolha o que melhor se encaixa na sua agenda.
                     </p>
                 </div>
             </div>
             
-            <div class="col-md-4">
-                <div class="card-minimal text-center">
-                    <div class="feature-icon-minimal mx-auto">
-                        <i class="bi bi-check-circle"></i>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-premium">
+                        <i class="bi bi-bell-fill"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">3. Pronto!</h5>
-                    <p class="text-muted mb-0">
-                        Receba confirmação por email e apareça no horário agendado.
+                    <h3 class="feature-title">3. Receba confirmação</h3>
+                    <p class="feature-description">
+                        Confirmação instantânea por email com todos os detalhes do seu agendamento.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon-premium">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <h3 class="feature-title">4. Pronto!</h3>
+                    <p class="feature-description">
+                        É só aparecer no horário marcado e aproveitar o melhor corte da sua vida.
                     </p>
                 </div>
             </div>
@@ -254,57 +592,194 @@
     </div>
 </section>
 
-<!-- Serviços Section -->
-<section class="section-gradient py-5">
-    <div class="container py-4">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Nossos serviços</h2>
-            <p class="lead text-muted">Experiência completa para seu visual</p>
+<!-- Serviços Premium -->
+<section class="services-premium" role="region" aria-labelledby="services-title">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">NOSSOS SERVIÇOS</span>
+            <h2 class="section-title" id="services-title">Tudo para você ficar impecável</h2>
+            <p class="section-description">
+                Serviços premium com profissionais qualificados e produtos de alta qualidade
+            </p>
         </div>
         
         <div class="row g-4">
-            <div class="col-6 col-md-3">
-                <div class="service-minimal">
-                    <i class="bi bi-scissors"></i>
-                    <h6 class="fw-bold">Corte</h6>
+            <div class="col-sm-6 col-lg-3">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-scissors"></i>
+                    </div>
+                    <h3 class="service-title">Corte Masculino</h3>
+                    <div class="service-price">R$ 45</div>
+                    <p class="service-description">
+                        Corte moderno e personalizado com acabamento perfeito
+                    </p>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="service-minimal">
-                    <i class="bi bi-brush"></i>
-                    <h6 class="fw-bold">Barba</h6>
+            
+            <div class="col-sm-6 col-lg-3">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-brush-fill"></i>
+                    </div>
+                    <h3 class="service-title">Barba Completa</h3>
+                    <div class="service-price">R$ 35</div>
+                    <p class="service-description">
+                        Design de barba com toalha quente e produtos premium
+                    </p>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="service-minimal">
-                    <i class="bi bi-droplet"></i>
-                    <h6 class="fw-bold">Hidratação</h6>
+            
+            <div class="col-sm-6 col-lg-3">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <h3 class="service-title">Combo Premium</h3>
+                    <div class="service-price">R$ 70</div>
+                    <p class="service-description">
+                        Corte + Barba + Acabamento especial. Melhor custo-benefício!
+                    </p>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="service-minimal">
-                    <i class="bi bi-star"></i>
-                    <h6 class="fw-bold">Acabamento</h6>
+            
+            <div class="col-sm-6 col-lg-3">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-droplet-fill"></i>
+                    </div>
+                    <h3 class="service-title">Hidratação</h3>
+                    <div class="service-price">R$ 25</div>
+                    <p class="service-description">
+                        Tratamento completo para cabelo e barba saudáveis
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
+<!-- Depoimentos -->
+<section class="testimonials-section" role="region" aria-labelledby="testimonials-title">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">DEPOIMENTOS</span>
+            <h2 class="section-title" id="testimonials-title">O que nossos clientes dizem</h2>
+            <p class="section-description">
+                Mais de 500 clientes satisfeitos com nosso atendimento e praticidade
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        "Sistema muito prático! Agora não preciso mais ficar esperando na fila. 
+                        Chego no horário certo e já sou atendido. Recomendo!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">RC</div>
+                        <div class="testimonial-info">
+                            <h6>Rafael Costa</h6>
+                            <div class="testimonial-stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        "Excelente! Muito fácil de usar e o atendimento continua impecável. 
+                        A tecnologia realmente facilitou minha vida."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MS</div>
+                        <div class="testimonial-info">
+                            <h6>Marcos Silva</h6>
+                            <div class="testimonial-stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">
+                        "Adorei poder agendar pelo celular de qualquer lugar. 
+                        Super prático e o corte sempre perfeito!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">LO</div>
+                        <div class="testimonial-info">
+                            <h6>Lucas Oliveira</h6>
+                            <div class="testimonial-stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section Premium -->
 {% if not session.usuario_id %}
-<section class="cta-minimal">
-    <div class="container" style="position: relative; z-index: 2;">
-        <h2 class="display-5 fw-bold text-white mb-3">
-            Comece hoje mesmo
+<section class="cta-premium" role="region" aria-labelledby="cta-title">
+    <div class="cta-content">
+        <h2 class="cta-title" id="cta-title">
+            Pronto para experimentar?
         </h2>
-        <p class="lead text-white-50 mb-5 mx-auto" style="max-width: 600px;">
-            Junte-se a centenas de clientes que já agendaram online
+        <p class="cta-description">
+            Junte-se a centenas de clientes satisfeitos que já descobriram 
+            a forma mais prática de agendar seu corte
         </p>
-        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg">
-            Criar minha conta grátis
-            <i class="bi bi-arrow-right ms-2"></i>
-        </a>
+        
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg">
+                <i class="bi bi-rocket-takeoff me-2"></i>
+                Criar conta grátis agora
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Fazer login
+            </a>
+        </div>
+        
+        <div class="cta-benefits">
+            <div class="cta-benefit">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>100% gratuito</span>
+            </div>
+            <div class="cta-benefit">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Sem compromisso</span>
+            </div>
+            <div class="cta-benefit">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Cadastro em 1 minuto</span>
+            </div>
+        </div>
     </div>
 </section>
 {% endif %}
