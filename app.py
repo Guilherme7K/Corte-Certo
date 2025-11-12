@@ -462,6 +462,18 @@ def cliente_agendar():
                 return redirect(url_for('cliente_agendar'))
             
             data_hora = datetime.strptime(f"{data} {hora}", '%Y-%m-%d %H:%M')
+            data_agendamento = data_hora.date()
+            
+            # Verificar se a data está bloqueada
+            bloqueio_ativo = BloqueioAgenda.query.filter(
+                BloqueioAgenda.ativo == True,
+                BloqueioAgenda.data_inicio <= data_agendamento,
+                BloqueioAgenda.data_fim >= data_agendamento
+            ).first()
+            
+            if bloqueio_ativo:
+                flash(f'Não é possível agendar nesta data. Motivo: {bloqueio_ativo.motivo}', 'danger')
+                return redirect(url_for('cliente_agendar'))
             
             # Verificar se a data não é no passado
             if data_hora < datetime.now():
@@ -573,6 +585,19 @@ def horarios_disponiveis():
         
         if not servico:
             return jsonify({'error': 'Serviço não encontrado'}), 404
+        
+        # Verificar se a data está bloqueada
+        bloqueio_ativo = BloqueioAgenda.query.filter(
+            BloqueioAgenda.ativo == True,
+            BloqueioAgenda.data_inicio <= data_obj,
+            BloqueioAgenda.data_fim >= data_obj
+        ).first()
+        
+        if bloqueio_ativo:
+            return jsonify({
+                'horarios': [], 
+                'mensagem': f'Agenda bloqueada: {bloqueio_ativo.motivo}'
+            })
         
         # Verificar se é domingo
         if data_obj.weekday() == 6:
