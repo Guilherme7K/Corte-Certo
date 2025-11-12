@@ -97,7 +97,7 @@
     }
     
     .appointment-card.status-agendado {
-        border-color: var(--accent);
+        border-color: #3b82f6;
     }
     
     .appointment-card.status-concluido {
@@ -115,10 +115,11 @@
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid var(--border);
+        position: relative;
     }
     
     .appointment-header.status-agendado {
-        background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
     }
     
     .appointment-header.status-concluido {
@@ -127,6 +128,37 @@
     
     .appointment-header.status-cancelado {
         background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    }
+    
+    .delete-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 1.125rem;
+        padding: 0;
+    }
+    
+    .delete-btn:hover {
+        background: #ef4444;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .delete-btn:focus {
+        outline: 2px solid #ef4444;
+        outline-offset: 2px;
     }
     
     .appointment-date {
@@ -148,7 +180,7 @@
     }
     
     .date-icon.status-agendado {
-        color: var(--accent);
+        color: #3b82f6;
     }
     
     .date-icon.status-concluido {
@@ -187,7 +219,7 @@
     }
     
     .status-badge.agendado {
-        background: var(--accent);
+        background: #3b82f6;
         color: white;
     }
     
@@ -407,6 +439,21 @@
                     <div class="appointment-card status-{{ ag.status }}" role="article" aria-label="Agendamento para {{ ag.data_hora.strftime('%d/%m/%Y às %H:%M') }}">
                         <!-- Header do Card -->
                         <div class="appointment-header status-{{ ag.status }}">
+                            {% if ag.status in ['concluido', 'cancelado'] %}
+                            <!-- Botão de exclusão para agendamentos concluídos ou cancelados -->
+                            <form method="POST" 
+                                  action="{{ url_for('cliente_excluir_agendamento', id=ag.id) }}" 
+                                  onsubmit="return confirm('Deseja remover este agendamento do histórico?');"
+                                  style="display: inline;">
+                                <button type="submit" 
+                                        class="delete-btn"
+                                        aria-label="Remover agendamento de {{ ag.data_hora.strftime('%d/%m/%Y') }} do histórico"
+                                        title="Remover do histórico">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                            
                             <div class="appointment-date">
                                 <div class="date-icon status-{{ ag.status }}">
                                     <i class="bi bi-calendar-event-fill"></i>

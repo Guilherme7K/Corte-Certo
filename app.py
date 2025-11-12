@@ -570,6 +570,28 @@ def cliente_cancelar_agendamento(id):
     flash('Agendamento cancelado com sucesso!', 'success')
     return redirect(url_for('meus_agendamentos'))
 
+@app.route('/cliente/agendamento/<int:id>/excluir', methods=['POST'])
+@login_required
+def cliente_excluir_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    
+    # Verificar se o agendamento pertence ao cliente logado
+    if agendamento.cliente_id != session.get('usuario_id'):
+        flash('Você não tem permissão para excluir este agendamento', 'danger')
+        return redirect(url_for('meus_agendamentos'))
+    
+    # Só pode excluir agendamentos concluídos ou cancelados
+    if agendamento.status not in ['concluido', 'cancelado']:
+        flash('Só é possível remover agendamentos concluídos ou cancelados', 'warning')
+        return redirect(url_for('meus_agendamentos'))
+    
+    # Excluir o agendamento
+    db.session.delete(agendamento)
+    db.session.commit()
+    
+    flash('Agendamento removido do histórico com sucesso!', 'success')
+    return redirect(url_for('meus_agendamentos'))
+
 @app.route('/api/horarios-disponiveis')
 @login_required
 def horarios_disponiveis():
