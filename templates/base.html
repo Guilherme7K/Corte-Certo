@@ -47,6 +47,34 @@
             -webkit-font-smoothing: antialiased;
         }
         
+        /* Linha de progresso animada no topo */
+        .progress-bar-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--accent) 0%, 
+                #3b82f6 25%, 
+                #8b5cf6 50%, 
+                #ec4899 75%, 
+                var(--accent) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
         /* Navbar minimalista */
         .navbar-minimal {
             background: rgba(255, 255, 255, 0.98);
@@ -54,6 +82,7 @@
             border-bottom: 1px solid var(--border);
             padding: 1rem 0;
             transition: all 0.3s ease;
+            margin-top: 3px; /* Espaço para a linha de progresso */
         }
         
         .navbar-brand {
@@ -264,6 +293,9 @@
     {% block styles %}{% endblock %}
 </head>
 <body>
+    <!-- Linha de progresso animada no topo -->
+    <div class="progress-bar-top" role="presentation" aria-hidden="true"></div>
+    
     <!-- Skip to content link para acessibilidade -->
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
     
