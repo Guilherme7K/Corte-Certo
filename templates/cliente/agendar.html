@@ -2,251 +2,740 @@
 
 {% block styles %}
 <style>
-    .step-indicator {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 30px;
+    /* Container principal */
+    .booking-container {
+        min-height: 85vh;
+        padding: 4rem 0;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     }
     
-    .step {
-        flex: 1;
-        text-align: center;
-        padding: 15px;
-        border-bottom: 3px solid #e0e0e0;
-        color: #999;
-        position: relative;
-    }
-    
-    .step.active {
-        border-bottom-color: var(--primary-color);
-        color: var(--primary-color);
-        font-weight: bold;
-    }
-    
-    .step.completed {
-        border-bottom-color: #28a745;
-        color: #28a745;
-    }
-    
-    .servico-card {
-        cursor: pointer;
-        transition: all 0.3s;
-        border: 2px solid #e0e0e0;
-    }
-    
-    .servico-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
-    
-    .servico-card.selected {
-        border-color: var(--primary-color);
-        background-color: #f0f8ff;
-    }
-    
-    .calendar-container {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-    
-    .horarios-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 10px;
-        margin-top: 20px;
-    }
-    
-    .horario-btn {
-        padding: 15px;
-        border: 2px solid #e0e0e0;
+    /* Card principal premium */
+    .booking-card {
         background: white;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-weight: bold;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
     }
     
-    .horario-btn:hover:not(:disabled) {
-        border-color: var(--primary-color);
-        background-color: #f0f8ff;
-        transform: scale(1.05);
+    /* Header do card */
+    .booking-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        padding: 2.5rem 2rem;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
     }
     
-    .horario-btn.selected {
-        border-color: var(--primary-color);
-        background-color: var(--primary-color);
+    .booking-header::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        top: -150px;
+        right: -150px;
+    }
+    
+    .booking-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
         color: white;
     }
     
-    .horario-btn:disabled {
-        background-color: #f8f9fa;
-        color: #999;
-        cursor: not-allowed;
-        text-decoration: line-through;
+    .booking-header p {
+        margin: 0;
+        opacity: 0.9;
+        position: relative;
+        z-index: 2;
     }
     
+    /* Indicador de passos moderno */
+    .step-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        background: #f8fafc;
+        position: relative;
+    }
+    
+    .step-progress::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: #e2e8f0;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+    
+    .step-progress-bar {
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
+        transform: translateY(-50%);
+        z-index: 2;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .step-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 3;
+    }
+    
+    .step-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.75rem;
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: #94a3b8;
+        transition: all 0.3s ease;
+    }
+    
+    .step-item.active .step-circle {
+        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+        border-color: var(--accent);
+        color: white;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+        transform: scale(1.1);
+    }
+    
+    .step-item.completed .step-circle {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+    
+    .step-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        transition: color 0.3s ease;
+    }
+    
+    .step-item.active .step-label {
+        color: var(--accent);
+    }
+    
+    /* Cards de serviço premium */
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+    
+    .service-card {
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .service-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .service-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .service-card.selected {
+        border-color: var(--accent);
+        background: linear-gradient(135deg, rgba(5, 150, 105, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+        box-shadow: 0 8px 16px rgba(5, 150, 105, 0.2);
+    }
+    
+    .service-card.selected::before {
+        transform: scaleX(1);
+    }
+    
+    .service-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon,
+    .service-card.selected .service-icon {
+        background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+        transform: scale(1.1);
+    }
+    
+    .service-icon i {
+        font-size: 2rem;
+        color: var(--accent);
+        transition: color 0.3s ease;
+    }
+    
+    .service-card:hover .service-icon i,
+    .service-card.selected .service-icon i {
+        color: white;
+    }
+    
+    .service-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+    }
+    
+    .service-description {
+        font-size: 0.9375rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+    
+    .service-details {
+        display: flex;
+        justify-content: space-around;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        margin-top: 1rem;
+    }
+    
+    .service-detail {
+        text-align: center;
+    }
+    
+    .service-detail-label {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+    
+    .service-detail-value {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--accent);
+    }
+    
+    /* Input de data moderno */
+    .date-picker-container {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+    
+    .date-input-modern {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        transition: all 0.2s ease;
+    }
+    
+    .date-input-modern:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: var(--focus-ring);
+    }
+    
+    /* Grid de horários */
+    .time-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+        padding: 2rem;
+    }
+    
+    .time-slot-btn {
+        padding: 1.25rem;
+        border: 2px solid var(--border);
+        background: white;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: var(--text-dark);
+    }
+    
+    .time-slot-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+        background: rgba(5, 150, 105, 0.05);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .time-slot-btn.selected {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 8px 16px rgba(5, 150, 105, 0.3);
+    }
+    
+    .time-slot-btn:disabled {
+        background: #f8fafc;
+        color: #cbd5e1;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+    
+    /* Resumo premium */
+    .summary-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        border: 2px solid var(--accent);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin: 2rem;
+    }
+    
+    .summary-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .summary-title i {
+        color: var(--accent);
+    }
+    
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-label {
+        font-weight: 600;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .summary-value {
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 1.125rem;
+    }
+    
+    /* Textarea moderno */
+    .textarea-modern {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        font-size: 0.9375rem;
+        color: var(--text-dark);
+        resize: vertical;
+        min-height: 120px;
+        transition: all 0.2s ease;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .textarea-modern:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: var(--focus-ring);
+    }
+    
+    /* Alertas modernos */
+    .alert-modern {
+        border-radius: 16px;
+        padding: 1.25rem;
+        border: none;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .alert-modern i {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .alert-info-modern {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
+        color: #1e40af;
+        border-left: 4px solid #3b82f6;
+    }
+    
+    .alert-warning-modern {
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(253, 224, 71, 0.1) 100%);
+        color: #92400e;
+        border-left: 4px solid #f59e0b;
+    }
+    
+    /* Botões de navegação */
+    .step-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 2rem;
+        border-top: 1px solid var(--border);
+        margin-top: 2rem;
+    }
+    
+    /* Animações */
     .step-content {
         display: none;
-        animation: fadeIn 0.5s;
+        animation: fadeInUp 0.5s ease;
     }
     
     .step-content.active {
         display: block;
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
-    .resumo-box {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 4px solid var(--primary-color);
+    /* Loading spinner */
+    .loading-container {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+    
+    .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(5, 150, 105, 0.1);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+        .booking-container {
+            padding: 2rem 0;
+        }
+        
+        .service-grid,
+        .time-slots-grid {
+            padding: 1rem;
+        }
+        
+        .summary-card {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0"><i class="bi bi-calendar-plus"></i> Novo Agendamento</h3>
-                    <p class="mb-0 small">{{ barbeiro.barbearia }} - {{ barbeiro.nome }}</p>
-                </div>
-                
-                <div class="card-body p-4">
-                    <!-- Indicador de Passos -->
-                    <div class="step-indicator">
-                        <div class="step active" id="step-indicator-1">
-                            <i class="bi bi-1-circle-fill"></i><br>
-                            Escolha o Serviço
+<div class="booking-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div class="booking-card">
+                    <!-- Header Premium -->
+                    <div class="booking-header">
+                        <h1>
+                            <i class="bi bi-calendar-heart me-2"></i>
+                            Novo Agendamento
+                        </h1>
+                        <p>{{ barbeiro.barbearia }} - {{ barbeiro.nome }}</p>
+                    </div>
+                    
+                    <!-- Indicador de Passos Premium -->
+                    <div class="step-progress" role="progressbar" aria-label="Progresso do agendamento" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+                        <div class="step-progress-bar" id="progressBar" style="width: 12.5%;"></div>
+                        
+                        <div class="step-item active" id="step-indicator-1">
+                            <div class="step-circle">
+                                <i class="bi bi-scissors"></i>
+                            </div>
+                            <div class="step-label">Serviço</div>
                         </div>
-                        <div class="step" id="step-indicator-2">
-                            <i class="bi bi-2-circle"></i><br>
-                            Selecione a Data
+                        
+                        <div class="step-item" id="step-indicator-2">
+                            <div class="step-circle">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <div class="step-label">Data</div>
                         </div>
-                        <div class="step" id="step-indicator-3">
-                            <i class="bi bi-3-circle"></i><br>
-                            Escolha o Horário
+                        
+                        <div class="step-item" id="step-indicator-3">
+                            <div class="step-circle">
+                                <i class="bi bi-clock"></i>
+                            </div>
+                            <div class="step-label">Horário</div>
                         </div>
-                        <div class="step" id="step-indicator-4">
-                            <i class="bi bi-4-circle"></i><br>
-                            Confirmar
+                        
+                        <div class="step-item" id="step-indicator-4">
+                            <div class="step-circle">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="step-label">Confirmar</div>
                         </div>
                     </div>
                     
-                    <form method="POST" id="formAgendamento">
+                    <form method="POST" id="formAgendamento" aria-label="Formulário de agendamento">
                         <!-- Passo 1: Escolher Serviço -->
                         <div class="step-content active" id="step-1">
-                            <h4 class="mb-4 text-center">Escolha o Serviço</h4>
-                            <div class="row g-3">
+                            <div class="service-grid">
                                 {% for servico in servicos %}
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="card servico-card h-100" 
-                                         data-servico-id="{{ servico.id }}"
-                                         data-servico-nome="{{ servico.nome }}"
-                                         data-servico-preco="{{ servico.preco }}"
-                                         data-servico-duracao="{{ servico.duracao }}">
-                                        <div class="card-body text-center">
-                                            <i class="bi bi-scissors display-4 text-primary mb-3"></i>
-                                            <h5 class="card-title">{{ servico.nome }}</h5>
-                                            <p class="card-text text-muted">{{ servico.descricao }}</p>
-                                            <hr>
-                                            <p class="mb-1"><strong>R$ {{ "%.2f"|format(servico.preco) }}</strong></p>
-                                            <p class="text-muted small">{{ servico.duracao }} minutos</p>
+                                <div class="service-card" 
+                                     role="button"
+                                     tabindex="0"
+                                     aria-label="Selecionar {{ servico.nome }}, R$ {{ '%.2f'|format(servico.preco) }}, {{ servico.duracao }} minutos"
+                                     data-servico-id="{{ servico.id }}"
+                                     data-servico-nome="{{ servico.nome }}"
+                                     data-servico-preco="{{ servico.preco }}"
+                                     data-servico-duracao="{{ servico.duracao }}">
+                                    <div class="service-icon">
+                                        <i class="bi bi-scissors"></i>
+                                    </div>
+                                    <h3 class="service-title">{{ servico.nome }}</h3>
+                                    <p class="service-description">{{ servico.descricao }}</p>
+                                    <div class="service-details">
+                                        <div class="service-detail">
+                                            <div class="service-detail-label">Preço</div>
+                                            <div class="service-detail-value">R$ {{ "%.2f"|format(servico.preco) }}</div>
+                                        </div>
+                                        <div class="service-detail">
+                                            <div class="service-detail-label">Duração</div>
+                                            <div class="service-detail-value">{{ servico.duracao }}<small>min</small></div>
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
-                            <input type="hidden" name="servico_id" id="servico_id">
+                            <input type="hidden" name="servico_id" id="servico_id" aria-label="ID do serviço selecionado">
                         </div>
                         
                         <!-- Passo 2: Escolher Data -->
                         <div class="step-content" id="step-2">
-                            <h4 class="mb-4 text-center">Selecione a Data</h4>
-                            <div class="calendar-container">
-                                <input type="date" class="form-control form-control-lg" id="data" name="data">
-                                <div class="alert alert-info mt-3">
+                            <div class="date-picker-container">
+                                <label for="data" class="form-label-modern mb-3">
+                                    <i class="bi bi-calendar-event me-2"></i>
+                                    Selecione a data desejada
+                                </label>
+                                <input type="date" 
+                                       class="date-input-modern" 
+                                       id="data" 
+                                       name="data"
+                                       aria-required="true"
+                                       aria-describedby="date-help">
+                                <div class="alert-modern alert-info-modern mt-3" id="date-help">
                                     <i class="bi bi-info-circle"></i>
-                                    <strong>Importante:</strong> Não abrimos aos domingos
+                                    <div>
+                                        <strong>Importante:</strong> Não abrimos aos domingos. 
+                                        Selecione uma data de segunda a sábado.
+                                    </div>
                                 </div>
                             </div>
-                            <div class="text-center mt-4">
-                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(1)">
-                                    <i class="bi bi-arrow-left"></i> Voltar
+                            
+                            <div class="step-actions">
+                                <button type="button" 
+                                        class="btn btn-modern btn-outline-modern" 
+                                        onclick="voltarPasso(1)"
+                                        aria-label="Voltar para seleção de serviço">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Voltar
                                 </button>
-                                <button type="button" class="btn btn-primary" onclick="avancarPasso(3)" disabled id="btn-passo-2">
-                                    Avançar <i class="bi bi-arrow-right"></i>
+                                <button type="button" 
+                                        class="btn btn-modern btn-primary-modern" 
+                                        onclick="avancarPasso(3)" 
+                                        disabled 
+                                        id="btn-passo-2"
+                                        aria-label="Avançar para seleção de horário">
+                                    Avançar
+                                    <i class="bi bi-arrow-right ms-2"></i>
                                 </button>
                             </div>
                         </div>
                         
                         <!-- Passo 3: Escolher Horário -->
                         <div class="step-content" id="step-3">
-                            <h4 class="mb-4 text-center">Escolha o Horário</h4>
-                            <div id="loading" class="text-center" style="display: none;">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Carregando...</span>
-                                </div>
-                                <p class="mt-2">Carregando horários disponíveis...</p>
+                            <div id="loading" class="loading-container" style="display: none;" aria-live="polite" aria-busy="true">
+                                <div class="spinner"></div>
+                                <p class="text-muted">Carregando horários disponíveis...</p>
                             </div>
-                            <div id="horarios-container"></div>
-                            <input type="hidden" name="hora" id="hora">
-                            <div class="text-center mt-4">
-                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(2)">
-                                    <i class="bi bi-arrow-left"></i> Voltar
+                            <div id="horarios-container" role="list" aria-label="Horários disponíveis"></div>
+                            <input type="hidden" name="hora" id="hora" aria-label="Horário selecionado">
+                            
+                            <div class="step-actions">
+                                <button type="button" 
+                                        class="btn btn-modern btn-outline-modern" 
+                                        onclick="voltarPasso(2)"
+                                        aria-label="Voltar para seleção de data">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Voltar
                                 </button>
-                                <button type="button" class="btn btn-primary" onclick="avancarPasso(4)" disabled id="btn-passo-3">
-                                    Avançar <i class="bi bi-arrow-right"></i>
+                                <button type="button" 
+                                        class="btn btn-modern btn-primary-modern" 
+                                        onclick="avancarPasso(4)" 
+                                        disabled 
+                                        id="btn-passo-3"
+                                        aria-label="Avançar para confirmação">
+                                    Avançar
+                                    <i class="bi bi-arrow-right ms-2"></i>
                                 </button>
                             </div>
                         </div>
                         
                         <!-- Passo 4: Confirmar -->
                         <div class="step-content" id="step-4">
-                            <h4 class="mb-4 text-center">Confirmar Agendamento</h4>
-                            <div class="resumo-box">
-                                <h5 class="mb-3"><i class="bi bi-clipboard-check"></i> Resumo do Agendamento</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Serviço:</strong> <span id="resumo-servico"></span></p>
-                                        <p><strong>Data:</strong> <span id="resumo-data"></span></p>
-                                        <p><strong>Horário:</strong> <span id="resumo-hora"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Duração:</strong> <span id="resumo-duracao"></span> minutos</p>
-                                        <p><strong>Valor:</strong> R$ <span id="resumo-preco"></span></p>
-                                        <p><strong>Local:</strong> {{ barbeiro.endereco }}</p>
-                                    </div>
+                            <div class="summary-card">
+                                <h2 class="summary-title">
+                                    <i class="bi bi-clipboard-check-fill"></i>
+                                    Resumo do Agendamento
+                                </h2>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-scissors"></i>
+                                        Serviço
+                                    </span>
+                                    <span class="summary-value" id="resumo-servico">-</span>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Data
+                                    </span>
+                                    <span class="summary-value" id="resumo-data">-</span>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-clock"></i>
+                                        Horário
+                                    </span>
+                                    <span class="summary-value" id="resumo-hora">-</span>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-hourglass-split"></i>
+                                        Duração
+                                    </span>
+                                    <span class="summary-value"><span id="resumo-duracao">-</span> min</span>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-cash-coin"></i>
+                                        Valor
+                                    </span>
+                                    <span class="summary-value">R$ <span id="resumo-preco">-</span></span>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <span class="summary-label">
+                                        <i class="bi bi-geo-alt"></i>
+                                        Local
+                                    </span>
+                                    <span class="summary-value" style="font-size: 0.9375rem;">{{ barbeiro.endereco }}</span>
                                 </div>
                             </div>
                             
-                            <div class="mt-4">
-                                <label for="observacoes" class="form-label">Observações (Opcional)</label>
-                                <textarea class="form-control" id="observacoes" name="observacoes" 
-                                          rows="3" maxlength="500" 
-                                          placeholder="Alguma preferência ou observação?"></textarea>
-                                <small class="text-muted">Máximo 500 caracteres</small>
+                            <div style="padding: 0 2rem;">
+                                <label for="observacoes" class="form-label-modern mb-2">
+                                    <i class="bi bi-chat-left-text me-2"></i>
+                                    Observações <span class="text-muted">(opcional)</span>
+                                </label>
+                                <textarea class="textarea-modern" 
+                                          id="observacoes" 
+                                          name="observacoes" 
+                                          maxlength="500" 
+                                          placeholder="Alguma preferência ou observação? Ex: Preferência de estilo, alergias, etc."
+                                          aria-describedby="observacoes-help"></textarea>
+                                <small id="observacoes-help" class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Máximo 500 caracteres
+                                </small>
                             </div>
                             
-                            <div class="alert alert-warning mt-4">
-                                <i class="bi bi-exclamation-triangle"></i>
-                                <strong>Lembre-se:</strong> Chegue com 5 minutos de antecedência. 
-                                Cancelamentos devem ser feitos com pelo menos 2 horas de antecedência.
+                            <div class="alert-modern alert-warning-modern" style="margin: 2rem;">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <div>
+                                    <strong>Lembre-se:</strong> Chegue com 5 minutos de antecedência. 
+                                    Cancelamentos devem ser feitos com pelo menos 2 horas de antecedência.
+                                </div>
                             </div>
                             
-                            <div class="text-center mt-4">
-                                <button type="button" class="btn btn-secondary me-2" onclick="voltarPasso(3)">
-                                    <i class="bi bi-arrow-left"></i> Voltar
+                            <div class="step-actions">
+                                <button type="button" 
+                                        class="btn btn-modern btn-outline-modern" 
+                                        onclick="voltarPasso(3)"
+                                        aria-label="Voltar para seleção de horário">
+                                    <i class="bi bi-arrow-left me-2"></i>
+                                    Voltar
                                 </button>
-                                <button type="submit" class="btn btn-success btn-lg px-5">
-                                    <i class="bi bi-check-circle"></i> Confirmar Agendamento
+                                <button type="submit" 
+                                        class="btn btn-modern btn-primary-modern btn-lg px-5"
+                                        aria-label="Confirmar agendamento">
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    Confirmar Agendamento
                                 </button>
                             </div>
                         </div>
@@ -263,7 +752,7 @@
 let passoAtual = 1;
 let servicoSelecionado = null;
 let dataSelecionada = null;
-let horaSelecionada = null;
+horaSelecionada = null;
 
 // Configurar data mínima como hoje
 document.addEventListener('DOMContentLoaded', function() {
@@ -271,49 +760,79 @@ document.addEventListener('DOMContentLoaded', function() {
     const dataInput = document.getElementById('data');
     dataInput.min = hoje.toISOString().split('T')[0];
     
-    // Adicionar evento de clique nos cards de serviço
-    document.querySelectorAll('.servico-card').forEach(card => {
+    // Adicionar evento de clique e teclado nos cards de serviço
+    document.querySelectorAll('.service-card').forEach(card => {
         card.addEventListener('click', function() {
-            const id = this.getAttribute('data-servico-id');
-            const nome = this.getAttribute('data-servico-nome');
-            const preco = parseFloat(this.getAttribute('data-servico-preco'));
-            const duracao = parseInt(this.getAttribute('data-servico-duracao'));
-            
-            selecionarServico(id, nome, preco, duracao, this);
+            selecionarServicoDoCar(this);
+        });
+        
+        card.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selecionarServicoDoCard(this);
+            }
         });
     });
+    
+    // Atualizar barra de progresso inicial
+    atualizarBarraProgresso();
 });
+
+function selecionarServicoDoCard(card) {
+    const id = card.getAttribute('data-servico-id');
+    const nome = card.getAttribute('data-servico-nome');
+    const preco = parseFloat(card.getAttribute('data-servico-preco'));
+    const duracao = parseInt(card.getAttribute('data-servico-duracao'));
+    
+    selecionarServico(id, nome, preco, duracao, card);
+}
 
 function selecionarServico(id, nome, preco, duracao, elemento) {
     // Remover seleção anterior
-    document.querySelectorAll('.servico-card').forEach(card => {
+    document.querySelectorAll('.service-card').forEach(card => {
         card.classList.remove('selected');
+        card.setAttribute('aria-selected', 'false');
     });
     
     // Selecionar novo serviço
     elemento.classList.add('selected');
+    elemento.setAttribute('aria-selected', 'true');
     
     servicoSelecionado = {id, nome, preco, duracao};
     document.getElementById('servico_id').value = id;
     
-    // Avançar automaticamente após 500ms
-    setTimeout(() => avancarPasso(2), 500);
+    // Avançar automaticamente após 600ms
+    setTimeout(() => avancarPasso(2), 600);
+}
+
+function atualizarBarraProgresso() {
+    const progressBar = document.getElementById('progressBar');
+    const progressElement = document.querySelector('.step-progress');
+    const larguras = {
+        1: '12.5%',
+        2: '37.5%',
+        3: '62.5%',
+        4: '87.5%'
+    };
+    
+    progressBar.style.width = larguras[passoAtual];
+    progressElement.setAttribute('aria-valuenow', passoAtual);
 }
 
 function avancarPasso(passo) {
-    // Validações
+    // Validações com mensagens acessíveis
     if (passo === 2 && !servicoSelecionado) {
-        alert('Por favor, selecione um serviço');
+        mostrarAlerta('Por favor, selecione um serviço', 'warning');
         return;
     }
     
     if (passo === 3 && !dataSelecionada) {
-        alert('Por favor, selecione uma data');
+        mostrarAlerta('Por favor, selecione uma data', 'warning');
         return;
     }
     
     if (passo === 4 && !horaSelecionada) {
-        alert('Por favor, selecione um horário');
+        mostrarAlerta('Por favor, selecione um horário', 'warning');
         return;
     }
     
@@ -327,6 +846,9 @@ function avancarPasso(passo) {
     document.getElementById('step-' + passo).classList.add('active');
     document.getElementById('step-indicator-' + passo).classList.add('active');
     
+    // Atualizar barra de progresso
+    atualizarBarraProgresso();
+    
     // Se for o passo 4, preencher resumo
     if (passo === 4) {
         preencherResumo();
@@ -334,15 +856,29 @@ function avancarPasso(passo) {
     
     // Scroll suave para o topo
     window.scrollTo({top: 0, behavior: 'smooth'});
+    
+    // Focar no primeiro elemento interativo do novo passo
+    setTimeout(() => {
+        const novoPassoElement = document.getElementById('step-' + passo);
+        const primeiroFocavel = novoPassoElement.querySelector('button, input, textarea, select, [tabindex="0"]');
+        if (primeiroFocavel) {
+            primeiroFocavel.focus();
+        }
+    }, 100);
 }
 
 function voltarPasso(passo) {
     document.getElementById('step-' + passoAtual).classList.remove('active');
     document.getElementById('step-indicator-' + passoAtual).classList.remove('active');
+    document.getElementById('step-indicator-' + passoAtual).classList.remove('completed');
     
     passoAtual = passo;
     document.getElementById('step-' + passo).classList.add('active');
     document.getElementById('step-indicator-' + passo).classList.add('active');
+    document.getElementById('step-indicator-' + passo).classList.remove('completed');
+    
+    // Atualizar barra de progresso
+    atualizarBarraProgresso();
     
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
@@ -353,7 +889,7 @@ document.getElementById('data').addEventListener('change', function() {
         // Verificar se é domingo
         const dataObj = new Date(data + 'T00:00:00');
         if (dataObj.getDay() === 0) {
-            alert('Desculpe, não abrimos aos domingos!');
+            mostrarAlerta('Desculpe, não abrimos aos domingos! Por favor, selecione outro dia.', 'warning');
             this.value = '';
             return;
         }
@@ -371,32 +907,45 @@ function carregarHorarios() {
     const container = document.getElementById('horarios-container');
     
     loading.style.display = 'block';
+    loading.setAttribute('aria-busy', 'true');
     container.innerHTML = '';
     
     fetch(`/api/horarios-disponiveis?data=${dataSelecionada}&servico_id=${servicoSelecionado.id}`)
         .then(response => response.json())
         .then(data => {
             loading.style.display = 'none';
+            loading.setAttribute('aria-busy', 'false');
             
             if (data.mensagem) {
-                container.innerHTML = `<div class="alert alert-warning">${data.mensagem}</div>`;
+                container.innerHTML = `
+                    <div class="alert-modern alert-warning-modern" style="margin: 2rem;">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>${data.mensagem}</div>
+                    </div>`;
                 return;
             }
             
             if (data.horarios.length === 0) {
-                container.innerHTML = '<div class="alert alert-info">Nenhum horário disponível para esta data</div>';
+                container.innerHTML = `
+                    <div class="alert-modern alert-info-modern" style="margin: 2rem;">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <div>Nenhum horário disponível para esta data. Por favor, escolha outra data.</div>
+                    </div>`;
                 return;
             }
             
             const grid = document.createElement('div');
-            grid.className = 'horarios-grid';
+            grid.className = 'time-slots-grid';
             
             data.horarios.forEach(h => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'horario-btn';
+                btn.className = 'time-slot-btn';
                 btn.textContent = h.horario;
                 btn.disabled = !h.disponivel;
+                btn.setAttribute('role', 'radio');
+                btn.setAttribute('aria-checked', 'false');
+                btn.setAttribute('aria-label', h.disponivel ? `Selecionar horário ${h.horario}` : `Horário ${h.horario} não disponível`);
                 
                 if (h.disponivel) {
                     btn.addEventListener('click', function() {
@@ -411,19 +960,26 @@ function carregarHorarios() {
         })
         .catch(error => {
             loading.style.display = 'none';
-            container.innerHTML = '<div class="alert alert-danger">Erro ao carregar horários</div>';
+            loading.setAttribute('aria-busy', 'false');
+            container.innerHTML = `
+                <div class="alert-modern alert-warning-modern" style="margin: 2rem;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <div>Erro ao carregar horários. Por favor, tente novamente.</div>
+                </div>`;
             console.error(error);
         });
 }
 
 function selecionarHorario(hora, elemento) {
     // Remover seleção anterior
-    document.querySelectorAll('.horario-btn').forEach(btn => {
+    document.querySelectorAll('.time-slot-btn').forEach(btn => {
         btn.classList.remove('selected');
+        btn.setAttribute('aria-checked', 'false');
     });
     
     // Selecionar novo horário
     elemento.classList.add('selected');
+    elemento.setAttribute('aria-checked', 'true');
     
     horaSelecionada = hora;
     document.getElementById('hora').value = hora;
@@ -437,9 +993,42 @@ function preencherResumo() {
     
     // Formatar data
     const dataObj = new Date(dataSelecionada + 'T00:00:00');
-    const dataFormatada = dataObj.toLocaleDateString('pt-BR');
-    document.getElementById('resumo-data').textContent = dataFormatada;
+    const dataFormatada = dataObj.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    document.getElementById('resumo-data').textContent = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
     document.getElementById('resumo-hora').textContent = horaSelecionada;
+}
+
+function mostrarAlerta(mensagem, tipo) {
+    // Criar elemento de alerta acessível
+    const alerta = document.createElement('div');
+    alerta.setAttribute('role', 'alert');
+    alerta.setAttribute('aria-live', 'assertive');
+    alerta.className = 'alert-modern alert-warning-modern';
+    alerta.style.position = 'fixed';
+    alerta.style.top = '100px';
+    alerta.style.left = '50%';
+    alerta.style.transform = 'translateX(-50%)';
+    alerta.style.zIndex = '10000';
+    alerta.style.maxWidth = '500px';
+    alerta.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.2)';
+    alerta.innerHTML = `
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div>${mensagem}</div>
+    `;
+    
+    document.body.appendChild(alerta);
+    
+    // Remover após 4 segundos
+    setTimeout(() => {
+        alerta.style.opacity = '0';
+        alerta.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => alerta.remove(), 300);
+    }, 4000);
 }
 </script>
 {% endblock %}
