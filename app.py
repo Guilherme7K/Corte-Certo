@@ -14,14 +14,6 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
-# Context processor para tornar datetime disponível em todos os templates
-@app.context_processor
-def inject_datetime():
-    return {
-        'datetime': datetime,
-        'date': date
-    }
-
 # Usar as configs do arquivo config.py
 BARBEIRO_INFO = {
     'nome': 'João Silva',
@@ -30,6 +22,16 @@ BARBEIRO_INFO = {
     'telefone': Config.TELEFONE,
     'email': Config.EMAIL_CONTATO
 }
+
+# Context processor para tornar variáveis disponíveis em todos os templates
+@app.context_processor
+def inject_global_variables():
+    return {
+        'datetime': datetime,
+        'date': date,
+        'now': datetime.now,
+        'barbeiro': BARBEIRO_INFO
+    }
 
 # Inicializar banco de dados automaticamente
 def init_db():
