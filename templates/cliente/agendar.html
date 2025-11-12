@@ -752,7 +752,7 @@
 let passoAtual = 1;
 let servicoSelecionado = null;
 let dataSelecionada = null;
-horaSelecionada = null;
+let horaSelecionada = null;
 
 // Configurar data mínima como hoje
 document.addEventListener('DOMContentLoaded', function() {
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adicionar evento de clique e teclado nos cards de serviço
     document.querySelectorAll('.service-card').forEach(card => {
         card.addEventListener('click', function() {
-            selecionarServicoDoCar(this);
+            selecionarServicoDoCard(this);
         });
         
         card.addEventListener('keypress', function(e) {
