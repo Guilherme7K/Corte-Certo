@@ -5,101 +5,111 @@
     <div class="container mx-auto max-w-3xl">
         
         <!-- Header -->
-        <div class="mb-8">
-            <a href="{{ url_for('admin_bloqueios') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-sand mb-3 transition-colors">
-                <i class="fa-solid fa-arrow-left"></i>
-                Voltar aos Bloqueios
-            </a>
-            <h1 class="font-display text-4xl text-sand syne-extra flex items-center gap-3">
-                <i class="fa-solid fa-calendar-xmark text-clay"></i>
-                Novo Bloqueio
-            </h1>
-            <p class="text-sand/60 mt-2">Bloqueie períodos na agenda para férias, feriados ou eventos</p>
+        <div class="relative mb-16">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 bg-gradient-to-br from-surface to-moss rounded-sm overflow-hidden">
+                <div class="absolute inset-0 opacity-5" style="background-image: url('https://www.transparenttextures.com/patterns/stardust.png');"></div>
+            </div>
+            
+            <div class="relative z-10 p-12">
+                <a href="{{ url_for('admin_bloqueios') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-clay mb-4 transition-colors text-sm font-mono">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Voltar
+                </a>
+                <h1 class="font-display text-5xl md:text-6xl text-sand font-bold mb-2">
+                    Novo Bloqueio
+                </h1>
+                <p class="text-sand/60 text-sm font-mono tracking-wide">Bloqueie períodos na agenda</p>
+            </div>
         </div>
 
         <!-- Formulário -->
-        <div class="bg-[#0d140c] border border-sand/10 rounded-xl shadow-2xl overflow-hidden">
+        <div class="bg-surface border border-sand/10 rounded-sm shadow-2xl overflow-hidden">
             
-            <div class="bg-gradient-to-br from-clay to-clay/80 p-8 text-center relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-sand/10 rounded-full blur-3xl"></div>
-                <i class="fa-solid fa-ban text-sand text-4xl mb-3 relative z-10"></i>
-                <h2 class="font-display text-2xl text-sand relative z-10">Configurar Bloqueio</h2>
+            <div class="bg-gradient-to-br from-clay to-clay/80 p-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-sand/10 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-xmark text-sand text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-display text-3xl text-sand font-bold">Configurar Bloqueio</h2>
+                        <p class="text-sand/80 text-sm font-mono mt-1">Preencha as informações abaixo</p>
+                    </div>
+                </div>
             </div>
 
-            <form method="POST" class="p-8 space-y-6">
+            <form method="POST" class="p-8 space-y-8">
                 
                 <div>
-                    <label class="block text-sand text-sm font-medium mb-2">
-                        <i class="fa-solid fa-heading mr-2 text-clay"></i>
+                    <label class="block text-sand text-sm font-mono uppercase tracking-widest mb-3">
                         Motivo do Bloqueio <span class="text-clay">*</span>
                     </label>
                     <input type="text" name="motivo" required maxlength="200"
                            placeholder="Ex: Férias, Feriado, Evento Especial"
-                           class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 
-                                  focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
+                           class="w-full px-5 py-4 bg-moss border border-sand/20 rounded-sm text-sand placeholder-sand/40 font-mono
+                                  focus:outline-none focus:border-clay transition-all">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sand text-sm font-medium mb-2">
-                            <i class="fa-solid fa-calendar mr-2 text-clay"></i>
+                        <label class="block text-sand text-sm font-mono uppercase tracking-widest mb-3">
                             Data Início <span class="text-clay">*</span>
                         </label>
                         <input type="date" name="data_inicio" required
-                               class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand 
-                                      focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
+                               class="w-full px-5 py-4 bg-moss border border-sand/20 rounded-sm text-sand font-mono
+                                      focus:outline-none focus:border-clay transition-all">
                     </div>
 
                     <div>
-                        <label class="block text-sand text-sm font-medium mb-2">
-                            <i class="fa-solid fa-calendar mr-2 text-clay"></i>
+                        <label class="block text-sand text-sm font-mono uppercase tracking-widest mb-3">
                             Data Fim <span class="text-clay">*</span>
                         </label>
                         <input type="date" name="data_fim" required
-                               class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand 
-                                      focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
+                               class="w-full px-5 py-4 bg-moss border border-sand/20 rounded-sm text-sand font-mono
+                                      focus:outline-none focus:border-clay transition-all">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sand text-sm font-medium mb-2">
-                        <i class="fa-solid fa-comment mr-2 text-clay"></i>
+                    <label class="block text-sand text-sm font-mono uppercase tracking-widest mb-3">
                         Observações <span class="text-sand/50 text-xs">(opcional)</span>
                     </label>
                     <textarea name="observacoes" rows="4" maxlength="500"
                               placeholder="Informações adicionais sobre o bloqueio..."
-                              class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 
-                                     focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all resize-none"></textarea>
+                              class="w-full px-5 py-4 bg-moss border border-sand/20 rounded-sm text-sand placeholder-sand/40 font-mono
+                                     focus:outline-none focus:border-clay transition-all resize-none"></textarea>
                 </div>
 
-                <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-6">
-                    <h4 class="font-display text-sand font-bold mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-info-circle text-orange-400"></i>
-                        Atenção
-                    </h4>
-                    <ul class="text-sand/70 text-sm space-y-2">
-                        <li class="flex items-start gap-2">
+                <div class="bg-orange-500/10 border border-orange-500/30 rounded-sm p-8">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-info-circle text-orange-400"></i>
+                        </div>
+                        <h4 class="font-display text-sand font-bold text-xl">Atenção</h4>
+                    </div>
+                    <ul class="text-sand/80 text-sm font-mono space-y-3">
+                        <li class="flex items-start gap-3">
                             <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
                             <span>O bloqueio impedirá novos agendamentos no período selecionado</span>
                         </li>
-                        <li class="flex items-start gap-2">
+                        <li class="flex items-start gap-3">
                             <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
                             <span>Agendamentos já existentes não serão afetados</span>
                         </li>
-                        <li class="flex items-start gap-2">
+                        <li class="flex items-start gap-3">
                             <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
                             <span>Você pode desativar ou deletar o bloqueio a qualquer momento</span>
                         </li>
                     </ul>
                 </div>
 
-                <div class="flex gap-4 pt-4">
+                <div class="flex gap-4 pt-6 border-t border-sand/10">
                     <a href="{{ url_for('admin_bloqueios') }}" 
-                       class="flex-1 bg-moss border border-sand/20 text-sand px-6 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:border-sand/40 transition-colors text-center">
+                       class="flex-1 bg-transparent border border-sand/30 text-sand px-6 py-4 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-surface hover:border-sand/50 transition-all text-center">
                         Cancelar
                     </a>
                     <button type="submit" 
-                            class="flex-1 bg-clay hover:bg-clay/90 text-sand px-6 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide transition-colors shadow-lg shadow-clay/20">
+                            class="flex-1 bg-clay hover:bg-clay/90 text-sand px-6 py-4 rounded-sm font-display font-bold text-xs uppercase tracking-widest transition-all shadow-lg">
                         <i class="fa-solid fa-check mr-2"></i>
                         Criar Bloqueio
                     </button>
