@@ -600,13 +600,16 @@ def api_horarios_disponiveis():
         if bloqueio_ativo:
             return jsonify({'horarios': [], 'bloqueado': True, 'motivo': bloqueio_ativo.motivo})
         
+        # obter_horarios_disponiveis já retorna lista de strings no formato 'HH:MM'
         horarios = obter_horarios_disponiveis(data, servico)
-        horarios_formatados = [h.strftime('%H:%M') for h in horarios]
         
-        return jsonify({'horarios': horarios_formatados, 'bloqueado': False})
+        return jsonify({'horarios': horarios, 'bloqueado': False})
         
-    except (ValueError, TypeError) as e:
-        return jsonify({'error': 'Data ou serviço inválidos'}), 400
+    except Exception as e:
+        print(f"Erro na API de horários: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Erro ao processar requisição: {str(e)}'}), 500
 
 @app.route('/cliente/agendamento/<int:id>/cancelar/confirmar', methods=['POST'])
 @login_required
