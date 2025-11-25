@@ -5,16 +5,16 @@
 <section class="relative min-h-screen flex items-center justify-center pt-20 px-6">
     <div class="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
-        <!-- Text Content -->
         <div class="lg:col-span-6 relative z-10">
             <div class="mb-6 flex items-center gap-4">
                 <div class="w-12 h-[1px] bg-clay"></div>
                 <span class="font-mono text-xs text-clay uppercase tracking-widest">Desde 2024</span>
             </div>
             
-            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] syne-extra text-sand mb-8">
-                <div class="line-reveal"><span>{{ barbeiro.barbearia }}</span></div>
-                <div class="line-reveal"><span class="italic font-normal text-clay">Redefinida.</span></div>
+            <h1 class="font-display text-6xl md:text-8xl leading-[0.9] syne-extra text-sand mb-8">
+                <div>Estética</div>
+                <div>Masculina</div>
+                <div class="italic font-normal text-clay">Redefinida.</div>
             </h1>
 
             <p class="text-sand/70 text-lg max-w-md leading-relaxed mb-10">
@@ -24,33 +24,29 @@
             <div class="flex gap-6 flex-wrap">
                 {% if session.usuario_id %}
                     {% if session.usuario_tipo == 'cliente' %}
-                        <a href="{{ url_for('cliente_agendar') }}" class="btn-primary shadow-lg shadow-clay/20">
-                            <i class="fa-solid fa-calendar-check mr-2"></i>
+                        <a href="{{ url_for('cliente_agendar') }}" class="bg-clay text-sand px-8 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                             Agendar Horário
                         </a>
                         <a href="{{ url_for('cliente_dashboard') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium hover:text-clay transition-colors group">
-                            Meus Agendamentos <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            Dashboard <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </a>
                     {% else %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="btn-primary shadow-lg shadow-clay/20">
-                            <i class="fa-solid fa-chart-line mr-2"></i>
+                        <a href="{{ url_for('admin_dashboard') }}" class="bg-clay text-sand px-8 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                             Dashboard Admin
                         </a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ url_for('cadastro') }}" class="btn-primary shadow-lg shadow-clay/20">
-                        <i class="fa-solid fa-user-plus mr-2"></i>
-                        Criar Conta Grátis
+                    <a href="{{ url_for('cadastro') }}" class="bg-clay text-sand px-8 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
+                        Criar Conta
                     </a>
                     <a href="{{ url_for('login') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium hover:text-clay transition-colors group">
-                        Já tem conta? Entrar <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        Entrar <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Hero Image -->
-        <div class="lg:col-span-6 h-[60vh] lg:h-[70vh] relative">
+        <div class="lg:col-span-6 h-[70vh] relative">
             <div class="absolute inset-0 bg-gradient-to-tr from-moss to-transparent z-10 opacity-30"></div>
             <div class="absolute -top-4 -right-4 w-full h-full border border-sand/10 z-0"></div>
             
@@ -60,8 +56,7 @@
                      class="w-full h-full object-cover">
             </div>
             
-            <!-- Badge Flutuante -->
-            <div class="absolute bottom-10 -left-10 bg-sand text-moss p-6 max-w-xs shadow-xl rounded-sm z-20 hidden lg:block">
+            <div class="absolute bottom-10 -left-10 bg-sand text-moss p-6 max-w-xs shadow-xl rounded-sm z-20 hidden md:block">
                 <p class="font-display font-bold text-xl mb-2">"O melhor corte da cidade."</p>
                 <div class="flex gap-1 text-clay text-xs">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
@@ -71,9 +66,9 @@
     </div>
 </section>
 
-<!-- Marquee Suave -->
-<div class="py-8 bg-moss border-y border-sand/5 overflow-hidden">
-    <div class="flex gap-12 text-sand/40 font-display text-2xl items-center animate-marquee whitespace-nowrap">
+<!-- Marquee -->
+<div class="py-8 bg-moss border-y border-sand/5 overflow-hidden flex gap-8 whitespace-nowrap opacity-60">
+    <div class="animate-marquee flex gap-12 text-sand/40 font-display text-2xl items-center">
         <span>CORTE</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
         <span>BARBA</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
         <span>ESTILO</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
@@ -85,9 +80,9 @@
     </div>
 </div>
 
-<!-- Sobre Section -->
-<section class="py-24 px-6 bg-moss relative">
-    <div class="container mx-auto relative z-10">
+<!-- Sobre -->
+<section id="atelier" class="py-24 px-6 bg-[#151C13]">
+    <div class="container mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div class="order-2 md:order-1 grid grid-cols-2 gap-4">
                 <div class="image-frame h-64 md:h-80 rounded-sm mt-12 scroll-reveal">
@@ -102,7 +97,7 @@
                 <h2 class="font-display text-4xl md:text-5xl text-sand mb-6">
                     Não é só cabelo.<br>É <span class="text-clay italic">identidade</span>.
                 </h2>
-                <p class="text-sand/80 text-lg mb-6 leading-relaxed">
+                <p class="text-sand/70 text-lg mb-6 leading-relaxed">
                     Fugimos do óbvio. Aqui, o ambiente respira tranquilidade e foco. Trocamos o barulho e a pressa por cadeiras ergonômicas, toalhas quentes com óleos essenciais e uma conversa que realmente importa.
                 </p>
                 <div class="flex items-center gap-4 text-sm font-medium text-clay">
@@ -113,46 +108,41 @@
     </div>
 </section>
 
-<!-- Serviços (Clean & Editorial) -->
-<section class="py-32 px-6 bg-moss relative">
-    <div class="container mx-auto relative z-10">
-        <div class="text-center mb-20 scroll-reveal">
-            <span class="text-clay font-mono text-xs tracking-widest uppercase">Nosso Menu</span>
-            <h2 class="font-display text-5xl md:text-6xl text-sand mt-4">Serviços</h2>
+<!-- Serviços -->
+<section id="servicos" class="py-32 px-6 container mx-auto">
+    <div class="text-center mb-20 scroll-reveal">
+        <span class="text-clay font-mono text-xs tracking-widest uppercase">Nosso Menu</span>
+        <h2 class="font-display text-5xl md:text-6xl text-sand mt-4">Serviços</h2>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-12">
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss transition-colors">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Corte Signature</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Consultoria + Lavagem + Corte + Styling</p>
+                </div>
+                <span class="font-display text-xl text-sand">R$ 80</span>
+            </div>
         </div>
 
-        <div class="max-w-4xl mx-auto space-y-12">
-            <!-- Service 1 -->
-            <div class="group relative scroll-reveal">
-                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 transition-colors cursor-pointer">
-                    <div>
-                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Corte Signature</h3>
-                        <p class="text-sand/60 text-sm mt-2 font-mono">Consultoria + Lavagem + Corte + Styling</p>
-                    </div>
-                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 80</span>
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Barba Real</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Toalha Quente + Hidratação + Modelagem</p>
                 </div>
+                <span class="font-display text-xl text-sand">R$ 65</span>
             </div>
+        </div>
 
-            <!-- Service 2 -->
-            <div class="group relative scroll-reveal">
-                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 cursor-pointer">
-                    <div>
-                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Barba Real</h3>
-                        <p class="text-sand/60 text-sm mt-2 font-mono">Toalha Quente + Hidratação + Modelagem</p>
-                    </div>
-                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 65</span>
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Ritual Completo</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Corte + Barba + Sobrancelha + Relaxamento</p>
                 </div>
-            </div>
-
-            <!-- Service 3 -->
-            <div class="group relative scroll-reveal">
-                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 cursor-pointer">
-                    <div>
-                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Ritual Completo</h3>
-                        <p class="text-sand/60 text-sm mt-2 font-mono">Corte + Barba + Sobrancelha + Relaxamento</p>
-                    </div>
-                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 130</span>
-                </div>
+                <span class="font-display text-xl text-sand">R$ 130</span>
             </div>
         </div>
     </div>
@@ -163,20 +153,17 @@
     <div class="container mx-auto">
         <div class="text-center mb-12">
             <span class="text-clay font-mono text-xs tracking-widest uppercase">Depoimentos</span>
-            <h2 class="font-display text-4xl md:text-5xl syne-extra mt-4">O que nossos clientes dizem</h2>
+            <h2 class="font-display text-4xl md:text-5xl syne-extra mt-4">O que dizem</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Card 1 -->
             <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
                 <div class="flex gap-1 text-clay text-xs mb-4">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
-                <p class="text-moss/80 mb-6 italic">"Melhor experiência que já tive em uma barbearia. Atendimento impecável e ambiente perfeito."</p>
+                <p class="text-moss/80 mb-6 italic">"Melhor experiência que já tive. Atendimento impecável."</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
-                        RC
-                    </div>
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">RC</div>
                     <div>
                         <h6 class="font-bold">Ricardo Costa</h6>
                         <p class="text-sm text-moss/60">Cliente desde 2024</p>
@@ -184,16 +171,13 @@
                 </div>
             </div>
 
-            <!-- Card 2 -->
             <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
                 <div class="flex gap-1 text-clay text-xs mb-4">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
-                <p class="text-moss/80 mb-6 italic">"O sistema de agendamento é muito prático. Consigo marcar meu horário em segundos."</p>
+                <p class="text-moss/80 mb-6 italic">"Sistema de agendamento muito prático e rápido."</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
-                        MS
-                    </div>
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">MS</div>
                     <div>
                         <h6 class="font-bold">Marcos Silva</h6>
                         <p class="text-sm text-moss/60">Cliente desde 2024</p>
@@ -201,16 +185,13 @@
                 </div>
             </div>
 
-            <!-- Card 3 -->
             <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
                 <div class="flex gap-1 text-clay text-xs mb-4">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
-                <p class="text-moss/80 mb-6 italic">"Profissionais altamente qualificados. Sempre saio satisfeito com o resultado."</p>
+                <p class="text-moss/80 mb-6 italic">"Profissionais qualificados. Sempre saio satisfeito."</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
-                        FA
-                    </div>
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">FA</div>
                     <div>
                         <h6 class="font-bold">Felipe Almeida</h6>
                         <p class="text-sm text-moss/60">Cliente desde 2024</p>
@@ -221,7 +202,7 @@
     </div>
 </section>
 
-<!-- CTA Section -->
+<!-- CTA -->
 {% if not session.usuario_id %}
 <section class="py-32 px-6 bg-moss">
     <div class="container mx-auto text-center max-w-3xl">
@@ -229,34 +210,16 @@
             Pronto para experimentar?
         </h2>
         <p class="text-sand/70 text-lg mb-10 leading-relaxed">
-            Junte-se a centenas de clientes satisfeitos que já descobriram 
-            a forma mais prática de agendar seu corte
+            Junte-se a centenas de clientes satisfeitos
         </p>
         
         <div class="flex gap-6 justify-center flex-wrap">
             <a href="{{ url_for('cadastro') }}" class="btn-primary shadow-lg shadow-clay/20">
-                <i class="fa-solid fa-rocket mr-2"></i>
-                Criar conta grátis agora
+                Criar conta grátis
             </a>
             <a href="{{ url_for('login') }}" class="btn-outline">
-                <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>
                 Fazer login
             </a>
-        </div>
-        
-        <div class="flex justify-center gap-8 mt-12 flex-wrap">
-            <div class="flex items-center gap-3 text-sand/70">
-                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
-                <span>100% gratuito</span>
-            </div>
-            <div class="flex items-center gap-3 text-sand/70">
-                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
-                <span>Sem compromisso</span>
-            </div>
-            <div class="flex items-center gap-3 text-sand/70">
-                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
-                <span>Cadastro em 1 minuto</span>
-            </div>
         </div>
     </div>
 </section>

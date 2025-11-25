@@ -8,7 +8,7 @@
     <!-- Fonts: Syne (Artística/Moderna) & Manrope (Legibilidade) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,18 +25,15 @@
             theme: {
                 extend: {
                     colors: {
-                        moss: '#1A2318',       // Verde Musgo Profundo (Fundo)
-                        sand: '#EAE6D7',       // Creme/Areia (Texto Claro)
-                        clay: '#BC5D2E',       // Terracota (Destaque Quente)
-                        charcoal: '#2A2A2A',   // Cinza Chumbo Suave
-                        gold: '#D4AF37'        // Toque sutil de clássico
+                        moss: '#1A2318',
+                        sand: '#EAE6D7',
+                        clay: '#BC5D2E',
+                        charcoal: '#2A2A2A',
+                        gold: '#D4AF37'
                     },
                     fontFamily: {
                         display: ['"Syne"', 'sans-serif'],
                         body: ['"Manrope"', 'sans-serif'],
-                    },
-                    backgroundImage: {
-                        'texture': "url('https://www.transparenttextures.com/patterns/concrete-wall.png')",
                     }
                 }
             }
@@ -56,7 +53,6 @@
             overflow-x: hidden;
         }
 
-        /* Header Flutuante */
         header.nav-header {
             position: fixed;
             top: 0;
@@ -107,9 +103,6 @@
             header.nav-header.scrolled .nav-container {
                 width: 95%;
             }
-            .nav-container {
-                padding: 0.75rem 1rem;
-            }
         }
 
         nav ul {
@@ -119,12 +112,6 @@
             align-items: center;
             margin: 0;
             padding: 0;
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                gap: 1rem;
-            }
         }
 
         nav ul li a {
@@ -181,7 +168,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -193,21 +179,11 @@
             border-radius: 3px;
         }
 
-        /* Tipografia */
         .syne-extra {
             font-weight: 800;
             letter-spacing: -0.05em;
         }
 
-        /* Texture Overlay - Removido para evitar conflito de z-index */
-
-        /* Scroll Reveal */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        /* Image Containers */
         .image-frame {
             overflow: hidden;
             position: relative;
@@ -219,7 +195,6 @@
             transform: scale(1.05);
         }
 
-        /* Botões estilo Navalha */
         .btn-primary {
             background: var(--color-secondary);
             color: var(--color-text);
@@ -265,7 +240,6 @@
             transform: translateY(-2px);
         }
 
-        /* Flash Messages */
         .alert {
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
@@ -285,13 +259,6 @@
             color: #dc2626;
         }
 
-        .alert-info {
-            background: rgba(234, 230, 215, 0.1);
-            border: 1px solid rgba(234, 230, 215, 0.3);
-            color: var(--color-text);
-        }
-
-        /* Forms */
         input, select, textarea {
             background: rgba(234, 230, 215, 0.05);
             border: 1px solid rgba(234, 230, 215, 0.2);
@@ -322,60 +289,47 @@
     {% block styles %}{% endblock %}
 </head>
 <body class="bg-moss font-body selection:bg-clay selection:text-white">
-    
-    <!-- Header Flutuante -->
+
     <header class="nav-header">
         <div class="nav-wrapper">
             <div class="nav-container">
-                <!-- Logo -->
                 <a href="{{ url_for('index') }}" class="font-display font-bold text-xl tracking-tighter text-sand z-10 no-underline hover:text-clay transition-colors">
                     {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
                 </a>
                 
-                <!-- Links Desktop -->
                 <nav class="hidden md:block">
                     <ul>
                         <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
                         {% if session.usuario_id %}
                             {% if session.usuario_tipo == 'cliente' %}
-                                <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Meus Agendamentos</a></li>
+                                <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Dashboard</a></li>
                                 <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
                             {% else %}
-                                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a></li>
-                                <li><a href="{{ url_for('admin_agendamentos') }}" class="{% if request.endpoint == 'admin_agendamentos' %}active{% endif %}">Agendamentos</a></li>
+                                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
                 </nav>
 
-                <!-- CTA Button -->
                 {% if session.usuario_id %}
                     {% if session.usuario_tipo == 'cliente' %}
-                        <a href="{{ url_for('cliente_agendar') }}" class="btn-cta z-10">
-                            Agendar
-                        </a>
+                        <a href="{{ url_for('cliente_agendar') }}" class="btn-cta z-10">Agendar</a>
                     {% else %}
-                        <a href="{{ url_for('logout') }}" class="btn-cta z-10">
-                            Sair
-                        </a>
+                        <a href="{{ url_for('logout') }}" class="btn-cta z-10">Sair</a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn-cta z-10">
-                        Entrar
-                    </a>
+                    <a href="{{ url_for('login') }}" class="btn-cta z-10">Entrar</a>
                 {% endif %}
             </div>
         </div>
     </header>
     
-    <!-- Main Content -->
     <main id="main-content" role="main">
-        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="container mx-auto px-4" style="padding-top: 120px;">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} fade-in-up">
+                        <div class="alert alert-{{ category }}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -386,7 +340,6 @@
         {% block content %}{% endblock %}
     </main>
     
-    <!-- Footer -->
     <footer class="bg-moss pt-20 pb-10 px-6 border-t border-sand/10">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <div>
@@ -394,22 +347,15 @@
                     {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
                 </span>
                 <p class="text-sand/60 text-sm leading-relaxed">
-                    {{ barbeiro.descricao if barbeiro.descricao else 'Elevando o padrão da estética masculina. Um corte de cada vez.' }}
+                    Elevando o padrão da estética masculina. Um corte de cada vez.
                 </p>
             </div>
             
             <div>
-                <h4 class="text-sand font-bold mb-4">Links Rápidos</h4>
+                <h4 class="text-sand font-bold mb-4">Links</h4>
                 <ul class="space-y-2">
                     <li><a href="{{ url_for('index') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Início</a></li>
-                    {% if session.usuario_id %}
-                        {% if session.usuario_tipo == 'cliente' %}
-                            <li><a href="{{ url_for('cliente_dashboard') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Dashboard</a></li>
-                            <li><a href="{{ url_for('cliente_agendar') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Agendar</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('admin_dashboard') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Admin</a></li>
-                        {% endif %}
-                    {% else %}
+                    {% if not session.usuario_id %}
                         <li><a href="{{ url_for('login') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Login</a></li>
                         <li><a href="{{ url_for('cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Cadastro</a></li>
                     {% endif %}
@@ -432,7 +378,7 @@
 
             <div>
                 <h4 class="text-sand font-bold mb-4">Horário</h4>
-                <p class="text-sand/60 text-sm">Segunda - Sexta: 9h - 20h<br>Sábado: 9h - 18h<br>Domingo: Fechado</p>
+                <p class="text-sand/60 text-sm">Segunda - Sexta: 9h - 20h<br>Sábado: 9h - 18h</p>
             </div>
         </div>
         <div class="text-center border-t border-sand/5 pt-8">
@@ -441,7 +387,6 @@
     </footer>
 
     <script>
-        // Scroll do Header
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header.nav-header');
             if (window.scrollY > 50) {
@@ -451,7 +396,6 @@
             }
         });
 
-        // Scroll Animations com GSAP
         gsap.registerPlugin(ScrollTrigger);
         
         document.querySelectorAll('.scroll-reveal').forEach(el => {
