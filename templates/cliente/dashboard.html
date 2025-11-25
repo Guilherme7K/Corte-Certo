@@ -162,6 +162,16 @@
                                                         <i class="fa-solid fa-trash text-xs"></i>
                                                     </button>
                                                 </form>
+                                            {% elif agendamento.status in ['concluido', 'cancelado'] %}
+                                                <form method="POST" action="{{ url_for('cliente_excluir_agendamento', id=agendamento.id) }}" 
+                                                      onsubmit="return confirm('Deseja remover este agendamento do histórico?')"
+                                                      class="inline">
+                                                    <button type="submit" 
+                                                            class="w-10 h-10 bg-transparent border border-sand/20 rounded-sm text-sand/40 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition-all flex items-center justify-center group"
+                                                            title="Remover do histórico">
+                                                        <i class="fa-solid fa-trash text-xs"></i>
+                                                    </button>
+                                                </form>
                                             {% endif %}
                                         </div>
                                     </div>
