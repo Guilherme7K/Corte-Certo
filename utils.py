@@ -7,6 +7,10 @@ def obter_horarios_disponiveis(data, servico):
     Retorna os horários disponíveis para um serviço em uma data específica
     Compatível com PostgreSQL e SQLite
     """
+    # Calcular tempo mínimo de antecedência (agora + 30 minutos)
+    agora = datetime.now()
+    minimo_antecedencia = agora + timedelta(minutes=30)
+    
     # Obter dia da semana (0=Domingo, 6=Sábado)
     dia_semana = data.weekday()
     if dia_semana == 6:  # Domingo
@@ -38,6 +42,11 @@ def obter_horarios_disponiveis(data, servico):
     horario_atual = inicio
     
     while horario_atual + timedelta(minutes=servico.duracao) <= fim:
+        # Verificar se o horário está no futuro com no mínimo 30 minutos de antecedência
+        if horario_atual < minimo_antecedencia:
+            horario_atual += timedelta(minutes=30)
+            continue
+        
         # Verificar se já existe agendamento nesse horário
         agendamento_existente = Agendamento.query.filter(
             and_(

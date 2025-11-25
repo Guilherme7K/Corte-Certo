@@ -477,9 +477,12 @@ def cliente_agendar():
                 flash(f'Não é possível agendar nesta data. Motivo: {bloqueio_ativo.motivo}', 'danger')
                 return redirect(url_for('cliente_agendar'))
             
-            # Verificar se a data não é no passado
-            if data_hora < datetime.now():
-                flash('Não é possível agendar para datas passadas', 'danger')
+            # Verificar se o horário é no futuro com no mínimo 30 minutos de antecedência
+            agora = datetime.now()
+            minimo_antecedencia = agora + timedelta(minutes=30)
+            
+            if data_hora < minimo_antecedencia:
+                flash('Não é possível agendar com menos de 30 minutos de antecedência', 'danger')
                 return redirect(url_for('cliente_agendar'))
             
             # Verificar se é um dia útil (segunda a sábado)
