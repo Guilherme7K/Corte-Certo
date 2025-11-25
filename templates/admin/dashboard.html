@@ -21,17 +21,10 @@
                         <p class="text-sand/60 text-sm font-mono tracking-wide">Olá, {{ session.usuario_nome.split()[0] if session.usuario_nome else 'Admin' }}</p>
                     </div>
                     
-                    <div class="flex items-center gap-4">
-                        <!-- Relógio -->
-                        <div class="bg-moss border border-sand/10 rounded-sm px-6 py-4">
-                            <p id="clock" class="text-sand font-mono text-2xl font-bold tracking-wider"></p>
-                            <p id="date" class="text-sand/60 text-xs text-center mt-1 font-mono"></p>
-                        </div>
-                        
-                        <a href="{{ url_for('logout') }}" 
-                           class="bg-transparent border border-sand/20 text-sand px-6 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-clay hover:text-clay transition-all">
-                            <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
-                        </a>
+                    <!-- Relógio -->
+                    <div class="bg-moss border border-sand/10 rounded-sm px-6 py-4">
+                        <p id="clock" class="text-sand font-mono text-2xl font-bold tracking-wider"></p>
+                        <p id="date" class="text-sand/60 text-xs text-center mt-1 font-mono"></p>
                     </div>
                 </div>
             </div>
