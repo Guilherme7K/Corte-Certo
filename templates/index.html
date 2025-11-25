@@ -30,9 +30,15 @@
                         <a href="{{ url_for('cliente_dashboard') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium hover:text-clay transition-colors group">
                             Dashboard <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </a>
+                        <a href="{{ url_for('logout') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
+                            Sair <i class="fa-solid fa-arrow-right-from-bracket group-hover:translate-x-1 transition-transform"></i>
+                        </a>
                     {% else %}
                         <a href="{{ url_for('admin_dashboard') }}" class="bg-clay text-sand px-8 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                             Dashboard Admin
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
+                            Sair <i class="fa-solid fa-arrow-right-from-bracket group-hover:translate-x-1 transition-transform"></i>
                         </a>
                     {% endif %}
                 {% else %}
