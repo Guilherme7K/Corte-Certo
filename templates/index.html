@@ -86,8 +86,8 @@
 </div>
 
 <!-- Sobre Section -->
-<section class="py-24 px-6 bg-[#151C13]">
-    <div class="container mx-auto">
+<section class="py-24 px-6 bg-moss relative">
+    <div class="container mx-auto relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div class="order-2 md:order-1 grid grid-cols-2 gap-4">
                 <div class="image-frame h-64 md:h-80 rounded-sm mt-12 scroll-reveal">
@@ -102,7 +102,7 @@
                 <h2 class="font-display text-4xl md:text-5xl text-sand mb-6">
                     Não é só cabelo.<br>É <span class="text-clay italic">identidade</span>.
                 </h2>
-                <p class="text-sand/70 text-lg mb-6 leading-relaxed">
+                <p class="text-sand/80 text-lg mb-6 leading-relaxed">
                     Fugimos do óbvio. Aqui, o ambiente respira tranquilidade e foco. Trocamos o barulho e a pressa por cadeiras ergonômicas, toalhas quentes com óleos essenciais e uma conversa que realmente importa.
                 </p>
                 <div class="flex items-center gap-4 text-sm font-medium text-clay">
@@ -111,46 +111,53 @@
             </div>
         </div>
     </div>
+    <!-- Gradient overlay para profundidade -->
+    <div class="absolute inset-0 bg-gradient-to-b from-moss via-moss to-black/20 pointer-events-none"></div>
 </section>
 
 <!-- Serviços (Clean & Editorial) -->
-<section class="py-32 px-6 container mx-auto">
-    <div class="text-center mb-20 scroll-reveal">
-        <span class="text-clay font-mono text-xs tracking-widest uppercase">Nosso Menu</span>
-        <h2 class="font-display text-5xl md:text-6xl text-sand mt-4">Serviços</h2>
-    </div>
-
-    <div class="max-w-4xl mx-auto space-y-12">
-        <!-- Service 1 -->
-        <div class="group relative scroll-reveal">
-            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss transition-colors cursor-pointer">
-                <div>
-                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Corte Signature</h3>
-                    <p class="text-sand/50 text-sm mt-2 font-mono">Consultoria + Lavagem + Corte + Styling</p>
-                </div>
-                <span class="font-display text-xl text-sand">R$ 80</span>
-            </div>
+<section class="py-32 px-6 bg-moss relative">
+    <div class="container mx-auto relative z-10">
+<!-- Serviços (Clean & Editorial) -->
+<section class="py-32 px-6 bg-moss relative">
+    <div class="container mx-auto relative z-10">
+        <div class="text-center mb-20 scroll-reveal">
+            <span class="text-clay font-mono text-xs tracking-widest uppercase">Nosso Menu</span>
+            <h2 class="font-display text-5xl md:text-6xl text-sand mt-4">Serviços</h2>
         </div>
 
-        <!-- Service 2 -->
-        <div class="group relative scroll-reveal">
-            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss cursor-pointer">
-                <div>
-                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Barba Real</h3>
-                    <p class="text-sand/50 text-sm mt-2 font-mono">Toalha Quente + Hidratação + Modelagem</p>
+        <div class="max-w-4xl mx-auto space-y-12">
+            <!-- Service 1 -->
+            <div class="group relative scroll-reveal">
+                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 transition-colors cursor-pointer">
+                    <div>
+                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Corte Signature</h3>
+                        <p class="text-sand/60 text-sm mt-2 font-mono">Consultoria + Lavagem + Corte + Styling</p>
+                    </div>
+                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 80</span>
                 </div>
-                <span class="font-display text-xl text-sand">R$ 65</span>
             </div>
-        </div>
 
-        <!-- Service 3 -->
-        <div class="group relative scroll-reveal">
-            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss cursor-pointer">
-                <div>
-                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Ritual Completo</h3>
-                    <p class="text-sand/50 text-sm mt-2 font-mono">Corte + Barba + Sobrancelha + Relaxamento</p>
+            <!-- Service 2 -->
+            <div class="group relative scroll-reveal">
+                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 cursor-pointer">
+                    <div>
+                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Barba Real</h3>
+                        <p class="text-sand/60 text-sm mt-2 font-mono">Toalha Quente + Hidratação + Modelagem</p>
+                    </div>
+                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 65</span>
                 </div>
-                <span class="font-display text-xl text-sand">R$ 130</span>
+            </div>
+
+            <!-- Service 3 -->
+            <div class="group relative scroll-reveal">
+                <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 cursor-pointer">
+                    <div>
+                        <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Ritual Completo</h3>
+                        <p class="text-sand/60 text-sm mt-2 font-mono">Corte + Barba + Sobrancelha + Relaxamento</p>
+                    </div>
+                    <span class="font-display text-xl text-sand group-hover:text-clay transition-colors">R$ 130</span>
+                </div>
             </div>
         </div>
     </div>
