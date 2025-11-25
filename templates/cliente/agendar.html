@@ -208,11 +208,14 @@
         const servicoSelecionado = document.querySelector('input[name="servico_id"]:checked');
         const dataSelecionada = dataInput.value;
         
+        console.log('Carregando horários...', {servico: servicoSelecionado?.value, data: dataSelecionada});
+        
         // Limpar horários
         horaSelect.innerHTML = '<option value="">Selecione</option>';
         horaSelect.disabled = true;
         
         if (!servicoSelecionado || !dataSelecionada) {
+            console.log('Serviço ou data não selecionados');
             return;
         }
         
@@ -227,8 +230,18 @@
         try {
             horaSelect.innerHTML = '<option value="">Carregando...</option>';
             
-            const response = await fetch(`/api/horarios-disponiveis?data=${dataSelecionada}&servico_id=${servicoSelecionado.value}`);
+            const url = `/api/horarios-disponiveis?data=${dataSelecionada}&servico_id=${servicoSelecionado.value}`;
+            console.log('Fazendo requisição para:', url);
+            
+            const response = await fetch(url);
+            console.log('Resposta recebida:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const dados = await response.json();
+            console.log('Dados recebidos:', dados);
             
             if (dados.bloqueado) {
                 horaSelect.innerHTML = '<option value="">Indisponível</option>';
@@ -245,13 +258,16 @@
                     horaSelect.appendChild(option);
                 });
                 horaSelect.disabled = false;
+                console.log(`${dados.horarios.length} horários carregados com sucesso`);
             } else {
                 horaSelect.innerHTML = '<option value="">Sem horários disponíveis</option>';
+                console.log('Nenhum horário disponível');
             }
             
         } catch (error) {
             console.error('Erro ao carregar horários:', error);
             horaSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+            alert('Erro ao carregar horários. Verifique o console para detalhes.');
         }
     }
     
