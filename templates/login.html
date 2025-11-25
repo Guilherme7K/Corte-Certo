@@ -1,89 +1,207 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | {{ barbeiro.barbearia }}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-{% block content %}
-<div class="min-h-screen flex items-center justify-center px-6 py-20">
-    <div class="w-full max-w-md">
-        
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <h1 class="font-display text-4xl md:text-5xl text-sand syne-extra mb-3">
-                Bem-vindo
-            </h1>
-            <p class="text-sand/60">Entre com suas credenciais</p>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        moss: '#1A2318',
+                        sand: '#EAE6D7',
+                        clay: '#BC5D2E',
+                        'clay-dark': '#9A4A24',
+                        surface: '#232E21'
+                    },
+                    fontFamily: {
+                        display: ['"Syne"', 'sans-serif'],
+                        body: ['"Manrope"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #1A2318;
+            color: #EAE6D7;
+        }
+
+        .texture-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(234, 230, 215, 0.2);
+            padding: 1rem 0;
+            color: #EAE6D7;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-bottom-color: #BC5D2E;
+        }
+
+        .input-label {
+            position: absolute;
+            top: 1rem;
+            left: 0;
+            color: rgba(234, 230, 215, 0.5);
+            font-size: 1rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus ~ .input-label,
+        .input-field:not(:placeholder-shown) ~ .input-label {
+            top: -0.75rem;
+            font-size: 0.75rem;
+            color: #BC5D2E;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .image-reveal-mask {
+            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        }
+    </style>
+</head>
+<body class="bg-moss font-body selection:bg-clay selection:text-white h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <div class="texture-overlay"></div>
+
+    <!-- Back to Home -->
+    <a href="{{ url_for('index') }}" class="absolute top-8 left-8 z-50 flex items-center gap-2 text-sand/60 hover:text-clay transition-colors text-sm font-bold uppercase tracking-widest reveal-element">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+    </a>
+
+    <!-- Left Side: Image -->
+    <div class="w-full md:w-1/2 h-48 md:h-full relative bg-surface">
+        <div class="absolute inset-0 bg-black/20 z-10"></div>
+        <div class="absolute inset-0 image-reveal-mask w-full h-full">
+            <img src="https://images.unsplash.com/photo-1503951914875-452162b7f300?q=80&w=2070&auto=format&fit=crop" 
+                 alt="Barber Atmosphere" 
+                 class="w-full h-full object-cover grayscale opacity-80">
         </div>
-
-        <!-- Card -->
-        <div class="bg-[#0d140c] border border-sand/10 rounded-lg p-8 shadow-2xl">
-            
-            <form method="POST" class="space-y-6">
-                
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-sand text-sm font-medium mb-2">
-                        Email <span class="text-clay">*</span>
-                    </label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        placeholder="seu@email.com"
-                        autocomplete="email"
-                        required
-                        class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
-                    <p class="text-sand/50 text-xs mt-1.5">Digite o email usado no cadastro</p>
-                </div>
-                
-                <!-- Senha -->
-                <div>
-                    <label for="senha" class="block text-sand text-sm font-medium mb-2">
-                        Senha <span class="text-clay">*</span>
-                    </label>
-                    <input 
-                        type="password" 
-                        id="senha" 
-                        name="senha"
-                        placeholder="••••••••"
-                        autocomplete="current-password"
-                        required
-                        class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
-                    <p class="text-sand/50 text-xs mt-1.5">Mínimo 6 caracteres</p>
-                </div>
-                
-                <!-- Submit -->
-                <button 
-                    type="submit" 
-                    class="w-full bg-clay hover:bg-clay/90 text-sand font-display font-bold py-3.5 rounded-lg transition-colors shadow-lg shadow-clay/20 uppercase tracking-wide text-sm">
-                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
-                    Entrar
-                </button>
-            </form>
-            
-            <!-- Divider -->
-            <div class="relative my-8">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-sand/10"></div>
-                </div>
-                <div class="relative flex justify-center text-xs">
-                    <span class="bg-[#0d140c] px-3 text-sand/50">ou</span>
-                </div>
-            </div>
-            
-            <!-- Link para cadastro -->
-            <p class="text-center text-sand/60 text-sm">
-                Não tem uma conta? 
-                <a href="{{ url_for('cadastro') }}" class="text-clay hover:text-clay/80 font-semibold transition-colors">
-                    Cadastre-se aqui
-                </a>
+        
+        <div class="absolute bottom-12 left-12 z-20 max-w-md hidden md:block">
+            <div class="w-12 h-[1px] bg-clay mb-6 reveal-element"></div>
+            <p class="font-display text-3xl text-sand leading-tight reveal-element">
+                "Detalhes não são apenas detalhes. Eles fazem o design."
+            </p>
+            <p class="font-mono text-xs text-sand/50 mt-4 tracking-widest uppercase reveal-element">
+                {{ barbeiro.barbearia }}
             </p>
         </div>
-        
-        <!-- Extra info -->
-        <div class="text-center mt-6">
-            <a href="{{ url_for('index') }}" class="text-sand/50 hover:text-sand text-sm transition-colors inline-flex items-center gap-2">
-                <i class="fa-solid fa-arrow-left"></i>
-                Voltar ao início
-            </a>
+    </div>
+
+    <!-- Right Side: Form -->
+    <div class="w-full md:w-1/2 h-full flex items-center justify-center p-8 md:p-24 relative z-20 bg-moss overflow-y-auto">
+        <div class="w-full max-w-sm">
+            
+            <div class="mb-12">
+                <span class="text-clay font-mono text-xs tracking-widest uppercase mb-2 block reveal-element">Área do Cliente</span>
+                <h1 class="font-display text-4xl md:text-5xl text-sand font-bold reveal-element">Bem-vindo<br>de volta.</h1>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-6 p-4 rounded border reveal-element {% if category == 'danger' %}bg-red-900/20 border-red-500/50 text-red-200{% else %}bg-green-900/20 border-green-500/50 text-green-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="space-y-6">
+                <!-- Email -->
+                <div class="input-group reveal-element">
+                    <input type="email" name="email" id="email" class="input-field" required autocomplete="email" placeholder=" ">
+                    <label for="email" class="input-label">Email</label>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group reveal-element">
+                    <input type="password" name="senha" id="senha" class="input-field" required autocomplete="current-password" placeholder=" ">
+                    <label for="senha" class="input-label">Senha</label>
+                </div>
+
+                <!-- Submit -->
+                <div class="pt-4 reveal-element">
+                    <button type="submit" class="w-full bg-clay text-sand py-4 rounded-sm font-display font-bold text-sm uppercase tracking-widest hover:bg-clay-dark hover:scale-[1.02] transition-all duration-300 shadow-lg shadow-clay/10">
+                        Acessar Conta
+                    </button>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center mt-8 reveal-element">
+                    <p class="text-sand/40 text-sm">
+                        Ainda não faz parte? 
+                        <a href="{{ url_for('cadastro') }}" class="text-clay hover:text-sand transition-colors font-bold ml-1 border-b border-clay hover:border-sand pb-0.5">Criar cadastro</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div class="absolute bottom-6 w-full text-center text-sand/20 text-[10px] uppercase tracking-widest font-mono reveal-element">
+            {{ barbeiro.barbearia }} System v2.0
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+
+            tl.fromTo('.image-reveal-mask', 
+                { clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)' },
+                { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 1.2, ease: 'power4.inOut' }
+            )
+            .fromTo('.reveal-element', 
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' },
+                "-=0.8"
+            );
+        });
+    </script>
+</body>
+</html>
