@@ -1,577 +1,111 @@
 {% extends "base.html" %}
 
-{% block styles %}
-<style>
-    .agendamentos-page {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-
-    .page-header {
-        background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.2);
-    }
-
-    .page-header h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .page-header p {
-        opacity: 0.9;
-        margin-bottom: 0;
-    }
-
-    .back-btn {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        border-radius: 12px;
-        padding: 0.625rem 1.25rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .back-btn:hover {
-        background: white;
-        color: var(--primary);
-        transform: translateX(-3px);
-    }
-
-    /* Filter Card */
-    .filter-card {
-        background: white;
-        border-radius: 20px;
-        padding: 1.75rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .filter-card label {
-        font-weight: 600;
-        color: var(--primary);
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .filter-card .form-control,
-    .filter-card .form-select {
-        border-radius: 12px;
-        border: 2px solid #e2e8f0;
-        padding: 0.75rem 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .filter-card .form-control:focus,
-    .filter-card .form-select:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
-    }
-
-    .filter-btn {
-        background: linear-gradient(135deg, var(--accent) 0%, #047857 100%);
-        border: none;
-        border-radius: 12px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        color: white;
-        transition: all 0.3s ease;
-    }
-
-    .filter-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-    }
-
-    .clear-btn {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        color: #64748b;
-        transition: all 0.3s ease;
-    }
-
-    .clear-btn:hover {
-        background: #f8fafc;
-        border-color: #cbd5e1;
-        color: var(--primary);
-    }
-
-    /* Table Card */
-    .table-card {
-        background: white;
-        border-radius: 20px;
-        padding: 1.75rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .table {
-        margin-bottom: 0;
-    }
-
-    .table thead {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    }
-
-    .table thead th {
-        border: none;
-        color: var(--primary);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-        padding: 1rem;
-        white-space: nowrap;
-    }
-
-    .table tbody tr {
-        transition: all 0.3s ease;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .table tbody tr:hover {
-        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-        transform: scale(1.01);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .table tbody td {
-        padding: 1.25rem 1rem;
-        vertical-align: middle;
-        border: none;
-    }
-
-    .datetime-col {
-        min-width: 120px;
-    }
-
-    .datetime-date {
-        font-weight: 700;
-        color: var(--primary);
-        font-size: 0.95rem;
-    }
-
-    .datetime-time {
-        color: #64748b;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.25rem;
-    }
-
-    .cliente-info {
-        min-width: 180px;
-    }
-
-    .cliente-name {
-        font-weight: 600;
-        color: #1e293b;
-        font-size: 0.95rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .cliente-email {
-        color: #64748b;
-        font-size: 0.8rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .servico-col {
-        min-width: 140px;
-        font-weight: 500;
-        color: #475569;
-    }
-
-    .duracao-col,
-    .valor-col {
-        font-weight: 600;
-        color: #1e293b;
-        white-space: nowrap;
-    }
-
-    .valor-col {
-        color: var(--accent);
-        font-size: 1.05rem;
-    }
-
-    .badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .bg-primary {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    }
-
-    .bg-success {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-    }
-
-    .bg-secondary {
-        background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%) !important;
-    }
-
-    /* Action Buttons */
-    .btn-group-sm .btn {
-        border-radius: 10px;
-        padding: 0.5rem 0.75rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: none;
-    }
-
-    .btn-group-sm .btn-success {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    }
-
-    .btn-group-sm .btn-success:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-group-sm .btn-danger {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    }
-
-    .btn-group-sm .btn-danger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
-    .btn-group-sm .btn-outline-info {
-        border: 2px solid #3b82f6;
-        color: #3b82f6;
-        background: white;
-    }
-
-    .btn-group-sm .btn-outline-info:hover {
-        background: #3b82f6;
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    /* Modal */
-    .modal-content {
-        border-radius: 20px;
-        border: none;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    }
-
-    .modal-header {
-        background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
-        color: white;
-        border-radius: 20px 20px 0 0;
-        padding: 1.5rem;
-        border: none;
-    }
-
-    .modal-header .modal-title {
-        font-weight: 700;
-        font-size: 1.25rem;
-    }
-
-    .modal-header .btn-close {
-        filter: brightness(0) invert(1);
-    }
-
-    .modal-body {
-        padding: 2rem;
-    }
-
-    .modal-body p {
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .modal-body strong {
-        color: var(--primary);
-        min-width: 80px;
-    }
-
-    .modal-body hr {
-        margin: 1.5rem 0;
-        border-color: #e2e8f0;
-    }
-
-    .modal-footer {
-        border: none;
-        padding: 1.5rem;
-    }
-
-    /* Empty State */
-    .empty-state {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 2px dashed #cbd5e1;
-        border-radius: 16px;
-        padding: 3rem 2rem;
-        text-align: center;
-        color: #64748b;
-    }
-
-    .empty-state i {
-        font-size: 4rem;
-        opacity: 0.3;
-        margin-bottom: 1rem;
-    }
-
-    .empty-state p {
-        margin: 0;
-        font-size: 1.1rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .page-header h2 {
-            font-size: 1.5rem;
-        }
-
-        .table-responsive {
-            border-radius: 12px;
-        }
-
-        .btn-group-sm {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .btn-group-sm .btn {
-            width: 100%;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="agendamentos-page">
-    <div class="container">
+<div class="min-h-screen py-20 px-6">
+    <div class="container mx-auto max-w-7xl">
+        
         <!-- Header -->
-        <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h2>
-                        <i class="bi bi-calendar-check-fill"></i>
-                        Gerenciar Agendamentos
-                    </h2>
-                    <p>{{ barbeiro.barbearia }}</p>
-                </div>
-                <div>
-                    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">
-                        <i class="bi bi-arrow-left"></i> Voltar ao Dashboard
-                    </a>
-                </div>
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-sand mb-3 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Voltar ao Dashboard
+                </a>
+                <h1 class="font-display text-4xl text-sand syne-extra flex items-center gap-3">
+                    <i class="fa-solid fa-calendar-check text-clay"></i>
+                    Agendamentos
+                </h1>
             </div>
         </div>
-        
+
         <!-- Filtros -->
-        <div class="filter-card">
-            <form method="GET" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">
-                        <i class="bi bi-calendar3"></i> Data
-                    </label>
-                    <input type="date" name="data" class="form-control" value="{{ request.args.get('data', '') }}">
+        <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 mb-8 shadow-lg">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sand text-sm font-medium mb-2">Data</label>
+                    <input type="date" name="data" value="{{ request.args.get('data', '') }}" 
+                           class="w-full px-4 py-2 bg-moss border border-sand/20 rounded-lg text-sand focus:outline-none focus:border-clay">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">
-                        <i class="bi bi-funnel-fill"></i> Status
-                    </label>
-                    <select name="status" class="form-select">
-                        <option value="todos">Todos os status</option>
+                <div>
+                    <label class="block text-sand text-sm font-medium mb-2">Status</label>
+                    <select name="status" class="w-full px-4 py-2 bg-moss border border-sand/20 rounded-lg text-sand focus:outline-none focus:border-clay">
+                        <option value="">Todos</option>
                         <option value="agendado" {% if request.args.get('status') == 'agendado' %}selected{% endif %}>Agendado</option>
                         <option value="concluido" {% if request.args.get('status') == 'concluido' %}selected{% endif %}>Concluído</option>
                         <option value="cancelado" {% if request.args.get('status') == 'cancelado' %}selected{% endif %}>Cancelado</option>
                     </select>
                 </div>
-                <div class="col-md-4 d-flex align-items-end gap-2">
-                    <button type="submit" class="filter-btn flex-grow-1">
-                        <i class="bi bi-funnel-fill"></i> Filtrar
+                <div class="md:col-span-2 flex items-end gap-2">
+                    <button type="submit" class="bg-clay text-sand px-6 py-2 rounded-lg font-bold hover:bg-clay/90 transition-colors">
+                        <i class="fa-solid fa-filter mr-2"></i>Filtrar
                     </button>
-                    <a href="{{ url_for('admin_agendamentos') }}" class="clear-btn">
-                        <i class="bi bi-x-lg"></i>
+                    <a href="{{ url_for('admin_agendamentos') }}" class="bg-moss border border-sand/20 text-sand px-6 py-2 rounded-lg font-bold hover:border-clay transition-colors">
+                        Limpar
                     </a>
                 </div>
             </form>
         </div>
-        
-        <!-- Tabela de Agendamentos -->
-        <div class="table-card">
+
+        <!-- Lista de Agendamentos -->
+        <div class="bg-[#0d140c] border border-sand/10 rounded-xl shadow-lg overflow-hidden">
             {% if agendamentos %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Data/Hora</th>
-                            <th>Cliente</th>
-                            <th>Serviço</th>
-                            <th>Duração</th>
-                            <th>Valor</th>
-                            <th>Status</th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ag in agendamentos %}
-                        <tr>
-                            <td class="datetime-col">
-                                <div class="datetime-date">{{ ag.data_hora.strftime('%d/%m/%Y') }}</div>
-                                <div class="datetime-time">
-                                    <i class="bi bi-clock"></i>
-                                    {{ ag.data_hora.strftime('%H:%M') }}
-                                </div>
-                            </td>
-                            <td class="cliente-info">
-                                {% if ag.cliente %}
-                                <div class="cliente-name">{{ ag.cliente.nome }}</div>
-                                <div class="cliente-email">
-                                    <i class="bi bi-envelope"></i>
-                                    {{ ag.cliente.email }}
-                                </div>
-                                {% else %}
-                                <span class="text-danger">
-                                    <i class="bi bi-exclamation-triangle"></i>
-                                    Cliente não encontrado
-                                </span>
-                                {% endif %}
-                            </td>
-                            <td class="servico-col">
-                                {% if ag.servico %}
-                                <i class="bi bi-scissors"></i>
-                                {{ ag.servico.nome }}
-                                {% else %}
-                                <span class="text-danger">
-                                    <i class="bi bi-exclamation-triangle"></i>
-                                    Serviço não encontrado
-                                </span>
-                                {% endif %}
-                            </td>
-                            <td class="duracao-col">
-                                {% if ag.servico %}
-                                <i class="bi bi-hourglass-split"></i>
-                                {{ ag.servico.duracao }} min
-                                {% else %}
-                                -
-                                {% endif %}
-                            </td>
-                            <td class="valor-col">
-                                {% if ag.servico %}
-                                R$ {{ "%.2f"|format(ag.servico.preco) }}
-                                {% else %}
-                                -
-                                {% endif %}
-                            </td>
-                            <td>
-                                <span class="badge {% if ag.status == 'agendado' %}bg-primary{% elif ag.status == 'concluido' %}bg-success{% else %}bg-secondary{% endif %}">
-                                    {{ ag.status }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    {% if ag.status == 'agendado' %}
-                                    <form method="POST" action="{{ url_for('atualizar_status_agendamento', id=ag.id) }}" style="display: inline;">
-                                        <input type="hidden" name="status" value="concluido">
-                                        <button type="submit" class="btn btn-success" title="Marcar como concluído">
-                                            <i class="bi bi-check-lg"></i>
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="{{ url_for('cancelar_agendamento', id=ag.id) }}" style="display: inline;" 
-                                          onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?');">
-                                        <button type="submit" class="btn btn-danger" title="Cancelar agendamento">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </form>
-                                    {% endif %}
-                                    
-                                    {% if ag.observacoes %}
-                                    <button type="button" class="btn btn-outline-info" 
-                                            data-bs-toggle="modal" data-bs-target="#obs{{ ag.id }}" title="Ver observações">
-                                        <i class="bi bi-chat-left-text-fill"></i>
-                                    </button>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        {% if ag.observacoes %}
-                        <div class="modal fade" id="obs{{ ag.id }}" tabindex="-1" aria-labelledby="obsLabel{{ ag.id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="obsLabel{{ ag.id }}">
-                                            <i class="bi bi-chat-left-text-fill"></i>
-                                            Observações do Cliente
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {% if ag.cliente %}
-                                        <p>
-                                            <strong><i class="bi bi-person-fill"></i> Cliente:</strong>
-                                            {{ ag.cliente.nome }}
-                                        </p>
-                                        {% endif %}
-                                        {% if ag.servico %}
-                                        <p>
-                                            <strong><i class="bi bi-scissors"></i> Serviço:</strong>
-                                            {{ ag.servico.nome }}
-                                        </p>
-                                        {% endif %}
-                                        <p>
-                                            <strong><i class="bi bi-calendar-event"></i> Data:</strong>
-                                            {{ ag.data_hora.strftime('%d/%m/%Y às %H:%M') }}
-                                        </p>
-                                        <hr>
-                                        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1rem; border-radius: 12px; border-left: 4px solid #f59e0b;">
-                                            <p class="mb-0" style="color: #92400e;">
-                                                <i class="bi bi-quote"></i>
-                                                {{ ag.observacoes }}
-                                            </p>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-moss/50 border-b border-sand/10">
+                            <tr>
+                                <th class="text-left text-sand text-sm font-bold p-4">Data/Hora</th>
+                                <th class="text-left text-sand text-sm font-bold p-4">Cliente</th>
+                                <th class="text-left text-sand text-sm font-bold p-4">Serviço</th>
+                                <th class="text-left text-sand text-sm font-bold p-4">Valor</th>
+                                <th class="text-left text-sand text-sm font-bold p-4">Status</th>
+                                <th class="text-left text-sand text-sm font-bold p-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-sand/10">
+                            {% for ag in agendamentos %}
+                                <tr class="hover:bg-moss/30 transition-colors">
+                                    <td class="p-4">
+                                        <p class="text-sand font-mono">{{ ag.data_hora.strftime('%d/%m/%Y') }}</p>
+                                        <p class="text-sand/60 text-sm">{{ ag.data_hora.strftime('%H:%M') }}</p>
+                                    </td>
+                                    <td class="p-4 text-sand">{{ ag.cliente.nome }}</td>
+                                    <td class="p-4 text-sand/80">{{ ag.servico.nome }}</td>
+                                    <td class="p-4 text-clay font-bold">R$ {{ "%.2f"|format(ag.servico.preco) }}</td>
+                                    <td class="p-4">
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold
+                                            {% if ag.status == 'agendado' %}bg-blue-500/20 text-blue-400
+                                            {% elif ag.status == 'concluido' %}bg-green-500/20 text-green-400
+                                            {% else %}bg-red-500/20 text-red-400{% endif %}">
+                                            {{ ag.status|capitalize }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4">
+                                        <div class="flex gap-2">
+                                            {% if ag.status == 'agendado' %}
+                                                <form method="POST" action="{{ url_for('concluir_agendamento', id=ag.id) }}" class="inline">
+                                                    <button type="submit" class="text-green-400 hover:text-green-300 transition-colors" title="Concluir">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ url_for('cancelar_agendamento', id=ag.id) }}" class="inline" 
+                                                      onsubmit="return confirm('Cancelar agendamento?')">
+                                                    <button type="submit" class="text-red-400 hover:text-red-300 transition-colors" title="Cancelar">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                            <i class="bi bi-x-lg"></i> Fechar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
-            <div class="empty-state">
-                <i class="bi bi-calendar-x"></i>
-                <p><strong>Nenhum agendamento encontrado</strong></p>
-                <small>Tente ajustar os filtros ou aguarde novos agendamentos.</small>
-            </div>
+                <div class="text-center py-16">
+                    <i class="fa-solid fa-calendar-xmark text-clay text-5xl mb-4"></i>
+                    <p class="text-sand/60">Nenhum agendamento encontrado</p>
+                </div>
             {% endif %}
         </div>
     </div>

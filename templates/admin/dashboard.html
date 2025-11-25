@@ -1,769 +1,221 @@
 {% extends "base.html" %}
 
-{% block styles %}
-<style>
-    .admin-dashboard {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-
-    .dashboard-header {
-        background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
-        color: white;
-        padding: 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.2);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .dashboard-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        border-radius: 50%;
-        transform: translate(30%, -30%);
-    }
-
-    .dashboard-header h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    .dashboard-header p {
-        opacity: 0.9;
-        font-size: 1.1rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    .clock-widget {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        padding: 1rem 1.5rem;
-        border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        position: relative;
-        z-index: 1;
-    }
-
-    .clock-time {
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: 2px;
-        margin-bottom: 0;
-        font-family: 'Courier New', monospace;
-    }
-
-    .clock-date {
-        opacity: 0.85;
-        font-size: 0.9rem;
-    }
-    
-    /* Navigation Pills */
-    .admin-nav {
-        background: white;
-        border-radius: 20px;
-        padding: 1rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        margin-bottom: 2rem;
-    }
-
-    .admin-nav .nav-link {
-        border-radius: 12px;
-        padding: 0.75rem 1.25rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        color: #64748b;
-        position: relative;
-    }
-
-    .admin-nav .nav-link:hover {
-        background: #f1f5f9;
-        color: var(--primary);
-        transform: translateY(-2px);
-    }
-
-    .admin-nav .nav-link.active {
-        background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
-    }
-
-    .admin-nav .nav-link i {
-        margin-right: 0.5rem;
-        font-size: 1.1rem;
-    }
-
-    /* Stat Cards */
-    .stat-card {
-        background: white;
-        border-radius: 20px;
-        padding: 1.75rem;
-        height: 100%;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, var(--card-color) 0%, transparent 100%);
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-
-    .stat-card.blue { --card-color: #3b82f6; }
-    .stat-card.green { --card-color: #10b981; }
-    .stat-card.orange { --card-color: #f59e0b; }
-    .stat-card.purple { --card-color: #8b5cf6; }
-
-    .stat-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card.blue .stat-icon {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #3b82f6;
-    }
-
-    .stat-card.green .stat-icon {
-        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-        color: #10b981;
-    }
-
-    .stat-card.orange .stat-icon {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #f59e0b;
-    }
-
-    .stat-card.purple .stat-icon {
-        background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-        color: #8b5cf6;
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 0.25rem;
-        line-height: 1;
-    }
-    
-    .stat-label {
-        color: #64748b;
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .stat-change {
-        margin-top: 0.75rem;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-
-    .stat-change.positive {
-        color: #10b981;
-    }
-
-    .stat-change.negative {
-        color: #ef4444;
-    }
-    
-    /* Agenda Cards */
-    .agenda-card {
-        background: white;
-        border-radius: 20px;
-        padding: 1.75rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        height: 100%;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .agenda-card h5, .agenda-card h6 {
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .agenda-card h5 i, .agenda-card h6 i {
-        font-size: 1.25rem;
-    }
-    
-    .agendamento-item {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-radius: 16px;
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .agendamento-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, #3b82f6 0%, transparent 100%);
-    }
-    
-    .agendamento-item:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    }
-    
-    .horario {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .horario i {
-        font-size: 1.25rem;
-    }
-
-    .agendamento-cliente {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .agendamento-details {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .detail-item {
-        display: flex;
-        align-items: center;
-        gap: 0.375rem;
-        font-size: 0.9rem;
-        color: #64748b;
-    }
-
-    .detail-item i {
-        color: var(--accent);
-    }
-    
-    .badge-status {
-        padding: 0.375rem 0.875rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .observacoes-box {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border-left: 3px solid #f59e0b;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
-        margin-top: 0.75rem;
-        font-size: 0.9rem;
-        color: #92400e;
-    }
-
-    .observacoes-box i {
-        color: #f59e0b;
-        margin-right: 0.5rem;
-    }
-    
-    /* Sidebar Items */
-    .proximos-item {
-        background: #f8fafc;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .proximos-item:hover {
-        background: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        transform: translateX(3px);
-    }
-
-    .proximos-time {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 0.25rem;
-    }
-
-    .proximos-cliente {
-        font-size: 0.9rem;
-        color: #64748b;
-    }
-
-    .proximos-badge {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        color: #3b82f6;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    
-    .servico-item {
-        padding: 1rem 0;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .servico-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .servico-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
-    }
-
-    .servico-name {
-        font-weight: 600;
-        color: var(--primary);
-        font-size: 0.95rem;
-    }
-
-    .servico-count {
-        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-        color: #64748b;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    .progress-bar-custom {
-        height: 8px;
-        background: #f1f5f9;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--accent) 0%, #047857 100%);
-        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
-    }
-
-    /* Action Buttons */
-    .action-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background: white;
-        color: #64748b;
-    }
-
-    .action-btn:hover {
-        background: var(--primary);
-        color: white;
-        transform: rotate(5deg) scale(1.1);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
-    }
-
-    /* Quick Actions */
-    .quick-action-btn {
-        background: white;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1rem;
-        font-weight: 600;
-        color: #475569;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
-    .quick-action-btn:hover {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
-    }
-
-    .quick-action-btn i {
-        font-size: 1.1rem;
-    }
-
-    /* Empty States */
-    .empty-state {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 2px dashed #cbd5e1;
-        border-radius: 16px;
-        padding: 2rem;
-        text-align: center;
-        color: #64748b;
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        opacity: 0.3;
-        margin-bottom: 1rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .dashboard-header {
-            padding: 1.5rem;
-        }
-
-        .dashboard-header h2 {
-            font-size: 1.5rem;
-        }
-
-        .clock-time {
-            font-size: 2rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-        }
-
-        .admin-nav .nav-link {
-            font-size: 0.9rem;
-            padding: 0.5rem 0.75rem;
-        }
-
-        .agendamento-item {
-            padding: 1rem;
-        }
-
-        .horario {
-            font-size: 1.25rem;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="admin-dashboard">
-    <div class="container-fluid px-4">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+<div class="min-h-screen py-20 px-6">
+    <div class="container mx-auto max-w-7xl">
+        
+        <!-- Header Admin -->
+        <div class="bg-gradient-to-br from-clay via-clay/90 to-clay/80 rounded-xl p-8 md:p-12 mb-12 relative overflow-hidden shadow-2xl">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-sand/10 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>
-                    <h2>👋 Olá, {{ session.usuario_nome }}!</h2>
-                    <p class="mb-0">{{ barbeiro.barbearia }}</p>
+                    <div class="inline-flex items-center gap-2 bg-sand/20 backdrop-blur-sm border border-sand/30 rounded-full px-4 py-2 mb-4">
+                        <i class="fa-solid fa-user-shield text-sand text-sm"></i>
+                        <span class="text-sand text-sm font-semibold">Painel Administrativo</span>
+                    </div>
+                    
+                    <h1 class="font-display text-4xl md:text-5xl text-sand syne-extra mb-2">
+                        Dashboard
+                    </h1>
+                    <p class="text-sand/80 text-lg">Olá, {{ session.usuario_nome }}</p>
                 </div>
-                <div class="clock-widget text-end">
-                    <div id="relogio" class="clock-time"></div>
-                    <div id="dataHoje" class="clock-date"></div>
+
+                <!-- Relógio -->
+                <div class="bg-sand/20 backdrop-blur-sm border border-sand/30 rounded-xl px-6 py-4">
+                    <p id="clock" class="text-sand font-mono text-3xl font-bold tracking-wider"></p>
+                    <p id="date" class="text-sand/80 text-sm text-center mt-1"></p>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation -->
-        <div class="admin-nav">
-            <nav class="nav nav-pills nav-fill">
-                <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
-                    <i class="bi bi-house-door-fill"></i>
-                    <span class="d-none d-md-inline">Dashboard</span>
+        <!-- Navegação -->
+        <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 mb-12 shadow-lg">
+            <div class="flex flex-wrap gap-4">
+                <a href="{{ url_for('admin_dashboard') }}" class="bg-clay text-sand px-6 py-3 rounded-lg font-display font-bold text-sm uppercase tracking-wide transition-colors shadow-lg shadow-clay/20">
+                    <i class="fa-solid fa-chart-line mr-2"></i>Dashboard
                 </a>
-                <a class="nav-link" href="{{ url_for('admin_agendamentos') }}">
-                    <i class="bi bi-calendar-check-fill"></i>
-                    <span class="d-none d-md-inline">Agendamentos</span>
+                <a href="{{ url_for('admin_agendamentos') }}" class="bg-moss border border-sand/20 text-sand px-6 py-3 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:border-clay transition-colors">
+                    <i class="fa-solid fa-calendar-check mr-2"></i>Agendamentos
                 </a>
-                <a class="nav-link" href="{{ url_for('admin_servicos') }}">
-                    <i class="bi bi-scissors"></i>
-                    <span class="d-none d-md-inline">Serviços</span>
+                <a href="{{ url_for('admin_servicos') }}" class="bg-moss border border-sand/20 text-sand px-6 py-3 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:border-clay transition-colors">
+                    <i class="fa-solid fa-scissors mr-2"></i>Serviços
                 </a>
-                <a class="nav-link" href="{{ url_for('admin_bloqueios') }}">
-                    <i class="bi bi-lock-fill"></i>
-                    <span class="d-none d-md-inline">Bloqueios</span>
+                <a href="{{ url_for('admin_bloqueios') }}" class="bg-moss border border-sand/20 text-sand px-6 py-3 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:border-clay transition-colors">
+                    <i class="fa-solid fa-ban mr-2"></i>Bloqueios
                 </a>
-                <a class="nav-link text-danger" href="{{ url_for('logout') }}">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span class="d-none d-md-inline">Sair</span>
-                </a>
-            </nav>
-        </div>
-    
-        <!-- Stats Cards -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-card blue">
-                    <div class="stat-icon">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <div class="stat-number">{{ agendamentos|length }}</div>
-                    <div class="stat-label">Agendamentos Hoje</div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-card green">
-                    <div class="stat-icon">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div class="stat-number">{{ concluidos_hoje }}</div>
-                    <div class="stat-label">Concluídos Hoje</div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-card orange">
-                    <div class="stat-icon">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <div class="stat-number">R$ {{ receita_hoje|round(2) }}</div>
-                    <div class="stat-label">Receita Hoje</div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-card purple">
-                    <div class="stat-icon">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="stat-number">{{ total_clientes }}</div>
-                    <div class="stat-label">Total de Clientes</div>
-                </div>
             </div>
         </div>
-    
-        <div class="row g-4">
-            <!-- Agenda de Hoje -->
-            <div class="col-lg-8">
-                <div class="agenda-card">
-                    <h5>
-                        <i class="bi bi-calendar-event-fill"></i>
-                        Agenda de Hoje
-                    </h5>
-                    
-                    {% if agendamentos %}
-                        {% for ag in agendamentos %}
-                        <div class="agendamento-item">
-                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                <div class="flex-grow-1">
-                                    <div class="horario">
-                                        <i class="bi bi-clock-fill"></i>
-                                        {{ ag.data_hora.strftime('%H:%M') }}
-                                    </div>
-                                    <div class="agendamento-cliente">
-                                        <i class="bi bi-person-fill"></i>
-                                        {{ ag.cliente.nome }}
-                                        <span class="badge-status {% if ag.status == 'agendado' %}bg-primary{% elif ag.status == 'concluido' %}bg-success{% else %}bg-secondary{% endif %}">
-                                            {{ ag.status }}
+
+        <!-- Cards de Estatísticas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <!-- Total Agendamentos -->
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 text-2xl">
+                        <i class="fa-solid fa-calendar"></i>
+                    </div>
+                    <span class="text-sand/50 text-xs uppercase tracking-wide">Total</span>
+                </div>
+                <p class="text-sand text-4xl font-display font-bold mb-1">{{ total_agendamentos }}</p>
+                <p class="text-sand/60 text-sm">Agendamentos</p>
+            </div>
+
+            <!-- Total Clientes -->
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-14 h-14 bg-green-500/20 rounded-xl flex items-center justify-center text-green-400 text-2xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <span class="text-sand/50 text-xs uppercase tracking-wide">Total</span>
+                </div>
+                <p class="text-sand text-4xl font-display font-bold mb-1">{{ total_clientes }}</p>
+                <p class="text-sand/60 text-sm">Clientes</p>
+            </div>
+
+            <!-- Agendamentos Mês -->
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center text-purple-400 text-2xl">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <span class="text-sand/50 text-xs uppercase tracking-wide">Este Mês</span>
+                </div>
+                <p class="text-sand text-4xl font-display font-bold mb-1">{{ agendamentos_mes }}</p>
+                <p class="text-sand/60 text-sm">Agendamentos</p>
+            </div>
+
+            <!-- Receita Hoje -->
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-6 shadow-lg hover:shadow-2xl transition-shadow">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-14 h-14 bg-clay/20 rounded-xl flex items-center justify-center text-clay text-2xl">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                    <span class="text-sand/50 text-xs uppercase tracking-wide">Hoje</span>
+                </div>
+                <p class="text-clay text-4xl font-display font-bold mb-1">R$ {{ "%.0f"|format(receita_hoje) }}</p>
+                <p class="text-sand/60 text-sm">Receita</p>
+            </div>
+        </div>
+
+        <!-- Status Hoje -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-8 shadow-lg">
+                <h3 class="font-display text-2xl text-sand mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-clock-rotate-left text-clay"></i>
+                    Status de Hoje
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between pb-4 border-b border-sand/10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <span class="text-sand">Agendados</span>
+                        </div>
+                        <span class="text-blue-400 font-bold text-2xl">{{ agendados_hoje }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <span class="text-sand">Concluídos</span>
+                        </div>
+                        <span class="text-green-400 font-bold text-2xl">{{ concluidos_hoje }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Serviços Populares -->
+            <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-8 shadow-lg">
+                <h3 class="font-display text-2xl text-sand mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-fire text-clay"></i>
+                    Top Serviços
+                </h3>
+                <div class="space-y-3">
+                    {% for servico in servicos_populares %}
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-sand">{{ servico[0] }}</span>
+                            <span class="text-clay font-bold">{{ servico[1] }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Agendamentos de Hoje -->
+        <div class="bg-[#0d140c] border border-sand/10 rounded-xl p-8 shadow-lg">
+            <h3 class="font-display text-2xl text-sand mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-calendar-day text-clay"></i>
+                Agendamentos de Hoje
+            </h3>
+
+            {% if agendamentos %}
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-sand/10">
+                                <th class="text-left text-sand/60 text-sm font-medium pb-4">Horário</th>
+                                <th class="text-left text-sand/60 text-sm font-medium pb-4">Cliente</th>
+                                <th class="text-left text-sand/60 text-sm font-medium pb-4">Serviço</th>
+                                <th class="text-left text-sand/60 text-sm font-medium pb-4">Status</th>
+                                <th class="text-left text-sand/60 text-sm font-medium pb-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-sand/10">
+                            {% for ag in agendamentos %}
+                                <tr class="hover:bg-moss/30 transition-colors">
+                                    <td class="py-4 text-sand font-mono">{{ ag.data_hora.strftime('%H:%M') }}</td>
+                                    <td class="py-4 text-sand">{{ ag.cliente.nome }}</td>
+                                    <td class="py-4 text-sand/80">{{ ag.servico.nome }}</td>
+                                    <td class="py-4">
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold
+                                            {% if ag.status == 'agendado' %}bg-blue-500/20 text-blue-400
+                                            {% elif ag.status == 'concluido' %}bg-green-500/20 text-green-400
+                                            {% else %}bg-red-500/20 text-red-400{% endif %}">
+                                            {{ ag.status|capitalize }}
                                         </span>
-                                    </div>
-                                    <div class="agendamento-details">
-                                        <div class="detail-item">
-                                            <i class="bi bi-scissors"></i>
-                                            <span>{{ ag.servico.nome }}</span>
-                                        </div>
-                                        <div class="detail-item">
-                                            <i class="bi bi-clock"></i>
-                                            <span>{{ ag.servico.duracao }} min</span>
-                                        </div>
-                                        <div class="detail-item">
-                                            <i class="bi bi-cash"></i>
-                                            <span>R$ {{ ag.servico.preco }}</span>
-                                        </div>
-                                    </div>
-                                    {% if ag.observacoes %}
-                                    <div class="observacoes-box">
-                                        <i class="bi bi-chat-left-text-fill"></i>
-                                        {{ ag.observacoes }}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <a href="{{ url_for('admin_agendamentos') }}" class="action-btn" title="Ver detalhes">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="empty-state">
-                            <i class="bi bi-calendar-x"></i>
-                            <p class="mb-0"><strong>Nenhum agendamento para hoje</strong></p>
-                            <small>Aproveite para se organizar ou relaxar! 😊</small>
-                        </div>
-                    {% endif %}
+                                    </td>
+                                    <td class="py-4">
+                                        {% if ag.status == 'agendado' %}
+                                            <form method="POST" action="{{ url_for('concluir_agendamento', id=ag.id) }}" class="inline">
+                                                <button type="submit" class="text-green-400 hover:text-green-300 transition-colors">
+                                                    <i class="fa-solid fa-check"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <!-- Próximos Agendamentos -->
-                <div class="agenda-card mb-4">
-                    <h6>
-                        <i class="bi bi-clock-history"></i>
-                        Próximas 3 Horas
-                    </h6>
-                    
-                    {% if proximos_agendamentos %}
-                        {% for ag in proximos_agendamentos %}
-                        <div class="proximos-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="proximos-time">{{ ag.data_hora.strftime('%H:%M') }}</div>
-                                    <div class="proximos-cliente">{{ ag.cliente.nome }}</div>
-                                </div>
-                                <div>
-                                    <span class="proximos-badge">{{ ag.servico.nome }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="empty-state">
-                            <i class="bi bi-hourglass-split"></i>
-                            <p class="mb-0"><small>Nenhum agendamento próximo</small></p>
-                        </div>
-                    {% endif %}
-                </div>
-                
-                <!-- Serviços Populares -->
-                <div class="agenda-card mb-4">
-                    <h6>
-                        <i class="bi bi-star-fill"></i>
-                        Serviços Populares
-                    </h6>
-                    
-                    {% if servicos_populares %}
-                        {% for servico in servicos_populares %}
-                        <div class="servico-item">
-                            <div class="servico-header">
-                                <span class="servico-name">{{ servico.nome }}</span>
-                                <span class="servico-count">{{ servico.total }}x</span>
-                            </div>
-                            <div class="progress-bar-custom">
-                                <div class="progress-fill" data-width="{{ (servico.total * 100 / servicos_populares[0].total)|int }}"></div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="empty-state">
-                            <i class="bi bi-graph-up"></i>
-                            <p class="mb-0"><small>Sem dados de serviços ainda</small></p>
-                        </div>
-                    {% endif %}
-                </div>
-                
-                <!-- Ações Rápidas -->
-                <div class="agenda-card">
-                    <h6>
-                        <i class="bi bi-lightning-charge-fill"></i>
-                        Ações Rápidas
-                    </h6>
-                    <div class="d-grid gap-3">
-                        <a href="{{ url_for('admin_agendamentos') }}" class="quick-action-btn">
-                            <i class="bi bi-calendar-check-fill"></i>
-                            Ver Agendamentos
-                        </a>
-                        <a href="{{ url_for('admin_servicos') }}" class="quick-action-btn">
-                            <i class="bi bi-scissors"></i>
-                            Gerenciar Serviços
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% else %}
+                <p class="text-sand/60 text-center py-8">Nenhum agendamento para hoje</p>
+            {% endif %}
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
     // Relógio em tempo real
-    function atualizarRelogio() {
-        const agora = new Date();
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
         
-        // Relógio
-        const horas = String(agora.getHours()).padStart(2, '0');
-        const minutos = String(agora.getMinutes()).padStart(2, '0');
-        document.getElementById('relogio').textContent = horas + ':' + minutos;
+        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
         
-        // Data
-        const dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-        const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        const dataFormatada = dias[agora.getDay()] + ', ' + agora.getDate() + ' de ' + meses[agora.getMonth()];
-        document.getElementById('dataHoje').textContent = dataFormatada;
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date').textContent = now.toLocaleDateString('pt-BR', options);
     }
     
-    atualizarRelogio();
-    setInterval(atualizarRelogio, 1000);
-    
-    // Animar barras de progresso
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.progress-fill').forEach(function(bar) {
-            const width = bar.getAttribute('data-width');
-            setTimeout(function() {
-                bar.style.width = width + '%';
-            }, 100);
-        });
-    });
+    updateClock();
+    setInterval(updateClock, 1000);
 </script>
 {% endblock %}

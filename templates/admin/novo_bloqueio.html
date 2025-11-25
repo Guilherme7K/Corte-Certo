@@ -1,133 +1,132 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 bg-light sidebar p-3">
-            <h5 class="mb-3"><i class="bi bi-speedometer2"></i> Painel Admin</h5>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
-                        <i class="bi bi-house-door"></i> Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_servicos') }}">
-                        <i class="bi bi-scissors"></i> Serviços
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_agendamentos') }}">
-                        <i class="bi bi-calendar-check"></i> Agendamentos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('admin_bloqueios') }}">
-                        <i class="bi bi-lock"></i> Bloqueios de Agenda
-                    </a>
-                </li>
-                <li class="nav-item mt-3">
-                    <a class="nav-link text-danger" href="{{ url_for('logout') }}">
-                        <i class="bi bi-box-arrow-right"></i> Sair
-                    </a>
-                </li>
-            </ul>
-        </div>
+<div class="min-h-screen py-20 px-6">
+    <div class="container mx-auto max-w-3xl">
         
-        <div class="col-md-9 col-lg-10 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="bi bi-lock"></i> Novo Bloqueio de Agenda</h2>
-                <a href="{{ url_for('admin_bloqueios') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Voltar
-                </a>
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="{{ url_for('admin_bloqueios') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-sand mb-3 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i>
+                Voltar aos Bloqueios
+            </a>
+            <h1 class="font-display text-4xl text-sand syne-extra flex items-center gap-3">
+                <i class="fa-solid fa-calendar-xmark text-clay"></i>
+                Novo Bloqueio
+            </h1>
+            <p class="text-sand/60 mt-2">Bloqueie períodos na agenda para férias, feriados ou eventos</p>
+        </div>
+
+        <!-- Formulário -->
+        <div class="bg-[#0d140c] border border-sand/10 rounded-xl shadow-2xl overflow-hidden">
+            
+            <div class="bg-gradient-to-br from-clay to-clay/80 p-8 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-sand/10 rounded-full blur-3xl"></div>
+                <i class="fa-solid fa-ban text-sand text-4xl mb-3 relative z-10"></i>
+                <h2 class="font-display text-2xl text-sand relative z-10">Configurar Bloqueio</h2>
             </div>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <form method="POST" id="formBloqueio">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="data_inicio" class="form-label">Data Início *</label>
-                                <input type="date" class="form-control" id="data_inicio" name="data_inicio" 
-                                       min="{{ datetime.now().strftime('%Y-%m-%d') }}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="data_fim" class="form-label">Data Fim *</label>
-                                <input type="date" class="form-control" id="data_fim" name="data_fim" 
-                                       min="{{ datetime.now().strftime('%Y-%m-%d') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="motivo" class="form-label">Motivo</label>
-                            <input type="text" class="form-control" id="motivo" name="motivo" 
-                                   placeholder="Ex: Férias, Folga, Compromisso pessoal" maxlength="200">
-                            <small class="text-muted">Opcional - Máximo 200 caracteres</small>
-                        </div>
-
-                        <div class="alert alert-warning">
-                            <h6><i class="bi bi-exclamation-triangle"></i> Atenção:</h6>
-                            <ul class="mb-0">
-                                <li>Todos os agendamentos existentes neste período serão <strong>cancelados automaticamente</strong>.</li>
-                                <li>Os clientes afetados deverão reagendar seus horários.</li>
-                                <li>Período máximo de bloqueio: 90 dias.</li>
-                            </ul>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-lock"></i> Criar Bloqueio
-                            </button>
-                        </div>
-                    </form>
+            <form method="POST" class="p-8 space-y-6">
+                
+                <div>
+                    <label class="block text-sand text-sm font-medium mb-2">
+                        <i class="fa-solid fa-heading mr-2 text-clay"></i>
+                        Motivo do Bloqueio <span class="text-clay">*</span>
+                    </label>
+                    <input type="text" name="motivo" required maxlength="200"
+                           placeholder="Ex: Férias, Feriado, Evento Especial"
+                           class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 
+                                  focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
                 </div>
-            </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sand text-sm font-medium mb-2">
+                            <i class="fa-solid fa-calendar mr-2 text-clay"></i>
+                            Data Início <span class="text-clay">*</span>
+                        </label>
+                        <input type="date" name="data_inicio" required
+                               class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand 
+                                      focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sand text-sm font-medium mb-2">
+                            <i class="fa-solid fa-calendar mr-2 text-clay"></i>
+                            Data Fim <span class="text-clay">*</span>
+                        </label>
+                        <input type="date" name="data_fim" required
+                               class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand 
+                                      focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sand text-sm font-medium mb-2">
+                        <i class="fa-solid fa-comment mr-2 text-clay"></i>
+                        Observações <span class="text-sand/50 text-xs">(opcional)</span>
+                    </label>
+                    <textarea name="observacoes" rows="4" maxlength="500"
+                              placeholder="Informações adicionais sobre o bloqueio..."
+                              class="w-full px-4 py-3 bg-moss border border-sand/20 rounded-lg text-sand placeholder-sand/40 
+                                     focus:outline-none focus:border-clay focus:ring-2 focus:ring-clay/20 transition-all resize-none"></textarea>
+                </div>
+
+                <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-6">
+                    <h4 class="font-display text-sand font-bold mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-info-circle text-orange-400"></i>
+                        Atenção
+                    </h4>
+                    <ul class="text-sand/70 text-sm space-y-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
+                            <span>O bloqueio impedirá novos agendamentos no período selecionado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
+                            <span>Agendamentos já existentes não serão afetados</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-orange-400 text-xs mt-1"></i>
+                            <span>Você pode desativar ou deletar o bloqueio a qualquer momento</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <a href="{{ url_for('admin_bloqueios') }}" 
+                       class="flex-1 bg-moss border border-sand/20 text-sand px-6 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide hover:border-sand/40 transition-colors text-center">
+                        Cancelar
+                    </a>
+                    <button type="submit" 
+                            class="flex-1 bg-clay hover:bg-clay/90 text-sand px-6 py-4 rounded-lg font-display font-bold text-sm uppercase tracking-wide transition-colors shadow-lg shadow-clay/20">
+                        <i class="fa-solid fa-check mr-2"></i>
+                        Criar Bloqueio
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-// Validar que data_fim >= data_inicio
-document.getElementById('formBloqueio').addEventListener('submit', function(e) {
-    const dataInicio = new Date(document.getElementById('data_inicio').value);
-    const dataFim = new Date(document.getElementById('data_fim').value);
-    
-    if (dataFim < dataInicio) {
-        e.preventDefault();
-        alert('A data final deve ser maior ou igual à data inicial!');
-        return;
-    }
-    
-    // Calcular dias
-    const diffTime = Math.abs(dataFim - dataInicio);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays > 90) {
-        e.preventDefault();
-        alert('O período máximo de bloqueio é 90 dias!');
-        return;
-    }
-    
-    // Confirmar ação
-    if (!confirm(`Confirma o bloqueio de ${diffDays + 1} dia(s)?\n\nAgendamentos existentes neste período serão cancelados.`)) {
-        e.preventDefault();
-    }
-});
+{% endblock %}
 
-// Atualizar min do data_fim quando data_inicio mudar
-document.getElementById('data_inicio').addEventListener('change', function() {
-    document.getElementById('data_fim').min = this.value;
-});
+{% block scripts %}
+<script>
+    // Definir data mínima como hoje
+    const dataInicioInput = document.querySelector('input[name="data_inicio"]');
+    const dataFimInput = document.querySelector('input[name="data_fim"]');
+    const hoje = new Date().toISOString().split('T')[0];
+    
+    dataInicioInput.min = hoje;
+    dataFimInput.min = hoje;
+
+    // Validar que data fim >= data início
+    dataInicioInput.addEventListener('change', function() {
+        dataFimInput.min = this.value || hoje;
+        if (dataFimInput.value && dataFimInput.value < this.value) {
+            dataFimInput.value = this.value;
+        }
+    });
 </script>
 {% endblock %}
