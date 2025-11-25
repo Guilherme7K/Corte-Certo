@@ -53,7 +53,13 @@
                 <div class="relative z-10">
                     <p class="text-sand/40 text-xs font-mono uppercase tracking-widest mb-3">Pendentes</p>
                     <p class="text-blue-400 font-display text-4xl font-bold mb-1">
-                        {{ agendamentos|selectattr('status', 'equalto', 'agendado')|list|length }}
+                        {% set agendados = 0 %}
+                        {% for ag in agendamentos %}
+                            {% if ag.status == 'agendado' %}
+                                {% set agendados = agendados + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ agendados }}
                     </p>
                     <p class="text-sand/60 text-sm">Próximos</p>
                 </div>
@@ -63,6 +69,21 @@
             <div class="bg-surface border border-sand/10 rounded-sm p-8 relative overflow-hidden group hover:border-clay/30 transition-all">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-2xl"></div>
                 <div class="relative z-10">
+                    <p class="text-sand/40 text-xs font-mono uppercase tracking-widest mb-3">Concluídos</p>
+                    <p class="text-green-400 font-display text-4xl font-bold mb-1">
+                        {% set concluidos = 0 %}
+                        {% for ag in agendamentos %}
+                            {% if ag.status == 'concluido' %}
+                                {% set concluidos = concluidos + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ concluidos }}
+                    </p>
+                    <p class="text-sand/60 text-sm">Finalizados</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Lista de Agendamentos -->
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-8">
@@ -167,15 +188,6 @@
                     <a href="{{ url_for('cliente_agendar') }}" 
                        class="inline-block bg-clay text-sand px-8 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-clay/90 transition-all hover:scale-[1.02] shadow-lg">
                         Fazer Agendamento
-                    </a>
-                </div>
-            {% endif %}
-        </div>      </div>
-                    <h3 class="font-display text-2xl text-sand mb-3">Nenhum agendamento ainda</h3>
-                    <p class="text-sand/60 mb-8">Que tal fazer seu primeiro agendamento?</p>
-                    <a href="{{ url_for('cliente_agendar') }}" class="inline-flex items-center gap-2 bg-clay hover:bg-clay/90 text-sand px-8 py-3 rounded-lg font-display font-bold text-sm uppercase tracking-wide transition-colors shadow-lg shadow-clay/20">
-                        <i class="fa-solid fa-calendar-plus"></i>
-                        Agendar Agora
                     </a>
                 </div>
             {% endif %}
