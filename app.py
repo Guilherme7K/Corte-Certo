@@ -529,6 +529,7 @@ def cliente_agendar():
     servicos = Servico.query.filter_by(ativo=True).all()
     return render_template('cliente/agendar.html', 
                             servicos=servicos,
+                            today=date.today().isoformat(),
                             barbeiro=BARBEIRO_INFO)
 
 @app.route('/meus-agendamentos')
@@ -567,6 +568,44 @@ def cliente_cancelar_agendamento(id):
     agendamento.status = 'cancelado'
     db.session.commit()
     
+
+@app.route('/api/horarios-disponiveis', methods=['GET'])
+@login_required
+def api_horarios_disponiveis():
+    """API para retornar horários disponíveis para uma data e serviço"""
+    from flask import jsonify
+    
+    data_str = request.args.get('data')
+    servico_id = request.args.get('servico_id')
+    
+    if not data_str or not servico_id:
+        return jsonify({'error': 'Parâmetros data e servico_id são obrigatórios'}), 400
+    
+    try:
+        data = datetime.strptime(data_str, '%Y-%m-%d')
+        servico = Servico.query.get(int(servico_id))
+        
+        if not servico:
+            return jsonify({'error': 'Serviço não encontrado'}), 404
+        
+        # Verificar se a data está bloqueada
+        data_agendamento = data.date()
+        bloqueio_ativo = BloqueioAgenda.query.filter(
+            BloqueioAgenda.ativo == True,
+            BloqueioAgenda.data_inicio <= data_agendamento,
+            BloqueioAgenda.data_fim >= data_agendamento
+        ).first()
+        
+        if bloqueio_ativo:
+            return jsonify({'horarios': [], 'bloqueado': True, 'motivo': bloqueio_ativo.motivo})
+        
+        horarios = obter_horarios_disponiveis(data, servico)
+        horarios_formatados = [h.strftime('%H:%M') for h in horarios]
+        
+        return jsonify({'horarios': horarios_formatados, 'bloqueado': False})
+        
+    except (ValueError, TypeError) as e:
+        return jsonify({'error': 'Data ou serviço inválidos'}), 400
     flash('Agendamento cancelado com sucesso!', 'success')
     return redirect(url_for('meus_agendamentos'))
 
