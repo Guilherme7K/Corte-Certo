@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <label class="block text-sand/60 text-xs font-mono uppercase tracking-widest mb-3">Status</label>
-                    <select name="status" class="w-full px-5 py-4 bg-moss border border-sand/10 rounded-sm text-sand font-mono focus:outline-none focus:border-clay transition-all appearance-none cursor-pointer">
+                    <select name="status" class="w-full px-5 py-4 bg-moss border border-sand/10 rounded-sm text-sand font-mono focus:outline-none focus:border-clay transition-all appearance-none cursor-pointer [&>option]:bg-moss [&>option]:text-sand">
                         <option value="">Todos</option>
                         <option value="agendado" {% if request.args.get('status') == 'agendado' %}selected{% endif %}>Agendado</option>
                         <option value="concluido" {% if request.args.get('status') == 'concluido' %}selected{% endif %}>Concluído</option>
