@@ -1,741 +1,217 @@
 {% extends "base.html" %}
 
-{% block styles %}
-<style>
-    /* Hero com animações e efeitos modernos */
-    .hero-premium {
-        min-height: 90vh;
-        display: flex;
-        align-items: center;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-        position: relative;
-        overflow: hidden;
-        color: white;
-    }
-    
-    .hero-premium::before {
-        content: '';
-        position: absolute;
-        width: 800px;
-        height: 800px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-        top: -400px;
-        right: -200px;
-        animation: pulse 8s ease-in-out infinite;
-    }
-    
-    .hero-premium::after {
-        content: '';
-        position: absolute;
-        width: 600px;
-        height: 600px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-        bottom: -300px;
-        left: -100px;
-        animation: pulse 6s ease-in-out infinite reverse;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-    }
-    
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .hero-title {
-        font-size: clamp(2.5rem, 6vw, 4.5rem);
-        font-weight: 900;
-        letter-spacing: -0.04em;
-        margin-bottom: 1.5rem;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .hero-subtitle {
-        font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 400;
-        margin-bottom: 2.5rem;
-        max-width: 600px;
-        line-height: 1.6;
-    }
-    
-    .trust-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px;
-        padding: 0.5rem 1.25rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-    }
-    
-    .stats-card-premium {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        padding: 2rem 1.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-    
-    .stats-card-premium:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-5px);
-    }
-    
-    .stats-number {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--accent);
-        display: block;
-        line-height: 1;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stats-label {
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 500;
-    }
-    
-    .hero-image-wrapper {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .hero-image {
-        border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Features Section Premium */
-    .features-premium {
-        padding: 8rem 0;
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    }
-    
-    .section-header {
-        text-align: center;
-        max-width: 700px;
-        margin: 0 auto 4rem;
-    }
-    
-    .section-badge {
-        display: inline-block;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-        color: var(--accent);
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 1.5rem;
-    }
-    
-    .section-title {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 900;
-        color: var(--text-dark);
-        margin-bottom: 1rem;
-        letter-spacing: -0.02em;
-    }
-    
-    .section-description {
-        font-size: 1.125rem;
-        color: var(--text-light);
-        line-height: 1.7;
-    }
-    
-    .feature-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 2.5rem;
-        height: 100%;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
-    
-    .feature-card:hover {
-        box-shadow: var(--shadow-xl);
-        transform: translateY(-8px);
-        border-color: var(--accent);
-    }
-    
-    .feature-card:hover::before {
-        transform: scaleX(1);
-    }
-    
-    .feature-icon-premium {
-        width: 64px;
-        height: 64px;
-        border-radius: 16px;
-        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
-    }
-    
-    .feature-icon-premium i {
-        font-size: 2rem;
-        color: white;
-    }
-    
-    .feature-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 1rem;
-    }
-    
-    .feature-description {
-        color: var(--text-light);
-        line-height: 1.7;
-        margin-bottom: 0;
-    }
-    
-    /* Serviços Premium */
-    .services-premium {
-        padding: 8rem 0;
-        background: white;
-        position: relative;
-    }
-    
-    .service-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 2rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        height: 100%;
-    }
-    
-    .service-card:hover {
-        background: white;
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-5px);
-    }
-    
-    .service-icon {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .service-card:hover .service-icon {
-        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
-        transform: scale(1.1);
-    }
-    
-    .service-icon i {
-        font-size: 2.5rem;
-        color: var(--accent);
-        transition: color 0.3s ease;
-    }
-    
-    .service-card:hover .service-icon i {
-        color: white;
-    }
-    
-    .service-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 0.75rem;
-    }
-    
-    .service-price {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--accent);
-        margin-bottom: 0.5rem;
-    }
-    
-    .service-description {
-        color: var(--text-light);
-        font-size: 0.9375rem;
-        line-height: 1.6;
-    }
-    
-    /* Depoimentos */
-    .testimonials-section {
-        padding: 8rem 0;
-        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-    }
-    
-    .testimonial-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 2.5rem;
-        height: 100%;
-        position: relative;
-    }
-    
-    .testimonial-quote {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        font-size: 4rem;
-        color: rgba(16, 185, 129, 0.1);
-        font-family: Georgia, serif;
-        line-height: 1;
-    }
-    
-    .testimonial-text {
-        font-size: 1.0625rem;
-        line-height: 1.8;
-        color: var(--text-muted);
-        margin-bottom: 1.5rem;
-        font-style: italic;
-    }
-    
-    .testimonial-author {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-    
-    .testimonial-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 1.125rem;
-    }
-    
-    .testimonial-info h6 {
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 0.25rem;
-    }
-    
-    .testimonial-stars {
-        color: #fbbf24;
-        font-size: 0.875rem;
-    }
-    
-    /* CTA Premium */
-    .cta-premium {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        padding: 8rem 0;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .cta-premium::before {
-        content: '';
-        position: absolute;
-        width: 600px;
-        height: 600px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: pulse 6s ease-in-out infinite;
-    }
-    
-    .cta-content {
-        position: relative;
-        z-index: 2;
-        max-width: 700px;
-        margin: 0 auto;
-    }
-    
-    .cta-title {
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 900;
-        color: white;
-        margin-bottom: 1.5rem;
-        letter-spacing: -0.02em;
-    }
-    
-    .cta-description {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 2.5rem;
-        line-height: 1.7;
-    }
-    
-    .cta-benefits {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin-top: 3rem;
-        flex-wrap: wrap;
-    }
-    
-    .cta-benefit {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 600;
-    }
-    
-    .cta-benefit i {
-        color: var(--accent);
-        font-size: 1.25rem;
-    }
-    
-    /* Responsivo */
-    @media (max-width: 768px) {
-        .hero-premium {
-            min-height: 70vh;
-            padding: 3rem 0;
-        }
-        
-        .features-premium,
-        .services-premium,
-        .testimonials-section,
-        .cta-premium {
-            padding: 4rem 0;
-        }
-        
-        .section-header {
-            margin-bottom: 3rem;
-        }
-        
-        .stats-card-premium {
-            margin-bottom: 1rem;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<!-- Hero Section Premium -->
-<section class="hero-premium" role="banner">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 hero-content">
-                <div class="trust-badge">
-                    <i class="bi bi-shield-check"></i>
-                    <span>Sistema 100% seguro e confiável</span>
-                </div>
-                
-                <h1 class="hero-title">
-                    A melhor experiência em agendamento de barbearia
-                </h1>
-                
-                <p class="hero-subtitle">
-                    {{ barbeiro.barbearia }} - Agende seu horário em segundos, 
-                    sem filas e sem espera. Transforme sua experiência com tecnologia de ponta.
-                </p>
-                
-                <div class="d-flex gap-3 mb-5 flex-wrap">
-                    {% if not session.usuario_id %}
-                        <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg" aria-label="Criar conta gratuitamente">
-                            <i class="bi bi-rocket-takeoff me-2"></i>
-                            Começar agora - É grátis
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center pt-20 px-6">
+    <div class="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Text Content -->
+        <div class="lg:col-span-6 relative z-10">
+            <div class="mb-6 flex items-center gap-4">
+                <div class="w-12 h-[1px] bg-clay"></div>
+                <span class="font-mono text-xs text-clay uppercase tracking-widest">Desde 2024</span>
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.9] syne-extra text-sand mb-8">
+                <div class="line-reveal"><span>{{ barbeiro.barbearia }}</span></div>
+                <div class="line-reveal"><span class="italic font-normal text-clay">Redefinida.</span></div>
+            </h1>
+
+            <p class="text-sand/70 text-lg max-w-md leading-relaxed mb-10">
+                Um espaço onde a barbearia clássica encontra o design contemporâneo. Sem pressa, com precisão.
+            </p>
+
+            <div class="flex gap-6 flex-wrap">
+                {% if session.usuario_id %}
+                    {% if session.usuario_tipo == 'cliente' %}
+                        <a href="{{ url_for('cliente_agendar') }}" class="btn-primary shadow-lg shadow-clay/20">
+                            <i class="fa-solid fa-calendar-check mr-2"></i>
+                            Agendar Horário
                         </a>
-                        <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern btn-lg" aria-label="Fazer login na conta existente">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                            Já tenho conta
+                        <a href="{{ url_for('cliente_dashboard') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium hover:text-clay transition-colors group">
+                            Meus Agendamentos <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </a>
                     {% else %}
-                        {% if session.usuario_tipo == 'cliente' %}
-                            <a href="{{ url_for('cliente_agendar') }}" class="btn btn-modern btn-primary-modern btn-lg">
-                                <i class="bi bi-calendar-plus me-2"></i>
-                                Fazer novo agendamento
-                            </a>
-                            <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-modern btn-outline-modern btn-lg">
-                                <i class="bi bi-speedometer2 me-2"></i>
-                                Meus agendamentos
-                            </a>
-                        {% else %}
-                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-modern btn-primary-modern btn-lg">
-                                <i class="bi bi-speedometer2 me-2"></i>
-                                Ir para dashboard
-                            </a>
-                        {% endif %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn-primary shadow-lg shadow-clay/20">
+                            <i class="fa-solid fa-chart-line mr-2"></i>
+                            Dashboard Admin
+                        </a>
                     {% endif %}
-                </div>
-                
-                <div class="row g-3">
-                    <div class="col-4">
-                        <div class="stats-card-premium">
-                            <span class="stats-number" aria-label="Disponível 24 horas por dia">24/7</span>
-                            <span class="stats-label">Disponível</span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stats-card-premium">
-                            <span class="stats-number" aria-label="Agendamento em 2 minutos">2min</span>
-                            <span class="stats-label">Para agendar</span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="stats-card-premium">
-                            <span class="stats-number" aria-label="5 estrelas de avaliação">5.0⭐</span>
-                            <span class="stats-label">Avaliação</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6 d-none d-lg-block hero-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&h=700&fit=crop&q=80" 
-                     alt="Interior moderno de barbearia com cadeiras profissionais" 
-                     class="img-fluid hero-image"
-                     loading="lazy">
+                {% else %}
+                    <a href="{{ url_for('cadastro') }}" class="btn-primary shadow-lg shadow-clay/20">
+                        <i class="fa-solid fa-user-plus mr-2"></i>
+                        Criar Conta Grátis
+                    </a>
+                    <a href="{{ url_for('login') }}" class="px-8 py-4 flex items-center gap-2 text-sm font-medium hover:text-clay transition-colors group">
+                        Já tem conta? Entrar <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </div>
-</section>
 
-<!-- Features Section Premium -->
-<section class="features-premium" role="region" aria-labelledby="features-title">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-badge">COMO FUNCIONA</span>
-            <h2 class="section-title" id="features-title">Agendar nunca foi tão fácil</h2>
-            <p class="section-description">
-                Sistema intuitivo e rápido, pensado para você economizar tempo e ter a melhor experiência
-            </p>
-        </div>
-        
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card">
-                    <div class="feature-icon-premium">
-                        <i class="bi bi-person-plus-fill"></i>
-                    </div>
-                    <h3 class="feature-title">1. Cadastro rápido</h3>
-                    <p class="feature-description">
-                        Crie sua conta em menos de 1 minuto. Só precisa de email e senha. Simples assim!
-                    </p>
-                </div>
+        <!-- Hero Image -->
+        <div class="lg:col-span-6 h-[60vh] lg:h-[70vh] relative">
+            <div class="absolute inset-0 bg-gradient-to-tr from-moss to-transparent z-10 opacity-30"></div>
+            <div class="absolute -top-4 -right-4 w-full h-full border border-sand/10 z-0"></div>
+            
+            <div class="image-frame w-full h-full rounded-sm shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1593702295094-aea8c5c13d7b?q=80&w=2000&auto=format&fit=crop" 
+                     alt="Interior da Barbearia" 
+                     class="w-full h-full object-cover">
             </div>
             
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card">
-                    <div class="feature-icon-premium">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <h3 class="feature-title">2. Escolha o horário</h3>
-                    <p class="feature-description">
-                        Veja horários disponíveis em tempo real e escolha o que melhor se encaixa na sua agenda.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card">
-                    <div class="feature-icon-premium">
-                        <i class="bi bi-bell-fill"></i>
-                    </div>
-                    <h3 class="feature-title">3. Receba confirmação</h3>
-                    <p class="feature-description">
-                        Confirmação instantânea por email com todos os detalhes do seu agendamento.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="col-md-6 col-lg-3">
-                <div class="feature-card">
-                    <div class="feature-icon-premium">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <h3 class="feature-title">4. Pronto!</h3>
-                    <p class="feature-description">
-                        É só aparecer no horário marcado e aproveitar o melhor corte da sua vida.
-                    </p>
+            <!-- Badge Flutuante -->
+            <div class="absolute bottom-10 -left-10 bg-sand text-moss p-6 max-w-xs shadow-xl rounded-sm z-20 hidden lg:block">
+                <p class="font-display font-bold text-xl mb-2">"O melhor corte da cidade."</p>
+                <div class="flex gap-1 text-clay text-xs">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Serviços Premium -->
-<section class="services-premium" role="region" aria-labelledby="services-title">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-badge">NOSSOS SERVIÇOS</span>
-            <h2 class="section-title" id="services-title">Tudo para você ficar impecável</h2>
-            <p class="section-description">
-                Serviços premium com profissionais qualificados e produtos de alta qualidade
-            </p>
+<!-- Marquee Suave -->
+<div class="py-8 bg-moss border-y border-sand/5 overflow-hidden">
+    <div class="flex gap-12 text-sand/40 font-display text-2xl items-center animate-marquee whitespace-nowrap">
+        <span>CORTE</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>BARBA</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>ESTILO</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>EXPERIÊNCIA</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>CORTE</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>BARBA</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>ESTILO</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+        <span>EXPERIÊNCIA</span> <span class="w-2 h-2 bg-clay rounded-full"></span>
+    </div>
+</div>
+
+<!-- Sobre Section -->
+<section class="py-24 px-6 bg-[#151C13]">
+    <div class="container mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div class="order-2 md:order-1 grid grid-cols-2 gap-4">
+                <div class="image-frame h-64 md:h-80 rounded-sm mt-12 scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Ferramentas">
+                </div>
+                <div class="image-frame h-64 md:h-80 rounded-sm scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1634480496307-e490518d6a89?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Cadeira">
+                </div>
+            </div>
+
+            <div class="order-1 md:order-2 scroll-reveal">
+                <h2 class="font-display text-4xl md:text-5xl text-sand mb-6">
+                    Não é só cabelo.<br>É <span class="text-clay italic">identidade</span>.
+                </h2>
+                <p class="text-sand/70 text-lg mb-6 leading-relaxed">
+                    Fugimos do óbvio. Aqui, o ambiente respira tranquilidade e foco. Trocamos o barulho e a pressa por cadeiras ergonômicas, toalhas quentes com óleos essenciais e uma conversa que realmente importa.
+                </p>
+                <div class="flex items-center gap-4 text-sm font-medium text-clay">
+                    <span class="border-b border-clay pb-1">Agendamento Online Disponível</span>
+                </div>
+            </div>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-sm-6 col-lg-3">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-scissors"></i>
-                    </div>
-                    <h3 class="service-title">Corte Masculino</h3>
-                    <div class="service-price">R$ 45</div>
-                    <p class="service-description">
-                        Corte moderno e personalizado com acabamento perfeito
-                    </p>
+    </div>
+</section>
+
+<!-- Serviços (Clean & Editorial) -->
+<section class="py-32 px-6 container mx-auto">
+    <div class="text-center mb-20 scroll-reveal">
+        <span class="text-clay font-mono text-xs tracking-widest uppercase">Nosso Menu</span>
+        <h2 class="font-display text-5xl md:text-6xl text-sand mt-4">Serviços</h2>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-12">
+        <!-- Service 1 -->
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss transition-colors cursor-pointer">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Corte Signature</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Consultoria + Lavagem + Corte + Styling</p>
                 </div>
+                <span class="font-display text-xl text-sand">R$ 80</span>
             </div>
-            
-            <div class="col-sm-6 col-lg-3">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-brush-fill"></i>
-                    </div>
-                    <h3 class="service-title">Barba Completa</h3>
-                    <div class="service-price">R$ 35</div>
-                    <p class="service-description">
-                        Design de barba com toalha quente e produtos premium
-                    </p>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss cursor-pointer">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Barba Real</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Toalha Quente + Hidratação + Modelagem</p>
                 </div>
+                <span class="font-display text-xl text-sand">R$ 65</span>
             </div>
-            
-            <div class="col-sm-6 col-lg-3">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-stars"></i>
-                    </div>
-                    <h3 class="service-title">Combo Premium</h3>
-                    <div class="service-price">R$ 70</div>
-                    <p class="service-description">
-                        Corte + Barba + Acabamento especial. Melhor custo-benefício!
-                    </p>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="group relative scroll-reveal">
+            <div class="flex justify-between items-baseline border-b border-sand/10 pb-4 relative z-10 bg-moss cursor-pointer">
+                <div>
+                    <h3 class="font-display text-2xl md:text-3xl text-sand group-hover:text-clay transition-colors">Ritual Completo</h3>
+                    <p class="text-sand/50 text-sm mt-2 font-mono">Corte + Barba + Sobrancelha + Relaxamento</p>
                 </div>
-            </div>
-            
-            <div class="col-sm-6 col-lg-3">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-droplet-fill"></i>
-                    </div>
-                    <h3 class="service-title">Hidratação</h3>
-                    <div class="service-price">R$ 25</div>
-                    <p class="service-description">
-                        Tratamento completo para cabelo e barba saudáveis
-                    </p>
-                </div>
+                <span class="font-display text-xl text-sand">R$ 130</span>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Depoimentos -->
-<section class="testimonials-section" role="region" aria-labelledby="testimonials-title">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-badge">DEPOIMENTOS</span>
-            <h2 class="section-title" id="testimonials-title">O que nossos clientes dizem</h2>
-            <p class="section-description">
-                Mais de 500 clientes satisfeitos com nosso atendimento e praticidade
-            </p>
+<section class="py-24 px-6 bg-sand text-moss">
+    <div class="container mx-auto">
+        <div class="text-center mb-12">
+            <span class="text-clay font-mono text-xs tracking-widest uppercase">Depoimentos</span>
+            <h2 class="font-display text-4xl md:text-5xl syne-extra mt-4">O que nossos clientes dizem</h2>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-quote">"</div>
-                    <p class="testimonial-text">
-                        "Sistema muito prático! Agora não preciso mais ficar esperando na fila. 
-                        Chego no horário certo e já sou atendido. Recomendo!"
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">RC</div>
-                        <div class="testimonial-info">
-                            <h6>Rafael Costa</h6>
-                            <div class="testimonial-stars">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
+                <div class="flex gap-1 text-clay text-xs mb-4">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-moss/80 mb-6 italic">"Melhor experiência que já tive em uma barbearia. Atendimento impecável e ambiente perfeito."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
+                        RC
+                    </div>
+                    <div>
+                        <h6 class="font-bold">Ricardo Costa</h6>
+                        <p class="text-sm text-moss/60">Cliente desde 2024</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-6 col-lg-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-quote">"</div>
-                    <p class="testimonial-text">
-                        "Excelente! Muito fácil de usar e o atendimento continua impecável. 
-                        A tecnologia realmente facilitou minha vida."
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">MS</div>
-                        <div class="testimonial-info">
-                            <h6>Marcos Silva</h6>
-                            <div class="testimonial-stars">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                        </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
+                <div class="flex gap-1 text-clay text-xs mb-4">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-moss/80 mb-6 italic">"O sistema de agendamento é muito prático. Consigo marcar meu horário em segundos."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
+                        MS
+                    </div>
+                    <div>
+                        <h6 class="font-bold">Marcos Silva</h6>
+                        <p class="text-sm text-moss/60">Cliente desde 2024</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-6 col-lg-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-quote">"</div>
-                    <p class="testimonial-text">
-                        "Adorei poder agendar pelo celular de qualquer lugar. 
-                        Super prático e o corte sempre perfeito!"
-                    </p>
-                    <div class="testimonial-author">
-                        <div class="testimonial-avatar">LO</div>
-                        <div class="testimonial-info">
-                            <h6>Lucas Oliveira</h6>
-                            <div class="testimonial-stars">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                        </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-sm shadow-lg scroll-reveal">
+                <div class="flex gap-1 text-clay text-xs mb-4">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-moss/80 mb-6 italic">"Profissionais altamente qualificados. Sempre saio satisfeito com o resultado."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-clay rounded-full flex items-center justify-center text-sand font-bold">
+                        FA
+                    </div>
+                    <div>
+                        <h6 class="font-bold">Felipe Almeida</h6>
+                        <p class="text-sm text-moss/60">Cliente desde 2024</p>
                     </div>
                 </div>
             </div>
@@ -743,44 +219,59 @@
     </div>
 </section>
 
-<!-- CTA Section Premium -->
+<!-- CTA Section -->
 {% if not session.usuario_id %}
-<section class="cta-premium" role="region" aria-labelledby="cta-title">
-    <div class="cta-content">
-        <h2 class="cta-title" id="cta-title">
+<section class="py-32 px-6 bg-moss">
+    <div class="container mx-auto text-center max-w-3xl">
+        <h2 class="font-display text-4xl md:text-5xl text-sand mb-6 syne-extra">
             Pronto para experimentar?
         </h2>
-        <p class="cta-description">
+        <p class="text-sand/70 text-lg mb-10 leading-relaxed">
             Junte-se a centenas de clientes satisfeitos que já descobriram 
             a forma mais prática de agendar seu corte
         </p>
         
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-lg">
-                <i class="bi bi-rocket-takeoff me-2"></i>
+        <div class="flex gap-6 justify-center flex-wrap">
+            <a href="{{ url_for('cadastro') }}" class="btn-primary shadow-lg shadow-clay/20">
+                <i class="fa-solid fa-rocket mr-2"></i>
                 Criar conta grátis agora
             </a>
-            <a href="{{ url_for('login') }}" class="btn btn-modern btn-outline-modern btn-lg">
-                <i class="bi bi-box-arrow-in-right me-2"></i>
+            <a href="{{ url_for('login') }}" class="btn-outline">
+                <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>
                 Fazer login
             </a>
         </div>
         
-        <div class="cta-benefits">
-            <div class="cta-benefit">
-                <i class="bi bi-check-circle-fill"></i>
+        <div class="flex justify-center gap-8 mt-12 flex-wrap">
+            <div class="flex items-center gap-3 text-sand/70">
+                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
                 <span>100% gratuito</span>
             </div>
-            <div class="cta-benefit">
-                <i class="bi bi-check-circle-fill"></i>
+            <div class="flex items-center gap-3 text-sand/70">
+                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
                 <span>Sem compromisso</span>
             </div>
-            <div class="cta-benefit">
-                <i class="bi bi-check-circle-fill"></i>
+            <div class="flex items-center gap-3 text-sand/70">
+                <i class="fa-solid fa-check-circle text-clay text-xl"></i>
                 <span>Cadastro em 1 minuto</span>
             </div>
         </div>
     </div>
 </section>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<style>
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    
+    .animate-marquee {
+        animation: marquee 20s linear infinite;
+        display: inline-flex;
+        gap: 3rem;
+    }
+</style>
 {% endblock %}

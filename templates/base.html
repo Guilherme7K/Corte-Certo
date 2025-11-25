@@ -1,413 +1,483 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ barbeiro.barbearia }}{% endblock %}</title>
     
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    
-    <!-- Google Fonts - Inter (moderno e clean) -->
+    <!-- Fonts: Syne (Artística/Moderna) & Manrope (Legibilidade) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        moss: '#1A2318',       // Verde Musgo Profundo (Fundo)
+                        sand: '#EAE6D7',       // Creme/Areia (Texto Claro)
+                        clay: '#BC5D2E',       // Terracota (Destaque Quente)
+                        charcoal: '#2A2A2A',   // Cinza Chumbo Suave
+                        gold: '#D4AF37'        // Toque sutil de clássico
+                    },
+                    fontFamily: {
+                        display: ['"Syne"', 'sans-serif'],
+                        body: ['"Manrope"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'texture': "url('https://www.transparenttextures.com/patterns/concrete-wall.png')",
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         :root {
-            --primary: #0f172a;
-            --secondary: #334155;
-            --accent: #059669;
-            --accent-hover: #047857;
-            --text-dark: #0f172a;
-            --text-light: #475569;
-            --bg-white: #ffffff;
-            --bg-gray: #f8fafc;
-            --bg-light: #f1f5f9;
-            --border: #e2e8f0;
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --focus-ring: 0 0 0 3px rgba(5, 150, 105, 0.3);
+            --color-primary: #1A2318;
+            --color-secondary: #BC5D2E;
+            --color-text: #EAE6D7;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            background: var(--bg-white);
-            -webkit-font-smoothing: antialiased;
+            background-color: #1A2318;
+            color: #EAE6D7;
+            overflow-x: hidden;
         }
-        
-        /* Linha de progresso animada no topo */
-        .progress-bar-top {
+
+        /* Header Flutuante */
+        header.nav-header {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, 
-                var(--accent) 0%, 
-                #3b82f6 25%, 
-                #8b5cf6 50%, 
-                #ec4899 75%, 
-                var(--accent) 100%);
-            background-size: 200% 100%;
-            animation: shimmer 3s linear infinite;
-            z-index: 9999;
-            box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
-        
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-            100% {
-                background-position: 200% 0;
-            }
-        }
-        
-        /* Navbar minimalista */
-        .navbar-minimal {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+
+        header.nav-header.scrolled {
             padding: 1rem 0;
-            transition: all 0.3s ease;
-            margin-top: 3px; /* Espaço para a linha de progresso */
         }
-        
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--primary) !important;
-            letter-spacing: -0.02em;
+
+        .nav-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: center;
+            pointer-events: auto;
         }
-        
-        .nav-link-minimal {
-            font-weight: 500;
-            font-size: 0.9375rem;
-            color: var(--text-light) !important;
-            padding: 0.5rem 1rem !important;
-            transition: color 0.2s ease;
-        }
-        
-        .nav-link-minimal:hover {
-            color: var(--primary) !important;
-        }
-        
-        .nav-link-minimal:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-            border-radius: 8px;
-        }
-        
-        /* Inputs e forms acessíveis */
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: var(--focus-ring);
-        }
-        
-        /* Skip to content link para leitores de tela */
-        .skip-to-content {
-            position: absolute;
-            top: -40px;
-            left: 0;
-            background: var(--accent);
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 0 0 8px 0;
-            z-index: 100;
-        }
-        
-        .skip-to-content:focus {
-            top: 0;
-        }
-        
-        /* Botões modernos com acessibilidade */
-        .btn-modern {
-            font-weight: 600;
-            font-size: 0.9375rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            border: none;
-            transition: all 0.2s ease;
-            letter-spacing: -0.01em;
-            cursor: pointer;
-        }
-        
-        .btn-modern:focus {
-            outline: none;
-            box-shadow: var(--focus-ring);
-        }
-        
-        .btn-modern:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-        
-        .btn-primary-modern {
-            background: var(--accent);
-            color: white;
-        }
-        
-        .btn-primary-modern:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
-            color: white;
-        }
-        
-        .btn-outline-modern {
-            background: transparent;
-            border: 1.5px solid var(--border);
-            color: var(--text-dark);
-        }
-        
-        .btn-outline-modern:hover {
-            background: var(--bg-gray);
-            border-color: var(--text-light);
-            color: var(--text-dark);
-        }
-        
-        /* Cards minimalistas */
-        .card-minimal {
-            background: var(--bg-white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-minimal:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
-        }
-        
-        /* Seções com gradiente sutil */
-        .section-gradient {
-            background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-gray) 100%);
-        }
-        
-        /* Títulos modernos */
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.2;
-            color: var(--primary);
-        }
-        
-        .text-gradient {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Badge moderno */
-        .badge-modern {
-            display: inline-flex;
+
+        .nav-container {
+            display: flex;
             align-items: center;
-            padding: 0.375rem 0.75rem;
-            border-radius: 8px;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            background: transparent;
+            border: 1px solid transparent;
+            backdrop-filter: none;
+        }
+
+        header.nav-header.scrolled .nav-container {
+            background: rgba(26, 35, 24, 0.85); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 230, 215, 0.1);
+            width: 70%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            header.nav-header.scrolled .nav-container {
+                width: 95%;
+            }
+            .nav-container {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+        }
+
+        nav ul li a {
+            font-size: 0.875rem;
+            font-family: 'Manrope', sans-serif;
             font-weight: 600;
-            font-size: 0.8125rem;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            border: 1px solid var(--border);
-        }
-        
-        .badge-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-        
-        /* Footer minimalista */
-        .footer-minimal {
-            background: var(--bg-gray);
-            border-top: 1px solid var(--border);
-            padding: 3rem 0 2rem;
-            margin-top: 5rem;
-        }
-        
-        .footer-link {
-            color: var(--text-light);
+            color: rgba(234, 230, 215, 0.8);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s ease;
             text-decoration: none;
-            font-size: 0.9375rem;
-            transition: color 0.2s ease;
         }
-        
-        .footer-link:hover {
-            color: var(--accent);
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--color-secondary);
         }
-        
-        /* Animação suave */
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--color-secondary);
+            transition: width 0.3s ease;
         }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+
+        nav ul li a:hover::after,
+        nav ul li a.active::after {
+            width: 100%;
         }
-        
-        /* Scrollbar customizada */
+
+        .btn-cta {
+            background: var(--color-text);
+            color: var(--color-primary);
+            padding: 0.75rem 1.75rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
-        
         ::-webkit-scrollbar-track {
-            background: var(--bg-gray);
+            background: #1A2318;
         }
-        
         ::-webkit-scrollbar-thumb {
-            background: var(--text-light);
-            border-radius: 4px;
+            background: #BC5D2E;
+            border-radius: 3px;
         }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent);
+
+        /* Tipografia */
+        .syne-extra {
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+
+        /* Texture Overlay */
+        .texture-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 9000;
+        }
+
+        /* Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        /* Image Containers */
+        .image-frame {
+            overflow: hidden;
+            position: relative;
+        }
+        .image-frame img {
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .image-frame:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Botões estilo Navalha */
+        .btn-primary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #a34e24;
+            color: var(--color-text);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(188, 93, 46, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-text);
+            padding: 1rem 2rem;
+            border: 1.5px solid rgba(234, 230, 215, 0.3);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--color-secondary);
+            color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Flash Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .alert-success {
+            background: rgba(188, 93, 46, 0.1);
+            border: 1px solid rgba(188, 93, 46, 0.3);
+            color: var(--color-secondary);
+        }
+
+        .alert-danger {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+        }
+
+        .alert-info {
+            background: rgba(234, 230, 215, 0.1);
+            border: 1px solid rgba(234, 230, 215, 0.3);
+            color: var(--color-text);
+        }
+
+        /* Forms */
+        input, select, textarea {
+            background: rgba(234, 230, 215, 0.05);
+            border: 1px solid rgba(234, 230, 215, 0.2);
+            color: var(--color-text);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Manrope', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+            background: rgba(234, 230, 215, 0.08);
+        }
+
+        label {
+            color: var(--color-text);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: block;
         }
     </style>
     
     {% block styles %}{% endblock %}
 </head>
-<body>
-    <!-- Linha de progresso animada no topo -->
-    <div class="progress-bar-top" role="presentation" aria-hidden="true"></div>
+<body class="bg-moss font-body selection:bg-clay selection:text-white">
+
+    <div class="texture-overlay"></div>
     
-    <!-- Skip to content link para acessibilidade -->
-    <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
-    
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-minimal fixed-top" role="navigation" aria-label="Menu principal">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                {{ barbeiro.barbearia }}
-            </a>
-            <button class="navbar-toggler border-0" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Alternar navegação">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center gap-1">
-                    {% if session.usuario_id %}
-                        <li class="nav-item">
-                            <span class="nav-link-minimal">
-                                Olá, <strong>{{ session.usuario_nome }}</strong>
-                            </span>
-                        </li>
-                        {% if session.usuario_tipo == 'cliente' %}
-                            <li class="nav-item">
-                                <a class="nav-link-minimal" href="{{ url_for('cliente_dashboard') }}">
-                                    Dashboard
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link-minimal" href="{{ url_for('admin_dashboard') }}">
-                                    Painel Admin
-                                </a>
-                            </li>
+    <!-- Header Flutuante -->
+    <header class="nav-header">
+        <div class="nav-wrapper">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="font-display font-bold text-xl tracking-tighter text-sand z-10 no-underline hover:text-clay transition-colors">
+                    {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
+                </a>
+                
+                <!-- Links Desktop -->
+                <nav class="hidden md:block">
+                    <ul>
+                        <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
+                        {% if session.usuario_id %}
+                            {% if session.usuario_tipo == 'cliente' %}
+                                <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Meus Agendamentos</a></li>
+                                <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
+                            {% else %}
+                                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Dashboard</a></li>
+                                <li><a href="{{ url_for('admin_agendamentos') }}" class="{% if request.endpoint == 'admin_agendamentos' %}active{% endif %}">Agendamentos</a></li>
+                            {% endif %}
                         {% endif %}
-                        <li class="nav-item ms-2">
-                            <a href="{{ url_for('logout') }}" class="btn btn-modern btn-outline-modern btn-sm">
-                                Sair
-                            </a>
-                        </li>
+                    </ul>
+                </nav>
+
+                <!-- CTA Button -->
+                {% if session.usuario_id %}
+                    {% if session.usuario_tipo == 'cliente' %}
+                        <a href="{{ url_for('cliente_agendar') }}" class="btn-cta z-10">
+                            Agendar
+                        </a>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link-minimal" href="{{ url_for('login') }}">Entrar</a>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <a href="{{ url_for('cadastro') }}" class="btn btn-modern btn-primary-modern btn-sm">
-                                Agendar
-                            </a>
-                        </li>
+                        <a href="{{ url_for('logout') }}" class="btn-cta z-10">
+                            Sair
+                        </a>
                     {% endif %}
-                </ul>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-cta z-10">
+                        Entrar
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </nav>
+    </header>
     
-    <!-- Espaçamento para navbar fixa -->
-    <div style="height: 72px;"></div>
-    
-    <!-- Conteúdo -->
-    <main class="fade-in-up" id="main-content" role="main" aria-label="Conteúdo principal">
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mx-auto px-4" style="padding-top: 120px;">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} fade-in-up">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
         {% block content %}{% endblock %}
     </main>
     
     <!-- Footer -->
-    <footer class="footer-minimal" role="contentinfo" aria-label="Rodapé">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <h6 class="fw-bold mb-3">{{ barbeiro.barbearia }}</h6>
-                    <p class="text-muted small">
-                        Agendamento online simplificado para sua barbearia.
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="fw-bold mb-3">Contato</h6>
-                    <p class="mb-2 small">
-                        <i class="bi bi-telephone me-2 text-muted"></i> 
-                        <a href="tel:{{ barbeiro.telefone }}" class="footer-link">{{ barbeiro.telefone }}</a>
-                    </p>
-                    <p class="mb-0 small">
-                        <i class="bi bi-envelope me-2 text-muted"></i> 
-                        <a href="mailto:{{ barbeiro.email }}" class="footer-link">{{ barbeiro.email }}</a>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="fw-bold mb-3">Redes Sociais</h6>
-                    <div class="d-flex gap-2">
-                        <a href="{{ barbeiro.link_whatsapp }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
-                            <i class="bi bi-whatsapp"></i>
-                        </a>
-                        <a href="{{ barbeiro.link_instagram }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="{{ barbeiro.link_facebook }}" target="_blank" class="btn btn-modern btn-outline-modern btn-sm">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                    </div>
-                </div>
+    <footer class="bg-moss pt-20 pb-10 px-6 border-t border-sand/10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div>
+                <span class="font-display text-2xl font-bold text-sand block mb-6">
+                    {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
+                </span>
+                <p class="text-sand/60 text-sm leading-relaxed">
+                    {{ barbeiro.descricao if barbeiro.descricao else 'Elevando o padrão da estética masculina. Um corte de cada vez.' }}
+                </p>
             </div>
-            <hr class="my-4" style="border-color: var(--border);">
-            <div class="text-center">
-                <small class="text-muted">&copy; 2025 {{ barbeiro.barbearia }}. Todos os direitos reservados.</small>
+            
+            <div>
+                <h4 class="text-sand font-bold mb-4">Links Rápidos</h4>
+                <ul class="space-y-2">
+                    <li><a href="{{ url_for('index') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Início</a></li>
+                    {% if session.usuario_id %}
+                        {% if session.usuario_tipo == 'cliente' %}
+                            <li><a href="{{ url_for('cliente_dashboard') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Dashboard</a></li>
+                            <li><a href="{{ url_for('cliente_agendar') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Agendar</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('admin_dashboard') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Admin</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Login</a></li>
+                        <li><a href="{{ url_for('cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Cadastro</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sand font-bold mb-4">Contato</h4>
+                {% if barbeiro.telefone %}
+                <p class="text-sand/60 text-sm mb-2">
+                    <i class="fa-solid fa-phone mr-2"></i>{{ barbeiro.telefone }}
+                </p>
+                {% endif %}
+                {% if barbeiro.email %}
+                <p class="text-sand/60 text-sm">
+                    <i class="fa-solid fa-envelope mr-2"></i>{{ barbeiro.email }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div>
+                <h4 class="text-sand font-bold mb-4">Horário</h4>
+                <p class="text-sand/60 text-sm">Segunda - Sexta: 9h - 20h<br>Sábado: 9h - 18h<br>Domingo: Fechado</p>
             </div>
         </div>
+        <div class="text-center border-t border-sand/5 pt-8">
+             <p class="text-sand/30 text-xs uppercase tracking-widest">© 2025 {{ barbeiro.barbearia }}</p>
+        </div>
     </footer>
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Scroll do Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header.nav-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Animations com GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
+        });
+    </script>
     
     {% block scripts %}{% endblock %}
 </body>
