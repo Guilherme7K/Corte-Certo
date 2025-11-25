@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento
 from datetime import datetime, timedelta, date
 from models import db, Usuario, Servico, Agendamento, HorarioFuncionamento, BloqueioAgenda
@@ -570,10 +570,11 @@ def cliente_cancelar_agendamento(id):
     
 
 @app.route('/api/horarios-disponiveis', methods=['GET'])
+
+@app.route('/api/horarios-disponiveis', methods=['GET'])
 @login_required
 def api_horarios_disponiveis():
     """API para retornar horários disponíveis para uma data e serviço"""
-    from flask import jsonify
     
     data_str = request.args.get('data')
     servico_id = request.args.get('servico_id')
@@ -606,6 +607,21 @@ def api_horarios_disponiveis():
         
     except (ValueError, TypeError) as e:
         return jsonify({'error': 'Data ou serviço inválidos'}), 400
+
+@app.route('/cliente/agendamento/<int:id>/cancelar/confirmar', methods=['POST'])
+@login_required
+def confirmar_cancelamento_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    
+    # Verificar se o agendamento pertence ao cliente logado
+    if agendamento.cliente_id != session.get('usuario_id'):
+        flash('Você não tem permissão para cancelar este agendamento', 'danger')
+        return redirect(url_for('meus_agendamentos'))
+    
+    # Cancelar o agendamento
+    agendamento.status = 'cancelado'
+    db.session.commit()
+    
     flash('Agendamento cancelado com sucesso!', 'success')
     return redirect(url_for('meus_agendamentos'))
 
