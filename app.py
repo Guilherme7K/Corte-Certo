@@ -908,11 +908,6 @@ def deletar_bloqueio(id):
     """Deleta um bloqueio de agenda"""
     bloqueio = BloqueioAgenda.query.get_or_404(id)
     
-    # Não permite deletar bloqueios que já iniciaram (inativos)
-    if bloqueio.data_inicio <= date.today():
-        flash('Não é possível deletar bloqueios que já iniciaram.', 'warning')
-        return redirect(url_for('admin_bloqueios'))
-    
     db.session.delete(bloqueio)
     db.session.commit()
     flash('Bloqueio deletado com sucesso!', 'success')
