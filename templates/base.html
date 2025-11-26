@@ -411,7 +411,7 @@
         <div class="nav-wrapper">
             <div class="nav-container">
                 <a href="{{ url_for('index') }}" class="font-display font-bold text-xl tracking-tighter text-sand z-10 no-underline hover:text-clay transition-colors">
-                    {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
+                    {{ barbeiro.barbearia if barbeiro.barbearia else 'Corte Certo' }}
                 </a>
                 
                 <nav class="hidden md:block">
@@ -453,7 +453,7 @@
     <!-- Mobile Menu -->
     <nav class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-header">
-            <span class="brand">{{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Corte' }}</span>
+            <span class="brand">{{ barbeiro.barbearia if barbeiro.barbearia else 'Corte Certo' }}</span>
         </div>
         
         <ul>
