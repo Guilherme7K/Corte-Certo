@@ -249,6 +249,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             z-index: 50;
+            padding: 0.5rem;
         }
 
         .mobile-menu {
@@ -256,15 +257,16 @@
             position: fixed;
             top: 0;
             right: -100%;
-            width: 80%;
-            max-width: 300px;
+            width: 85%;
+            max-width: 320px;
             height: 100vh;
             background: rgba(26, 35, 24, 0.98);
             backdrop-filter: blur(20px);
-            padding: 5rem 2rem 2rem;
+            padding: 6rem 2rem 2rem;
             transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 40;
             border-left: 1px solid rgba(234, 230, 215, 0.1);
+            overflow-y: auto;
         }
 
         .mobile-menu.active {
@@ -274,26 +276,49 @@
         .mobile-menu ul {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: 0;
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
+        .mobile-menu ul li {
+            border-bottom: 1px solid rgba(234, 230, 215, 0.05);
+        }
+
         .mobile-menu ul li a {
-            color: rgba(234, 230, 215, 0.8);
-            font-size: 1.125rem;
+            color: rgba(234, 230, 215, 0.9);
+            font-size: 1rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             display: block;
+            padding: 1.25rem 0;
         }
 
         .mobile-menu ul li a:hover,
         .mobile-menu ul li a.active {
             color: var(--color-secondary);
+            padding-left: 0.5rem;
+        }
+
+        .mobile-menu-header {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-header .brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--color-text);
         }
 
         .mobile-overlay {
@@ -303,10 +328,11 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 30;
             opacity: 0;
             transition: opacity 0.4s ease;
+            backdrop-filter: blur(2px);
         }
 
         .mobile-overlay.active {
@@ -426,20 +452,40 @@
 
     <!-- Mobile Menu -->
     <nav class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <span class="brand">{{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Corte' }}</span>
+        </div>
+        
         <ul>
-            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+                <i class="fa-solid fa-home mr-2"></i>Início
+            </a></li>
             {% if session.usuario_id %}
                 {% if session.usuario_tipo == 'cliente' %}
-                    <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Dashboard</a></li>
-                    <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
-                    <li><a href="{{ url_for('logout') }}" class="text-red-400">Sair</a></li>
+                    <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">
+                        <i class="fa-solid fa-chart-line mr-2"></i>Dashboard
+                    </a></li>
+                    <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">
+                        <i class="fa-solid fa-calendar-plus mr-2"></i>Agendar
+                    </a></li>
+                    <li><a href="{{ url_for('logout') }}" class="text-red-400">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
+                    </a></li>
                 {% else %}
-                    <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a></li>
-                    <li><a href="{{ url_for('logout') }}" class="text-red-400">Sair</a></li>
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                        <i class="fa-solid fa-gauge mr-2"></i>Admin
+                    </a></li>
+                    <li><a href="{{ url_for('logout') }}" class="text-red-400">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
+                    </a></li>
                 {% endif %}
             {% else %}
-                <li><a href="{{ url_for('login') }}">Entrar</a></li>
-                <li><a href="{{ url_for('cadastro') }}">Cadastrar</a></li>
+                <li><a href="{{ url_for('login') }}">
+                    <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Entrar
+                </a></li>
+                <li><a href="{{ url_for('cadastro') }}">
+                    <i class="fa-solid fa-user-plus mr-2"></i>Cadastrar
+                </a></li>
             {% endif %}
         </ul>
     </nav>
