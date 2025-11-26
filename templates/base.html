@@ -240,6 +240,97 @@
             transform: translateY(-2px);
         }
 
+        /* Mobile Menu */
+        .mobile-menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--color-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: rgba(26, 35, 24, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 5rem 2rem 2rem;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 40;
+            border-left: 1px solid rgba(234, 230, 215, 0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu ul {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-menu ul li a {
+            color: rgba(234, 230, 215, 0.8);
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+        }
+
+        .mobile-menu ul li a:hover,
+        .mobile-menu ul li a.active {
+            color: var(--color-secondary);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .mobile-overlay {
+                display: block;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+        }
+
         .alert {
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
@@ -311,18 +402,47 @@
                     </ul>
                 </nav>
 
-                {% if session.usuario_id %}
-                    {% if session.usuario_tipo == 'cliente' %}
-                        <a href="{{ url_for('cliente_agendar') }}" class="btn-cta z-10">Agendar</a>
+                <div class="flex items-center gap-4 z-10">
+                    {% if session.usuario_id %}
+                        {% if session.usuario_tipo == 'cliente' %}
+                            <a href="{{ url_for('cliente_agendar') }}" class="btn-cta hidden md:inline-block">Agendar</a>
+                        {% else %}
+                            <a href="{{ url_for('logout') }}" class="btn-cta hidden md:inline-block">Sair</a>
+                        {% endif %}
                     {% else %}
-                        <a href="{{ url_for('logout') }}" class="btn-cta z-10">Sair</a>
+                        <a href="{{ url_for('login') }}" class="btn-cta hidden md:inline-block">Entrar</a>
                     {% endif %}
-                {% else %}
-                    <a href="{{ url_for('login') }}" class="btn-cta z-10">Entrar</a>
-                {% endif %}
+                    
+                    <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
+            {% if session.usuario_id %}
+                {% if session.usuario_tipo == 'cliente' %}
+                    <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Dashboard</a></li>
+                    <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
+                    <li><a href="{{ url_for('logout') }}" class="text-red-400">Sair</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a></li>
+                    <li><a href="{{ url_for('logout') }}" class="text-red-400">Sair</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{{ url_for('login') }}">Entrar</a></li>
+                <li><a href="{{ url_for('cadastro') }}">Cadastrar</a></li>
+            {% endif %}
+        </ul>
+    </nav>
     
     <main id="main-content" role="main">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -340,53 +460,80 @@
         {% block content %}{% endblock %}
     </main>
     
-    <footer class="bg-moss pt-20 pb-10 px-6 border-t border-sand/10">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+    <footer class="bg-moss pt-16 md:pt-20 pb-8 md:pb-10 px-4 md:px-6 border-t border-sand/10">
+        <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
             <div>
-                <span class="font-display text-2xl font-bold text-sand block mb-6">
+                <span class="font-display text-xl md:text-2xl font-bold text-sand block mb-4 md:mb-6">
                     {{ barbeiro.barbearia.split()[0] if barbeiro.barbearia else 'Barbearia' }}
                 </span>
-                <p class="text-sand/60 text-sm leading-relaxed">
+                <p class="text-sand/60 text-xs md:text-sm leading-relaxed">
                     Elevando o padrão da estética masculina. Um corte de cada vez.
                 </p>
             </div>
             
             <div>
-                <h4 class="text-sand font-bold mb-4">Links</h4>
+                <h4 class="text-sand font-bold mb-3 md:mb-4 text-sm md:text-base">Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="{{ url_for('index') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Início</a></li>
+                    <li><a href="{{ url_for('index') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Início</a></li>
                     {% if not session.usuario_id %}
-                        <li><a href="{{ url_for('login') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Login</a></li>
-                        <li><a href="{{ url_for('cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-sm no-underline">Cadastro</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Login</a></li>
+                        <li><a href="{{ url_for('cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Cadastro</a></li>
                     {% endif %}
                 </ul>
             </div>
 
             <div>
-                <h4 class="text-sand font-bold mb-4">Contato</h4>
+                <h4 class="text-sand font-bold mb-3 md:mb-4 text-sm md:text-base">Contato</h4>
                 {% if barbeiro.telefone %}
-                <p class="text-sand/60 text-sm mb-2">
+                <p class="text-sand/60 text-xs md:text-sm mb-2">
                     <i class="fa-solid fa-phone mr-2"></i>{{ barbeiro.telefone }}
                 </p>
                 {% endif %}
                 {% if barbeiro.email %}
-                <p class="text-sand/60 text-sm">
+                <p class="text-sand/60 text-xs md:text-sm">
                     <i class="fa-solid fa-envelope mr-2"></i>{{ barbeiro.email }}
                 </p>
                 {% endif %}
             </div>
 
             <div>
-                <h4 class="text-sand font-bold mb-4">Horário</h4>
-                <p class="text-sand/60 text-sm">Segunda - Sexta: 9h - 20h<br>Sábado: 9h - 18h</p>
+                <h4 class="text-sand font-bold mb-3 md:mb-4 text-sm md:text-base">Horário</h4>
+                <p class="text-sand/60 text-xs md:text-sm">Segunda - Sexta: 9h - 20h<br>Sábado: 9h - 18h</p>
             </div>
         </div>
-        <div class="text-center border-t border-sand/5 pt-8">
+        <div class="text-center border-t border-sand/5 pt-6 md:pt-8">
              <p class="text-sand/30 text-xs uppercase tracking-widest">© 2025 {{ barbeiro.barbearia }}</p>
         </div>
     </footer>
 
     <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            
+            const icon = mobileMenuButton.querySelector('i');
+            icon.className = mobileMenu.classList.contains('active') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+        }
+
+        mobileMenuButton?.addEventListener('click', toggleMobileMenu);
+        mobileOverlay?.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('active')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header.nav-header');
             if (window.scrollY > 50) {
