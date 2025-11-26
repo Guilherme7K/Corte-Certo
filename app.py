@@ -571,8 +571,8 @@ def cliente_cancelar_agendamento(id):
     agendamento.status = 'cancelado'
     db.session.commit()
     
-
-@app.route('/api/horarios-disponiveis', methods=['GET'])
+    flash('Agendamento cancelado com sucesso', 'success')
+    return redirect(url_for('cliente_dashboard'))
 
 @app.route('/api/horarios-disponiveis', methods=['GET'])
 @login_required
