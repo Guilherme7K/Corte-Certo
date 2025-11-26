@@ -431,15 +431,15 @@
                 <div class="flex items-center gap-4 z-10">
                     {% if session.usuario_id %}
                         {% if session.usuario_tipo == 'cliente' %}
-                            <a href="{{ url_for('cliente_agendar') }}" class="btn-cta hidden md:inline-block">Agendar</a>
+                            <a href="{{ url_for('cliente_agendar') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Agendar</a>
                         {% else %}
-                            <a href="{{ url_for('logout') }}" class="btn-cta hidden md:inline-block">Sair</a>
+                            <a href="{{ url_for('logout') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Sair</a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="btn-cta hidden md:inline-block">Entrar</a>
+                        <a href="{{ url_for('login') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Entrar</a>
                     {% endif %}
                     
-                    <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Menu">
+                    <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Menu" onclick="event.stopPropagation();">
                         <i class="fa-solid fa-bars"></i>
                     </button>
                 </div>
@@ -558,7 +558,8 @@
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileOverlay = document.getElementById('mobileOverlay');
 
-        function toggleMobileMenu() {
+        function toggleMobileMenu(e) {
+            if (e) e.stopPropagation();
             mobileMenu.classList.toggle('active');
             mobileOverlay.classList.toggle('active');
             document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
@@ -568,15 +569,24 @@
         }
 
         mobileMenuButton?.addEventListener('click', toggleMobileMenu);
-        mobileOverlay?.addEventListener('click', toggleMobileMenu);
+        mobileOverlay?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
 
         // Close menu when clicking on a link
         document.querySelectorAll('.mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
+            link.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if (mobileMenu.classList.contains('active')) {
                     toggleMobileMenu();
                 }
             });
+        });
+
+        // Prevent menu toggle when clicking inside menu
+        mobileMenu?.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
 
         // Navbar scroll effect
