@@ -110,7 +110,7 @@
     <div class="texture-overlay"></div>
 
     <!-- Back to Home -->
-    <a href="{{ url_for('index') }}" class="absolute top-8 left-8 z-50 flex items-center gap-2 text-sand/60 hover:text-clay transition-colors text-sm font-bold uppercase tracking-widest reveal-element">
+    <a href="{{ url_for('main.index') }}" class="absolute top-8 left-8 z-50 flex items-center gap-2 text-sand/60 hover:text-clay transition-colors text-sm font-bold uppercase tracking-widest reveal-element">
         <i class="fa-solid fa-arrow-left"></i> Voltar
     </a>
 
@@ -216,7 +216,7 @@
                 <div class="text-center mt-8 reveal-element">
                     <p class="text-sand/40 text-sm">
                         Já possui cadastro? 
-                        <a href="{{ url_for('login') }}" class="text-clay hover:text-sand transition-colors font-bold ml-1 border-b border-clay hover:border-sand pb-0.5">Fazer login</a>
+                        <a href="{{ url_for('auth.login') }}" class="text-clay hover:text-sand transition-colors font-bold ml-1 border-b border-clay hover:border-sand pb-0.5">Fazer login</a>
                     </p>
                 </div>
             </form>

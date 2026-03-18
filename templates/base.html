@@ -410,19 +410,19 @@
     <header class="nav-header">
         <div class="nav-wrapper">
             <div class="nav-container">
-                <a href="{{ url_for('index') }}" class="font-display font-bold text-xl tracking-tighter text-sand z-10 no-underline hover:text-clay transition-colors">
+                <a href="{{ url_for('main.index') }}" class="font-display font-bold text-xl tracking-tighter text-sand z-10 no-underline hover:text-clay transition-colors">
                     {{ barbeiro.barbearia if barbeiro.barbearia else 'Corte Certo' }}
                 </a>
                 
                 <nav class="hidden md:block">
                     <ul>
-                        <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
+                        <li><a href="{{ url_for('main.index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Início</a></li>
                         {% if session.usuario_id %}
                             {% if session.usuario_tipo == 'cliente' %}
-                                <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Dashboard</a></li>
-                                <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
+                                <li><a href="{{ url_for('cliente.cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">Dashboard</a></li>
+                                <li><a href="{{ url_for('cliente.cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">Agendar</a></li>
                             {% else %}
-                                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a></li>
+                                <li><a href="{{ url_for('admin.admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -431,12 +431,12 @@
                 <div class="flex items-center gap-4 z-10">
                     {% if session.usuario_id %}
                         {% if session.usuario_tipo == 'cliente' %}
-                            <a href="{{ url_for('cliente_agendar') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Agendar</a>
+                            <a href="{{ url_for('cliente.cliente_agendar') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Agendar</a>
                         {% else %}
-                            <a href="{{ url_for('logout') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Sair</a>
+                            <a href="{{ url_for('auth.logout') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Sair</a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Entrar</a>
+                        <a href="{{ url_for('auth.login') }}" class="btn-cta hidden md:inline-block" onclick="event.stopPropagation();">Entrar</a>
                     {% endif %}
                     
                     <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Menu" onclick="event.stopPropagation();">
@@ -457,33 +457,33 @@
         </div>
         
         <ul>
-            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+            <li><a href="{{ url_for('main.index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
                 <i class="fa-solid fa-home mr-2"></i>Início
             </a></li>
             {% if session.usuario_id %}
                 {% if session.usuario_tipo == 'cliente' %}
-                    <li><a href="{{ url_for('cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">
+                    <li><a href="{{ url_for('cliente.cliente_dashboard') }}" class="{% if request.endpoint == 'cliente_dashboard' %}active{% endif %}">
                         <i class="fa-solid fa-chart-line mr-2"></i>Dashboard
                     </a></li>
-                    <li><a href="{{ url_for('cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">
+                    <li><a href="{{ url_for('cliente.cliente_agendar') }}" class="{% if request.endpoint == 'cliente_agendar' %}active{% endif %}">
                         <i class="fa-solid fa-calendar-plus mr-2"></i>Agendar
                     </a></li>
-                    <li><a href="{{ url_for('logout') }}" class="text-red-400">
+                    <li><a href="{{ url_for('auth.logout') }}" class="text-red-400">
                         <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
                     </a></li>
                 {% else %}
-                    <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                    <li><a href="{{ url_for('admin.admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
                         <i class="fa-solid fa-gauge mr-2"></i>Admin
                     </a></li>
-                    <li><a href="{{ url_for('logout') }}" class="text-red-400">
+                    <li><a href="{{ url_for('auth.logout') }}" class="text-red-400">
                         <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
                     </a></li>
                 {% endif %}
             {% else %}
-                <li><a href="{{ url_for('login') }}">
+                <li><a href="{{ url_for('auth.login') }}">
                     <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>Entrar
                 </a></li>
-                <li><a href="{{ url_for('cadastro') }}">
+                <li><a href="{{ url_for('auth.cadastro') }}">
                     <i class="fa-solid fa-user-plus mr-2"></i>Cadastrar
                 </a></li>
             {% endif %}
@@ -520,10 +520,10 @@
             <div>
                 <h4 class="text-sand font-bold mb-3 md:mb-4 text-sm md:text-base">Links</h4>
                 <ul class="space-y-2">
-                    <li><a href="{{ url_for('index') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Início</a></li>
+                    <li><a href="{{ url_for('main.index') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Início</a></li>
                     {% if not session.usuario_id %}
-                        <li><a href="{{ url_for('login') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Login</a></li>
-                        <li><a href="{{ url_for('cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Cadastro</a></li>
+                        <li><a href="{{ url_for('auth.login') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Login</a></li>
+                        <li><a href="{{ url_for('auth.cadastro') }}" class="text-sand/60 hover:text-clay transition-colors text-xs md:text-sm no-underline">Cadastro</a></li>
                     {% endif %}
                 </ul>
             </div>

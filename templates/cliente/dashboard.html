@@ -22,11 +22,11 @@
                     </div>
                     
                     <div class="flex items-center gap-4">
-                        <a href="{{ url_for('cliente_agendar') }}" 
+                        <a href="{{ url_for('cliente.cliente_agendar') }}" 
                            class="bg-clay text-sand px-6 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-clay/90 transition-all hover:scale-[1.02] shadow-lg">
                             <i class="fa-solid fa-calendar-plus mr-2"></i>Novo Agendamento
                         </a>
-                        <a href="{{ url_for('logout') }}" 
+                        <a href="{{ url_for('auth.logout') }}" 
                            class="bg-transparent border border-sand/20 text-sand px-6 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-clay hover:text-clay transition-all">
                             <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
                         </a>
@@ -154,7 +154,7 @@
                                             </span>
 
                                             {% if agendamento.status == 'agendado' %}
-                                                <form method="POST" action="{{ url_for('cliente_cancelar_agendamento', id=agendamento.id) }}" 
+                                                <form method="POST" action="{{ url_for('cliente.cliente_cancelar_agendamento', id=agendamento.id) }}" 
                                                       onsubmit="return confirm('Tem certeza que deseja cancelar este agendamento?')"
                                                       class="inline">
                                                     <button type="submit" 
@@ -163,7 +163,7 @@
                                                     </button>
                                                 </form>
                                             {% elif agendamento.status in ['concluido', 'cancelado'] %}
-                                                <form method="POST" action="{{ url_for('cliente_excluir_agendamento', id=agendamento.id) }}" 
+                                                <form method="POST" action="{{ url_for('cliente.cliente_excluir_agendamento', id=agendamento.id) }}" 
                                                       onsubmit="return confirm('Deseja remover este agendamento do histórico?')"
                                                       class="inline">
                                                     <button type="submit" 
@@ -195,7 +195,7 @@
                     </div>
                     <h3 class="font-display text-2xl text-sand mb-3">Nenhum agendamento</h3>
                     <p class="text-sand/60 mb-8 text-sm">Inicie sua jornada conosco</p>
-                    <a href="{{ url_for('cliente_agendar') }}" 
+                    <a href="{{ url_for('cliente.cliente_agendar') }}" 
                        class="inline-block bg-clay text-sand px-8 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-clay/90 transition-all hover:scale-[1.02] shadow-lg">
                         Fazer Agendamento
                     </a>

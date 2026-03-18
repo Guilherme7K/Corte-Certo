@@ -98,3 +98,31 @@ def calcular_receita_periodo(data_inicio, data_fim, status='concluido'):
     ).all()
     
     return sum([ag.servico.preco for ag in agendamentos if ag.servico])
+
+# Função para sanitizar inputs
+def sanitizar_input(texto):
+    if not texto:
+        return texto
+    # Remove caracteres perigosos
+    caracteres_perigosos = ['<', '>', '"', "'", '&', '\\', '/']
+    for char in caracteres_perigosos:
+        texto = texto.replace(char, '')
+    return texto.strip()
+
+# Função para validar email
+def validar_email(email):
+    import re
+    padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(padrao, email) is not None
+
+# Função para validar senha forte
+def validar_senha_forte(senha):
+    if len(senha) < 8:
+        return False, "A senha deve ter no mínimo 8 caracteres"
+    if not any(char.isdigit() for char in senha):
+        return False, "A senha deve conter pelo menos um número"
+    if not any(char.isupper() for char in senha):
+        return False, "A senha deve conter pelo menos uma letra maiúscula"
+    if not any(char.islower() for char in senha):
+        return False, "A senha deve conter pelo menos uma letra minúscula"
+    return True, "Senha válida"

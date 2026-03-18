@@ -24,28 +24,28 @@
             <div class="flex gap-4 md:gap-6 flex-wrap">
                 {% if session.usuario_id %}
                     {% if session.usuario_tipo == 'cliente' %}
-                        <a href="{{ url_for('cliente_agendar') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
+                        <a href="{{ url_for('cliente.cliente_agendar') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                             Agendar Horário
                         </a>
-                        <a href="{{ url_for('cliente_dashboard') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium hover:text-clay transition-colors group">
+                        <a href="{{ url_for('cliente.cliente_dashboard') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium hover:text-clay transition-colors group">
                             Dashboard <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                         </a>
-                        <a href="{{ url_for('logout') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
+                        <a href="{{ url_for('auth.logout') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
                             Sair <i class="fa-solid fa-arrow-right-from-bracket group-hover:translate-x-1 transition-transform"></i>
                         </a>
                     {% else %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
+                        <a href="{{ url_for('admin.admin_dashboard') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                             Dashboard Admin
                         </a>
-                        <a href="{{ url_for('logout') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
+                        <a href="{{ url_for('auth.logout') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium text-sand/60 hover:text-red-400 transition-colors group">
                             Sair <i class="fa-solid fa-arrow-right-from-bracket group-hover:translate-x-1 transition-transform"></i>
                         </a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ url_for('cadastro') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
+                    <a href="{{ url_for('auth.cadastro') }}" class="bg-clay text-sand px-6 md:px-8 py-3 md:py-4 rounded-lg font-display font-bold text-xs md:text-sm uppercase tracking-wide hover:bg-clay/90 transition-colors shadow-lg shadow-clay/20">
                         Criar Conta
                     </a>
-                    <a href="{{ url_for('login') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium hover:text-clay transition-colors group">
+                    <a href="{{ url_for('auth.login') }}" class="px-6 md:px-8 py-3 md:py-4 flex items-center gap-2 text-xs md:text-sm font-medium hover:text-clay transition-colors group">
                         Entrar <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 {% endif %}
@@ -220,10 +220,10 @@
         </p>
         
         <div class="flex gap-4 md:gap-6 justify-center flex-wrap">
-            <a href="{{ url_for('cadastro') }}" class="btn-primary shadow-lg shadow-clay/20 text-xs md:text-sm">
+            <a href="{{ url_for('auth.cadastro') }}" class="btn-primary shadow-lg shadow-clay/20 text-xs md:text-sm">
                 Criar conta grátis
             </a>
-            <a href="{{ url_for('login') }}" class="btn-outline text-xs md:text-sm">
+            <a href="{{ url_for('auth.login') }}" class="btn-outline text-xs md:text-sm">
                 Fazer login
             </a>
         </div>

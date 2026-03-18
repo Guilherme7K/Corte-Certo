@@ -46,3 +46,11 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+BARBEIRO_INFO = {
+    'nome': 'João Silva',
+    'barbearia': Config.NOME_EMPRESA,
+    'endereco': Config.ENDERECO,
+    'telefone': Config.TELEFONE,
+    'email': Config.EMAIL_CONTATO
+}

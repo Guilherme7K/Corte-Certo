@@ -14,7 +14,7 @@
             <div class="relative z-10 p-12">
                 <div class="flex items-start justify-between flex-wrap gap-6">
                     <div>
-                        <a href="{{ url_for('cliente_dashboard') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-clay mb-4 transition-colors text-sm font-mono">
+                        <a href="{{ url_for('cliente.cliente_dashboard') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-clay mb-4 transition-colors text-sm font-mono">
                             <i class="fa-solid fa-arrow-left"></i>
                             Voltar
                         </a>
@@ -24,7 +24,7 @@
                         <p class="text-sand/60 text-sm font-mono tracking-wide">Escolha o serviço e horário ideal</p>
                     </div>
                     
-                    <a href="{{ url_for('logout') }}" 
+                    <a href="{{ url_for('auth.logout') }}" 
                        class="bg-transparent border border-sand/20 text-sand px-6 py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-clay hover:text-clay transition-all">
                         <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>Sair
                     </a>
@@ -176,7 +176,7 @@
 
                 <!-- Botões -->
                 <div class="flex flex-col md:flex-row gap-4 pt-6">
-                    <a href="{{ url_for('cliente_dashboard') }}" 
+                    <a href="{{ url_for('cliente.cliente_dashboard') }}" 
                        class="flex-1 bg-transparent border border-sand/20 text-sand px-8 py-4 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-sand/40 transition-all text-center">
                         Cancelar
                     </a>

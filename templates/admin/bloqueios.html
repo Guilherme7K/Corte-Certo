@@ -12,7 +12,7 @@
             </div>
             
             <div class="relative z-10 p-12">
-                <a href="{{ url_for('admin_dashboard') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-clay mb-4 transition-colors text-sm font-mono">
+                <a href="{{ url_for('admin.admin_dashboard') }}" class="inline-flex items-center gap-2 text-sand/60 hover:text-clay mb-4 transition-colors text-sm font-mono">
                     <i class="fa-solid fa-arrow-left"></i>
                     Voltar
                 </a>
@@ -23,7 +23,7 @@
                         </h1>
                         <p class="text-sand/60 text-sm font-mono tracking-wide">Gerencie períodos bloqueados na agenda</p>
                     </div>
-                    <a href="{{ url_for('novo_bloqueio') }}" 
+                    <a href="{{ url_for('admin.novo_bloqueio') }}" 
                        class="bg-clay text-sand px-8 py-4 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-clay/90 transition-all hover:scale-[1.02] shadow-lg">
                         <i class="fa-solid fa-plus mr-2"></i>Novo Bloqueio
                     </a>
@@ -73,7 +73,7 @@
                                     </span>
 
                                     {% if bloqueio.ativo %}
-                                        <form method="POST" action="{{ url_for('desativar_bloqueio', id=bloqueio.id) }}" class="inline">
+                                        <form method="POST" action="{{ url_for('admin.desativar_bloqueio', id=bloqueio.id) }}" class="inline">
                                             <button type="submit" 
                                                     class="w-10 h-10 bg-transparent border border-sand/20 rounded-sm text-green-400 hover:bg-green-500/10 hover:border-green-500/30 transition-all flex items-center justify-center"
                                                     title="Desativar">
@@ -82,7 +82,7 @@
                                         </form>
                                     {% endif %}
 
-                                    <form method="POST" action="{{ url_for('deletar_bloqueio', id=bloqueio.id) }}" 
+                                    <form method="POST" action="{{ url_for('admin.deletar_bloqueio', id=bloqueio.id) }}" 
                                           onsubmit="return confirm('Tem certeza que deseja deletar este bloqueio?')" class="inline">
                                         <button type="submit" 
                                                 class="w-10 h-10 bg-transparent border border-sand/20 rounded-sm text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all flex items-center justify-center"
@@ -112,7 +112,7 @@
                 </div>
                 <h3 class="font-display text-2xl text-sand mb-3">Nenhum bloqueio cadastrado</h3>
                 <p class="text-sand/60 text-sm mb-8">Crie bloqueios para períodos indisponíveis</p>
-                <a href="{{ url_for('novo_bloqueio') }}" 
+                <a href="{{ url_for('admin.novo_bloqueio') }}" 
                    class="inline-block bg-clay text-sand px-8 py-4 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:bg-clay/90 transition-all">
                     Criar Primeiro Bloqueio
                 </a>
