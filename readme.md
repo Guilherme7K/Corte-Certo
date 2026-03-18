@@ -88,8 +88,8 @@ Corte-certo-2/
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/seu-usuario/corte-certo.git
-cd corte-certo
+git clone https://github.com/Guilherme7K/Corte-Certo.git
+cd Corte-Certo
 
 # Criar e ativar environment
 python -m venv venv
