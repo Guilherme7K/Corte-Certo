@@ -6,16 +6,17 @@ Sistema web full-stack de agendamento online para barbearias, com painel adminis
 
 ---
 
-## � Telas do Sistema
+
+## 📱 Telas do Sistema
 
 ### Página Inicial da Barbearia
-![Página Inicial]((image.png))
+![Página Inicial](static/images/image.png)
 
 ### Depoimentos
-![Depoimentos e Rodapé]((image-1.png))
+![Depoimentos e Rodapé](static/images/image-1.png)
 
 ### Dashboard Administrativo
-![Dashboard Admin]((image-2.png))
+![Dashboard Admin](static/images/image-2.png)
 
 ---
 
