@@ -2,7 +2,7 @@
 
 Sistema web full-stack de agendamento online para barbearias, com painel administrativo e área do cliente. Desenvolvido com **Flask**, **SQLAlchemy** e **Tailwind CSS**, seguindo o padrão **MVC** com Flask Blueprints.
 
-> 🔗 **Demo:** [cortecerto.onrender.com](https://cortecerto.onrender.com)
+> 🔗 **Demo:** [cortecerto-app.vercel.app](https://cortecerto-app.vercel.app) — na tela de login, use **Entrar como cliente demo** ou **Entrar como admin demo** para conhecer o sistema sem criar conta.
 
 ---
 
@@ -37,18 +37,19 @@ Sistema web full-stack de agendamento online para barbearias, com painel adminis
 | **Frontend** | Jinja2 · Tailwind CSS · JavaScript · GSAP |
 | **Banco de Dados** | PostgreSQL (produção) · SQLite (dev) |
 | **Segurança** | Werkzeug (hash de senhas) · Session-based auth · Decorators de autorização |
-| **Deploy** | Render.com · Gunicorn · Supabase (PostgreSQL) |
+| **Deploy** | Vercel (Python serverless) · Supabase (PostgreSQL) |
 
 ---
 
 ## 📁 Arquitetura (MVC)
 
 ```
-Corte-certo-2/
+Corte-Certo/
 ├── app.py                          # Entry point — inicialização e registro de Blueprints
 ├── config.py                       # Configurações e variáveis de ambiente
 ├── models.py                       # Model — entidades do banco (ORM)
 ├── decorators.py                   # Middlewares de autenticação/autorização
+├── demo.py                         # Contas de demonstração (cliente e admin)
 ├── utils.py                        # Funções utilitárias e validações
 │
 ├── controllers/                    # Controller — lógica de negócio por domínio
@@ -69,8 +70,9 @@ Corte-certo-2/
 │   ├── css/ · js/ · images/
 │
 ├── requirements.txt                # Dependências Python
-├── Procfile / render.yaml          # Configuração de deploy
-└── gunicorn.conf.py                # Servidor WSGI
+├── .python-version                 # Versão do Python usada no deploy
+├── vercel.json                     # Cron diário de verificação do banco
+└── .env.example                    # Modelo das variáveis de ambiente
 ```
 
 ---
@@ -79,6 +81,7 @@ Corte-certo-2/
 
 ### Cliente
 - Cadastro e login com validação de senha forte
+- Contas de demonstração (cliente e admin) com dados de exemplo, acessíveis com um clique
 - Agendamento online com verificação de disponibilidade em tempo real
 - Cancelamento de agendamentos (mínimo 2h de antecedência)
 - Histórico completo de agendamentos
@@ -122,15 +125,30 @@ python app.py
 
 O servidor inicia em `http://localhost:5000`. O banco SQLite é criado automaticamente com dados de exemplo.
 
-**Login padrão admin:** `admin@cortecerto.com` / `admin123`
+**Login padrão admin:** `admin@cortecerto.com` / `admin123` (é a mesma conta do botão "Entrar como admin demo")
 
 ---
 
-## 📦 Deploy (Render.com)
+## 📦 Deploy (Vercel + Supabase)
 
-1. Conecte o repositório Git ao Render
-2. Configure as variáveis de ambiente: `SECRET_KEY`, `DATABASE_URL`
-3. O deploy é automático a cada push — Gunicorn + PostgreSQL
+O app roda como função Python serverless na Vercel, que detecta o Flask pelo `app.py`. O banco é PostgreSQL no Supabase.
+
+1. No Supabase, copie a URL do **Transaction pooler** (botão *Connect*, porta `6543`). A conexão direta (`db.<ref>.supabase.co:5432`) usa só IPv6 e não funciona na Vercel.
+2. Crie as tabelas e os dados iniciais uma única vez, apontando para o Supabase:
+   ```bash
+   # com DATABASE_URL do Supabase no .env
+   flask --app app init-db
+   ```
+3. Importe o repositório na Vercel e configure as variáveis de ambiente:
+
+| Variável | Obrigatória | Descrição |
+|---|---|---|
+| `DATABASE_URL` | Sim | URL do pooler do Supabase: `postgresql://postgres.<ref>:<senha>@aws-0-<regiao>.pooler.supabase.com:6543/postgres` |
+| `SECRET_KEY` | Sim | Chave para assinar a sessão. Gere com `python -c "import secrets; print(secrets.token_hex(32))"` |
+
+O deploy é automático a cada push na `main`. Sem essas variáveis o app não inicia em produção, de propósito, para não cair em SQLite ou em uma chave padrão.
+
+O `vercel.json` agenda um cron diário que chama a rota `/saude`, que faz uma consulta simples no banco. Isso confirma que a conexão está funcionando e evita que o Supabase gratuito pause o projeto por inatividade.
 
 ---
 

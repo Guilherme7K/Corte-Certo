@@ -33,7 +33,7 @@ def init_db():
         try:
             # Criar todas as tabelas
             db.create_all()
-            print("✅ Tabelas criadas/verificadas!")
+            print("Tabelas criadas/verificadas")
             
             # Verificar se já existe um admin
             admin = Usuario.query.filter_by(email='admin@cortecerto.com').first()
@@ -46,7 +46,7 @@ def init_db():
                     tipo='admin'
                 )
                 db.session.add(admin)
-                print("✅ Usuário admin criado!")
+                print("Usuário admin criado")
             
             # Verificar se já existem serviços
             if Servico.query.count() == 0:
@@ -59,7 +59,7 @@ def init_db():
                     Servico(nome='Acabamento', descricao='Finalização com máquina e navalha', preco=20.00, duracao=15, ativo=True),
                 ]
                 db.session.add_all(servicos_padrao)
-                print("✅ Serviços padrão criados!")
+                print("Serviços padrão criados")
             
             # Verificar se já existem horários de funcionamento
             if HorarioFuncionamento.query.count() == 0:
@@ -73,17 +73,24 @@ def init_db():
                     HorarioFuncionamento(dia_semana=0, horario_abertura='09:00', horario_fechamento='13:00', ativo=False),
                 ]
                 db.session.add_all(horarios)
-                print("✅ Horários de funcionamento criados!")
+                print("Horários de funcionamento criados")
             
             db.session.commit()
-            print("✅ Banco de dados inicializado com sucesso!")
+            print("Banco de dados inicializado com sucesso")
             
         except Exception as e:
-            print(f"❌ Erro ao inicializar banco: {e}")
+            print(f"Erro ao inicializar banco: {e}")
             db.session.rollback()
 
-# Chamar init_db ao iniciar
-init_db()
+@app.cli.command('init-db')
+def init_db_command():
+    """Cria as tabelas e os dados iniciais: flask --app app init-db"""
+    init_db()
+
+# Em desenvolvimento o banco é preparado ao iniciar. Na Vercel isso é feito
+# uma única vez com "flask --app app init-db", para não atrasar cada cold start.
+if not os.environ.get('VERCEL'):
+    init_db()
 
 # Registrar Blueprints
 app.register_blueprint(main_bp)

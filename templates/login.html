@@ -181,6 +181,23 @@
                     </p>
                 </div>
             </form>
+
+            <!-- Demonstração -->
+            <div class="mt-10 pt-8 border-t border-sand/10 reveal-element">
+                <p class="text-sand/50 text-xs uppercase tracking-widest font-mono mb-4 text-center">Só quer conhecer o sistema?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <form method="POST" action="{{ url_for('auth.login_demo', perfil='cliente') }}">
+                        <button type="submit" class="w-full border border-sand/20 text-sand py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-clay hover:text-clay transition-colors">
+                            Entrar como cliente demo
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('auth.login_demo', perfil='admin') }}">
+                        <button type="submit" class="w-full border border-sand/20 text-sand py-3 rounded-sm font-display font-bold text-xs uppercase tracking-widest hover:border-clay hover:text-clay transition-colors">
+                            Entrar como admin demo
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div class="absolute bottom-6 w-full text-center text-sand/20 text-[10px] uppercase tracking-widest font-mono reveal-element">

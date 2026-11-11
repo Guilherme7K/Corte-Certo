@@ -2,8 +2,23 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from models import db, Usuario
 from utils import sanitizar_input, validar_email, validar_senha_forte
 from decorators import login_required
+from demo import obter_cliente_demo, obter_admin_demo
 
 auth_bp = Blueprint('auth', __name__)
+
+
+def _iniciar_sessao(usuario, mensagem):
+    session.clear()
+    session['usuario_id'] = usuario.id
+    session['usuario_nome'] = usuario.nome
+    session['usuario_tipo'] = usuario.tipo
+    session.permanent = True
+    flash(mensagem, 'success')
+
+    if usuario.tipo == 'admin':
+        return redirect(url_for('admin.admin_dashboard'))
+    return redirect(url_for('cliente.cliente_dashboard'))
+
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -22,22 +37,27 @@ def login():
         usuario = Usuario.query.filter_by(email=email).first()
         
         if usuario and usuario.verificar_senha(senha):
-            session.clear()
-            session['usuario_id'] = usuario.id
-            session['usuario_nome'] = usuario.nome
-            session['usuario_tipo'] = usuario.tipo
-            session.permanent = True
-            
-            flash('Login realizado com sucesso!', 'success')
-            
-            if usuario.tipo == 'admin':
-                return redirect(url_for('admin.admin_dashboard'))
-            else:
-                return redirect(url_for('cliente.cliente_dashboard'))
+            return _iniciar_sessao(usuario, 'Login realizado com sucesso!')
         else:
             flash('Email ou senha incorretos', 'danger')
     
     return render_template('login.html')
+
+@auth_bp.route('/demo/<perfil>', methods=['POST'])
+def login_demo(perfil):
+    """Entra direto em uma conta de demonstração (cliente ou admin)."""
+    if perfil == 'cliente':
+        usuario = obter_cliente_demo()
+    elif perfil == 'admin':
+        usuario = obter_admin_demo()
+    else:
+        usuario = None
+
+    if not usuario:
+        flash('Conta de demonstração indisponível no momento', 'danger')
+        return redirect(url_for('auth.login'))
+
+    return _iniciar_sessao(usuario, 'Você está usando uma conta de demonstração.')
 
 @auth_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
